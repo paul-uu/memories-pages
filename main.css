@@ -1,0 +1,271 @@
+/*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}
+
+
+
+/* Base Styles */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+/* Layout */
+#page_container {
+	height: 100%;
+	width: 100%;
+}
+section#page_header, section#add_memory {
+	position: fixed;
+	width: 100%;
+	background-color: white;
+	z-index: 2;
+}
+section#page_header {
+	padding-left: 15px;
+	height: 40px;
+}
+section#page_header h3 {
+	margin: 15px 0;
+}
+section#add_memory {
+	padding: 0 15px;	
+	height: 110px;
+	top: 40px;
+	border-bottom: 1px solid #ccc;
+}
+section#memory_container {
+	padding: 150px 15px 1px 15px;
+	min-height: 100%;
+	z-index: 1;
+	background-color: steelblue;
+	display: flex;
+	position: relative;
+	flex-wrap: wrap-reverse;
+	align-content: flex-start;
+}
+#memory_display {
+	height: 350px;
+	background-color: rgba(255, 255, 255, 0.8);
+	width: calc(100% - 30px);
+	position: absolute;
+	top: -205px;
+	border-radius: 0 0 5px 5px;
+	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+	overflow: auto;
+}
+
+
+
+/* Components */
+form {
+	height: 45px;
+}
+textarea, #input_attachments, #save_memory {
+	height: 45px;
+	float: left;
+}
+textarea {
+	width: 80%;
+	height:45px;
+	font-size: 16px;
+    padding: 5px;
+    resize: none;
+    color: #555;
+    border-radius: 3px;
+}
+textarea:focus,
+input[type="text"] { outline-width: 0; }
+
+#input_attachments {
+	display: inline-block;
+	width:14%;
+	vertical-align: top;
+	margin-top: 12px;
+}
+#input_attachments ul {
+	padding: 0;
+	margin: 0;
+}
+
+#save_memory {
+	display: inline-block;
+	vertical-align: top;
+	padding-top: 14px;
+	margin-left: 30px;
+	border: 1px solid #bbb;
+	width: 10%;
+	text-align: center;
+	cursor: pointer;
+	background-color: #eee;
+	border-radius: 3px;
+
+}
+#save_memory:hover {
+	background-color: #ddd;
+}
+
+.input_attachments_tab {
+	display: inline-block;
+	width: 33%;
+	cursor: pointer;
+	text-align: left;
+	font-size: 37px;
+	color: #999;
+}
+.input_attachments_tab:hover {
+	color: #565656;
+}
+
+
+/* Slider(s) */
+#emotion_sliders {
+	clear:both;
+	height: 45px;
+	margin-left: 4%;
+	margin-top: 14px;
+	width: 63%;
+	display: inline-block;
+}
+@media only screen and (max-width: 900px) {
+	#input_attachments {
+		width: 20%;
+		margin-top: 16px;
+	}
+	.input_attachments_tab {
+		font-size: 28px;
+	}
+	#emotion_sliders {
+		width: 75%;
+	}
+	.emotion_slider {
+		width: 13.8% !important;
+	}
+}
+
+.emotion_slider {
+	width: 14.3%;
+	display: inline-block;
+	margin-right: 2%;
+	height: 8px;
+}
+.slider_label > span:first-of-type {
+	color: #aaa;
+}
+.emotion_slider:last-of-type {
+	margin-right: 0;
+}
+
+.emotion_slider > span:focus {
+	outline: none;
+}
+.emotion_slider > span.ui-state-hover,
+.emotion_slider > span.ui-state-focus {
+	border: 1px solid #cccccc;
+	background: #f6f6f6;
+}
+
+
+.slider_label {
+	margin-top: -27px;
+
+}
+.slider_label strong {
+	color: #999;
+}
+
+#emotion_sliders > .emotion_slider > .ui-slider-handle {
+	height: 16px;
+	width: 16px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+#slider_joy > span.ui-slider-handle,
+#slider_joy > .ui-slider-range {
+	background: #f9e258;
+}
+#slider_sadness > span.ui-slider-handle, 
+#slider_sadness > .ui-slider-range {
+	background: #5380be;
+}
+#slider_anger > span.ui-slider-handle, 
+#slider_anger > .ui-slider-range {
+	background: #db373e;
+}
+#slider_fear > span.ui-slider-handle, 
+#slider_fear > .ui-slider-range {
+	background: #c3648e;
+}
+#slider_disgust > span.ui-slider-handle, 
+#slider_disgust > .ui-slider-range {
+	background: #73c557;
+}
+#slider_neutral > span.ui-slider-handle, 
+#slider_neutral > .ui-slider-range {
+	background: #ccc;
+}
+
+.ui-slider-horizontal {
+	
+}
+
+/* Memory display */
+.memory-display-header {
+	height: 50px;
+}
+.memory-display-header,
+.memory-display-body {
+	padding: 10px 20px;	
+}
+.memory-display-date {
+	float: left;
+}
+#memory-display-close {
+	float: right;
+	cursor: pointer;
+}
+.memory-display-body {
+	clear: both;
+	height: 250px;
+}
+.memory-display-footer {
+	height: 50px;
+	border-top: 1px solid #aaa;
+}
+.memory-display-controls,
+.memory-display-delete {
+	width: 50%;
+	height: 49px;
+	text-align: center;
+	padding: 15px 20px 0 20px;
+}
+.memory-display-controls {
+	float: left;
+}
+.memory-display-delete {
+	float: right;
+	border-left: 1px solid #aaa;
+	cursor: pointer;
+}
+
+
+/* Memories */
+.memory {
+	width: 35px;
+	height: 35px;
+	border: 1px solid #aaa;
+	border-radius: 50%;
+	cursor: pointer;
+	display: inline-block;
+	background-color: #ffffff;
+}
+.memory .memory_contents { display: none; }
+.memory-active {
+	-webkit-box-shadow:0 0 8px #f0f8ff; 
+	-moz-box-shadow: 0 0 8px #f0f8ff; 
+	box-shadow:0 0 8px #f0f8ff;
+}
+
+
+
+

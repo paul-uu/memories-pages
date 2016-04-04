@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<title>Inside Out</title>
+
+	<!-- Stylesheets -->
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css'>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.theme.css'>
+	<link rel='stylesheet' href='main.css'>
+	
+</head>
+<body>
+
+	<div id='page_container'>
+
+		<section id='page_header'>
+			<h3>Inside Out thingy</h3>
+		</section>
+
+		<section id='add_memory'>
+
+			<form>
+				<textarea id='input_memory' placeholder='Type in your memory here...'></textarea>
+				<div id='save_memory'>Save</div>
+			</form>
+
+
+			<div id='input_attachments'>
+				<ul>
+					<li id='attachment-button-audio' class='input_attachments_tab'>
+					<i class="fa fa-music"></i></li><li id='attachment-button-image' class='input_attachments_tab'>
+					<i class="fa fa-picture-o"></i></li><li id='attachment-button-video' class='input_attachments_tab'>
+					<i class="fa fa-video-camera"></i></li>
+				</ul>
+				<div id='attachments_dialog'>
+					<h1>attachments dialog</h1>
+					<input type='text'>
+				</div>
+			</div>
+
+
+
+			<div id='emotion_sliders'>
+
+				<div class='emotion_slider' id='slider_joy'>
+					<div class='slider_label'>
+						<span>Joy</span>
+						<!--
+						<span class='slider_value'>0</span>
+						-->
+					</div>
+				</div>
+
+				<div class='emotion_slider' id='slider_sadness'>
+					<div class='slider_label'>
+						<span>Sadness</span>
+						<!--
+						<span class='slider_value'>0</span>
+						-->
+					</div>
+				</div>
+
+				<div class='emotion_slider' id='slider_anger'>
+					<div class='slider_label'>
+						<span>Anger</span>
+						<!--
+						<span class='slider_value'>0</span>
+						-->
+					</div>
+				</div>
+
+				<div class='emotion_slider' id='slider_fear'>
+					<div class='slider_label'>
+						<span>Fear</span>
+						<!--
+						<span class='slider_value'>0</span>
+						-->
+					</div>
+				</div>
+
+				<div class='emotion_slider' id='slider_disgust'>
+					<div class='slider_label'>
+						<span>Disgust</span>
+						<!--
+						<span class='slider_value'>0</span>
+						-->
+					</div>
+				</div>
+
+				<div class='emotion_slider' id='slider_neutral'>
+					<div class='slider_label'>
+						<span>Neutral</span>
+						<!--
+						<span class='slider_value'>0</span>
+						-->
+					</div>
+				</div>
+
+			</div>
+		</section>
+
+
+
+		<section id='memory_container'>
+			<div id='memory_display'>
+				<div class='memory-display-header'>
+
+					<div class='memory-display-date'></div>
+					<div id='memory-display-close'>x</div>
+				</div>
+				<div class='memory-display-body'>
+					<div class='memory-display-text'></div>
+				</div>
+				<div class='memory-display-footer'>
+					<div class='memory-display-controls'>
+						Controls
+					</div>
+					<div class='memory-display-delete'>
+						Delete Memory
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</div>
+
+
+
+
+	<!-- Underscore Templates -->
+	<script type='text/template' id='memory_template'>
+		<div class='memory_contents'>
+			<div class='memory_model_date'><%= attributes.date %></div>
+			<div class='memory_model_text'><%= attributes.memory_text %></div>
+			<div class='memory_model_image'><%= attributes.media.image %></div>
+			<div class='memory_model_video'><%= attributes.media.video %></div>
+			<div class='memory_model_audio'><%= attributes.media.audio %></div>
+			<div class='memory_model_joy'><%= attributes.emotions.joy %></div>
+			<div class='memory_model_sadness'><%= attributes.emotions.sadness %></div>	
+			<div class='memory_model_anger'><%= attributes.emotions.anger %></div>
+			<div class='memory_model_fear'><%= attributes.emotions.fear %></div>
+			<div class='memory_model_disgust'><%= attributes.emotions.disgust %></div>			
+		</div>
+	</script>
+
+
+	<!-- JavaScripts -->
+	<!--
+	<script src='libs.js'></script>
+	-->
+	<script src='node_modules/jquery/dist/jquery.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+	<script src='node_modules/underscore/underscore-min.js'></script>
+	<script src='node_modules/backbone/backbone-min.js'></script>
+	<script src='node_modules/backbone.localstorage/backbone.localStorage-min.js'></script>
+	<script src='main.js'></script>
+</body>
+</html>
