@@ -1,5 +1,5 @@
 (function() {
-var test;
+
 	// ----------------------------------------------------------
 	// Date stuff:
 	Date.prototype.today = function () {  // today's date;
@@ -96,16 +96,18 @@ var test;
 
 
 	// View for Memory Model
-	var $memory_display = $('#memory_display');
-	var $memory_display_close = $('#memory-display-close');
+	var $memory_display = $('#memory_display'),
+		$memory_display_close = $('#memory-display-close'),
+		$memory_delete = $('.memory-display-delete');
+
 	$memory_display_close.on('click', function() {
 		$memory_display.animate({
 			top: '-205px'
 		}, 850, 'easeOutQuart', function() {
-			console.log('display closed');
 			$('.memory-active').removeClass('memory-active');
 		});
 	});
+	
 
 	var Memory_View = Backbone.View.extend({
 		tagName: 'div',
@@ -119,8 +121,8 @@ var test;
 		},
 		render: function() {
 			this.$el.html(this.template(this.model));
-			this.$el.css('background-color', 'green');
-			this.$el.css('background', this.model.attributes.gradient.default.toString() );
+			//this.$el.css('background', this.model.attributes.gradient.default.toString() );
+			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
 			return this;
 		},
 
@@ -142,8 +144,6 @@ var test;
 			$memory_display.animate({
 				top: '150px'
 			}, 850, 'easeOutQuart');
-
-
 		},
 		/*
 		add_gradient: function($el) {
@@ -168,9 +168,7 @@ var test;
 			this.collection = new Memory_Collection();
 			this.collection.fetch();
 			this.collection.toJSON();
-
 			this.render();
-			//this.cache_dom();
 			this.collection.on('add', this.render_item, this);
 			this.collection.on('remove', this.remove_item, this);
 		},
@@ -185,6 +183,8 @@ var test;
 				var model_view = new Memory_View({ model: model });
 				this.$('#memory_container').append(model_view.render().el);
 			}
+		},
+		remove_item: function(model) {
 		},
 		add_memory: function() {
 
@@ -266,11 +266,8 @@ var test;
 		if (m.neutral)
 			emotions['neutral'] = m.neutral;
 
-		var emotions_total = sum_obj_values(emotions);
-		var gradient_percentage = 0;
-
 		var emotions_percent_obj = _.mapObject(emotions, function(val, key) {
-			return Math.floor((val/emotions_total) * 100);
+			return Math.floor( (val/sum_obj_values(emotions)) * 100 );
 		});
 
 		var gradient_str = 'linear-gradient(to bottom, ',
@@ -281,7 +278,7 @@ var test;
 
 		for (emotion in emotions_percent_obj) {
 			if (i === (obj_len - 1)) {
-				value = ');';
+				value = ');'; // last object property / emotion; end gradient_str
 			} else {
 				current_percentage += emotions_percent_obj[emotion];
 				value = current_percentage + '%, ';
@@ -326,38 +323,6 @@ var test;
 				break;																		
 		}
 	}
-
-
-
-
-	// pass in model.attributes.emotions
-	/*
-	function calculate_gradient(joy, sadness, anger, fear, disgust, neutral) {
-
-		var emotions = {
-				'joy': 0,
-				'sadness': 0,
-				'anger': 0,
-				'fear': 0,
-				'disgust': 0,
-				'neutral': 0
-			},
-			keys = ['joy','sadness','anger','fear','disgust','neutral'],
-			total = 0;
-
-		for (var i = 0; i < arguments.length; i++) {
-			if (arguments[i] > 0) {
-				total += arguments[i];
-				emotions[ keys[i] ] = arguments[i];
-			} else {
-				delete emotions[ keys[i] ];
-			}
-		}
-		return emotions;
-	}
-	*/
-
-
 
 
 })();

@@ -18,7 +18,7 @@
 	<div id='page_container'>
 
 		<section id='page_header'>
-			<h3>Inside Out thingy</h3>
+			<h3>Inside Out thingy<em>&nbsp;hi</em></h3>
 		</section>
 
 		<section id='add_memory'>
@@ -27,7 +27,6 @@
 				<textarea id='input_memory' placeholder='Type in your memory here...'></textarea>
 				<div id='save_memory'>Save</div>
 			</form>
-
 
 			<div id='input_attachments'>
 				<ul>
@@ -42,68 +41,39 @@
 				</div>
 			</div>
 
-
-
 			<div id='emotion_sliders'>
-
 				<div class='emotion_slider' id='slider_joy'>
 					<div class='slider_label'>
 						<span>Joy</span>
-						<!--
-						<span class='slider_value'>0</span>
-						-->
 					</div>
 				</div>
-
 				<div class='emotion_slider' id='slider_sadness'>
 					<div class='slider_label'>
 						<span>Sadness</span>
-						<!--
-						<span class='slider_value'>0</span>
-						-->
 					</div>
 				</div>
-
 				<div class='emotion_slider' id='slider_anger'>
 					<div class='slider_label'>
 						<span>Anger</span>
-						<!--
-						<span class='slider_value'>0</span>
-						-->
 					</div>
 				</div>
-
 				<div class='emotion_slider' id='slider_fear'>
 					<div class='slider_label'>
 						<span>Fear</span>
-						<!--
-						<span class='slider_value'>0</span>
-						-->
 					</div>
 				</div>
-
 				<div class='emotion_slider' id='slider_disgust'>
 					<div class='slider_label'>
 						<span>Disgust</span>
-						<!--
-						<span class='slider_value'>0</span>
-						-->
 					</div>
 				</div>
-
 				<div class='emotion_slider' id='slider_neutral'>
 					<div class='slider_label'>
 						<span>Neutral</span>
-						<!--
-						<span class='slider_value'>0</span>
-						-->
 					</div>
 				</div>
-
 			</div>
 		</section>
-
-
 
 		<section id='memory_container'>
 			<div id='memory_display'>
@@ -129,8 +99,6 @@
 	</div>
 
 
-
-
 	<!-- Underscore Templates -->
 	<script type='text/template' id='memory_template'>
 		<div class='memory_contents'>
@@ -146,7 +114,6 @@
 			<div class='memory_model_disgust'><%= attributes.emotions.disgust %></div>			
 		</div>
 	</script>
-
 
 	<!-- JavaScripts -->
 	<script src='node_modules/jquery/dist/jquery.min.js'></script>
