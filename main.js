@@ -12,16 +12,7 @@
 	var date = today.today();
 
 
-
-	/* jQuery UI Slider
-	 * values:
-	 * 0: Joy
-	 * 1: Sadness
-	 * 2: Anger
-	 * 3: Fear
-	 * 4: Disgust
-	 *
-	 */
+	/* jQuery UI Slider */
 	var $slide_handles = $('#emotion_sliders .ui-slider-handle');
 
 	$('.emotion_slider').slider({
@@ -29,11 +20,9 @@
 		value: 0,
 		min: 0,
 		max: 5,
-		/*
-		slide: function(e, ui) {
+		/*slide: function(e, ui) {
 			$(this).find('.slider_value').text(ui.value);
-		}
-		*/
+		}*/
 	});
 
 	var attachments_dialog = $('#attachments_dialog').dialog({
@@ -63,6 +52,7 @@
 	// ----------------------------------------------------------
 	// Backbone stuff:
 	
+	// --------------------
 	// Model
 	var Memory_Model = Backbone.Model.extend({
 		defaults: {
@@ -88,27 +78,58 @@
 			}
 		}
 	});
-	// Collection
+
+	// --------------------
+	// Collection (rename to hippocampus?)
 	var Memory_Collection = Backbone.Collection.extend({
 		model: Memory_Model,
 		localStorage: new Backbone.LocalStorage('Memory_LocalStorage')
 	});
+	var my_memory = new Memory_Collection();
+	my_memory.fetch();
 
 
+	// ---------------------
 	// View for Memory Model
-	var $memory_display = $('#memory_display'),
-		$memory_display_close = $('#memory-display-close'),
-		$memory_delete = $('.memory-display-delete');
+	var $memory_display = $('#memory_display');
 
-	$memory_display_close.on('click', function() {
-		$memory_display.animate({
-			top: '-205px'
-		}, 850, 'easeOutQuart', function() {
-			$('.memory-active').removeClass('memory-active');
-		});
+	var Memory_Display = Backbone.View.extend({
+		el: $('#memory_display'),
+		events: {
+			'click #memory-display-close': 'close_display',
+			'click .memory-display-delete': 'delete_memory' 
+		},
+		initialize: function() {
+		},
+		render: function(model) {
+			this.current_memory = model;
+			this.$el.animate({
+				top: '150px'
+			}, 850, 'easeOutQuart');
+			this.$el.find('.memory-display-date').text(model.attributes.date);
+			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
+		},
+		current_memory: '',
+		close_display: function() {
+			this.$el.animate({
+				top: '-205px'
+			}, 850, 'easeOutQuart', function() {
+				$('.memory-active').removeClass('memory-active');
+			});
+		},
+		delete_memory: function() {
+			console.log(this.current_memory);
+			this.current_memory.destroy();
+			this.close_display();
+			memories.render();
+		}
 	});
+	var memory_display_view = new Memory_Display;
 	
 
+
+	// --------------------------
+	// View for individual memory
 	var Memory_View = Backbone.View.extend({
 		tagName: 'div',
 		className: 'memory',
@@ -125,25 +146,17 @@
 			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
 			return this;
 		},
-
 		delete_memory: function() {
 			console.log('delete');
 			this.model.destroy();	// delete model
 			this.remove();			// delete view
 		},
-
 		// Custom Events
 		view_memory: function() {
-
 			$('.memory-active').removeClass('memory-active')
 			this.$el.addClass('memory-active');
 
-			var m = this.model.attributes;
-			$memory_display.find('.memory-display-date').text(m.date);
-			$memory_display.find('.memory-display-text').text(m.memory_text);			
-			$memory_display.animate({
-				top: '150px'
-			}, 850, 'easeOutQuart');
+			memory_display_view.render(this.model);
 		},
 		/*
 		add_gradient: function($el) {
@@ -157,7 +170,7 @@
 	}); 
 
 
-
+	// --------------------------
 	// View for Memory Collection
 	var Memories_View = Backbone.View.extend({
 		el: $('#page_container'),
@@ -165,14 +178,14 @@
 			'click #save_memory': 'add_memory',
 		},
 		initialize: function() {
-			this.collection = new Memory_Collection();
-			this.collection.fetch();
+			this.collection = my_memory;
 			this.collection.toJSON();
 			this.render();
 			this.collection.on('add', this.render_item, this);
 			this.collection.on('remove', this.remove_item, this);
 		},
 		render: function() {
+			//this.$el.find('#memory_container').html('');
 			var that = this;
 			_.each(this.collection.models, function(model) {
 				that.render_item(model);
@@ -299,7 +312,6 @@
 		}
 		return sum;
 	}
-
 
 	function get_emotion_color(emotion_str) {
 		switch (emotion_str) {
