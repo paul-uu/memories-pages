@@ -118,7 +118,7 @@
 		delete_memory: function() {
 			this.current_memory.destroy();
 			this.close_display();
-			memories.render();
+			//memories.render();
 		}
 	});
 	var memory_display_view = new Memory_Display();
@@ -234,13 +234,17 @@
 		*/
 	}); 
 
+	$('#delete_everything').on('click', function() {
+		memories.delete_collection();
+	});
 
 	var $memory_display = $('#memory_display');
 	// --------------------------
 	// View for Memory Collection
 	var Memories_View = Backbone.View.extend({
 		el: $('#memory_container'),
-		events: {  },
+		events: {
+		},
 		initialize: function() {
 			this.collection = my_memory;
 			this.collection.toJSON();
@@ -260,7 +264,21 @@
 				var model_view = new Memory_View({ model: model });
 				this.$el.append(model_view.render().el);
 			}
+		},
+		remove_item: function() {
+			this.render();
+		},
+		delete_collection: function() {
+			this.collection.each(function(model) {
+				model.destroy();
+			});
+			this.render();
+		},
+		sort_by_emotion: function(emotion) {
+		},
+		sort_by_date: function() {
 		}
+
 	});
 	var memories = new Memories_View();
 

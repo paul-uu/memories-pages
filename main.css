@@ -74,6 +74,7 @@ textarea {
     padding: 5px;
     resize: none;
     color: #555;
+    border-color: #bbb;
     border-radius: 3px;
 }
 textarea:focus,
