@@ -90,9 +90,7 @@
 
 
 	// ---------------------
-	// View for Memory Model
-	var $memory_display = $('#memory_display');
-
+	// View for Memory Display
 	var Memory_Display = Backbone.View.extend({
 		el: $('#memory_display'),
 		events: {
@@ -118,98 +116,40 @@
 			});
 		},
 		delete_memory: function() {
-			console.log(this.current_memory);
 			this.current_memory.destroy();
 			this.close_display();
 			memories.render();
 		}
 	});
-	var memory_display_view = new Memory_Display;
+	var memory_display_view = new Memory_Display();
 	
 
 
-	// --------------------------
-	// View for individual memory
-	var Memory_View = Backbone.View.extend({
-		tagName: 'div',
-		className: 'memory',
+	// ---------------------
+	// View for Control Panel
+	var Control_Panel = Backbone.View.extend({
+		el: $('#control_panel'),
 		events: {
-			'click': 'view_memory',
+			'click #save_memory': 'save_memory'
 		},
-		template: _.template($('#memory_template').html()),
 		initialize: function() {
 			this.render();
 		},
 		render: function() {
-			this.$el.html(this.template(this.model));
-			//this.$el.css('background', this.model.attributes.gradient.default.toString() );
-			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
-			return this;
+			console.log('control panel render()');
+			this.$el.find('#input_memory').val('');
+			this.$el.find('.emotion_slider').slider('value', 0);
 		},
-		delete_memory: function() {
-			console.log('delete');
-			this.model.destroy();	// delete model
-			this.remove();			// delete view
-		},
-		// Custom Events
-		view_memory: function() {
-			$('.memory-active').removeClass('memory-active')
-			this.$el.addClass('memory-active');
-
-			memory_display_view.render(this.model);
-		},
-		/*
-		add_gradient: function($el) {
-			var m = this.model.attributes;
-			$(this).css({
-				'background-color': m.gradient,
-				'background-color': m.webkit_gradient
-			});
-		}
-		*/
-	}); 
-
-
-	// --------------------------
-	// View for Memory Collection
-	var Memories_View = Backbone.View.extend({
-		el: $('#page_container'),
-		events: {
-			'click #save_memory': 'add_memory',
-		},
-		initialize: function() {
-			this.collection = my_memory;
-			this.collection.toJSON();
-			this.render();
-			this.collection.on('add', this.render_item, this);
-			this.collection.on('remove', this.remove_item, this);
-		},
-		render: function() {
-			//this.$el.find('#memory_container').html('');
-			var that = this;
-			_.each(this.collection.models, function(model) {
-				that.render_item(model);
-			}, this);
-		},
-		render_item: function(model) {
-			if (model) {
-				var model_view = new Memory_View({ model: model });
-				this.$('#memory_container').append(model_view.render().el);
-			}
-		},
-		remove_item: function(model) {
-		},
-		add_memory: function() {
-
+		save_memory: function() {
 			// gather input values
 			var emotions = {},
-				input = $('#input_memory').val(),
-				joy = $('#slider_joy').slider('value'),
-				sadness = $('#slider_sadness').slider('value'),
-				anger = $('#slider_anger').slider('value'),
-				fear = $('#slider_fear').slider('value'),
-				disgust = $('#slider_disgust').slider('value'),
-				neutral = $('#slider_neutral').slider('value');
+				input = this.$el.find('#input_memory').val(),
+				joy = this.$el.find('#slider_joy').slider('value'),
+				sadness = this.$el.find('#slider_sadness').slider('value'),
+				anger = this.$el.find('#slider_anger').slider('value'),
+				fear = this.$el.find('#slider_fear').slider('value'),
+				disgust = this.$el.find('#slider_disgust').slider('value'),
+				neutral = this.$el.find('#slider_neutral').slider('value');
 
 			if (joy)
 				emotions['joy'] = joy;
@@ -222,7 +162,7 @@
 			if (disgust)
 				emotions['disgust'] = disgust;
 			if (neutral)
-				emotions['neutral'] = neutral;														
+				emotions['neutral'] = neutral;	
 
 			var new_memory = new Memory_Model({
 				'date': date,
@@ -247,12 +187,81 @@
 			var gradient_str = emotions_to_gradient(new_memory);
 			new_memory.attributes.gradient.default = gradient_str;
 
-			this.collection.add(new_memory);
+			my_memory.add(new_memory);
 			new_memory.save();
-			$('#input_memory').val('');
+			this.render();								
 		}
 	});
+	var control_panel = new Control_Panel();
 
+
+	// --------------------------
+	// View for individual memory
+	var Memory_View = Backbone.View.extend({
+		tagName: 'div',
+		className: 'memory',
+		events: {
+			'click': 'view_memory',
+		},
+		template: _.template($('#memory_template').html()),
+		initialize: function() {
+			this.render();
+		},
+		render: function() {
+			this.$el.html(this.template(this.model));
+			//this.$el.css({'background': this.model.attributes.gradient.default.toString() });
+			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
+			return this;
+		},
+		delete_memory: function() {
+			this.model.destroy();	// delete model
+			this.remove();			// delete view
+		},
+		// Custom Events
+		view_memory: function() {
+			$('.memory-active').removeClass('memory-active')
+			this.$el.addClass('memory-active');
+			memory_display_view.render(this.model);
+		},
+		/*
+		add_gradient: function($el) {
+			var m = this.model.attributes;
+			$(this).css({
+				'background-color': m.gradient,
+				'background-color': m.webkit_gradient
+			});
+		}
+		*/
+	}); 
+
+
+	var $memory_display = $('#memory_display');
+	// --------------------------
+	// View for Memory Collection
+	var Memories_View = Backbone.View.extend({
+		el: $('#memory_container'),
+		events: {  },
+		initialize: function() {
+			this.collection = my_memory;
+			this.collection.toJSON();
+			this.render();
+			this.collection.on('add', this.render_item, this);
+			this.collection.on('remove', this.remove_item, this);
+		},
+		render: function() {
+			this.$el.html('');
+			var that = this;
+			_.each(this.collection.models, function(model) {
+				that.render_item(model);
+			}, this);
+		},
+		render_item: function(model) {
+			if (model) {
+				var model_view = new Memory_View({ model: model });
+				this.$el.append(model_view.render().el);
+			}
+		}
+	});
 	var memories = new Memories_View();
 
 
