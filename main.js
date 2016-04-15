@@ -136,11 +136,16 @@
 			this.render();
 		},
 		render: function() {
-			console.log('control panel render()');
 			this.$el.find('#input_memory').val('');
 			this.$el.find('.emotion_slider').slider('value', 0);
 		},
 		save_memory: function() {
+
+			if (!this.$el.find('#input_memory').val() || this.$el.find('.emotion_slider').slider('value') <= 0 ) {
+				this.render();
+				return;
+			}
+
 			// gather input values
 			var emotions = {},
 				input = this.$el.find('#input_memory').val(),
@@ -153,16 +158,20 @@
 
 			if (joy)
 				emotions['joy'] = joy;
-			if (sadness)
+			else if (sadness)
 				emotions['sadness'] = sadness;
-			if (anger)
+			else if (anger)
 				emotions['anger'] = anger;
-			if (fear)
+			else if (fear)
 				emotions['fear'] = fear;
-			if (disgust)
+			else if (disgust)
 				emotions['disgust'] = disgust;
-			if (neutral)
-				emotions['neutral'] = neutral;	
+			else if (neutral)
+				emotions['neutral'] = neutral;
+			else {
+				this.render();
+				return;
+			}
 
 			var new_memory = new Memory_Model({
 				'date': date,
@@ -190,6 +199,9 @@
 			my_memory.add(new_memory);
 			new_memory.save();
 			this.render();								
+		},
+		display_error: function(type) {
+			
 		}
 	});
 	var control_panel = new Control_Panel();
@@ -365,3 +377,4 @@
 
 
 })();
+
