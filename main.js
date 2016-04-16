@@ -38,7 +38,6 @@
 		},
 		close: function() {
 			console.log('close modal');
-
 		}
 	});
 	function add_attachment() {
@@ -90,42 +89,6 @@
 
 
 	// ---------------------
-	// View for Memory Display
-	var Memory_Display = Backbone.View.extend({
-		el: $('#memory_display'),
-		events: {
-			'click #memory-display-close': 'close_display',
-			'click .memory-display-delete': 'delete_memory' 
-		},
-		initialize: function() {
-		},
-		render: function(model) {
-			this.current_memory = model;
-			this.$el.animate({
-				top: '150px'
-			}, 850, 'easeOutQuart');
-			this.$el.find('.memory-display-date').text(model.attributes.date);
-			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
-		},
-		current_memory: '',
-		close_display: function() {
-			this.$el.animate({
-				top: '-205px'
-			}, 850, 'easeOutQuart', function() {
-				$('.memory-active').removeClass('memory-active');
-			});
-		},
-		delete_memory: function() {
-			this.current_memory.destroy();
-			this.close_display();
-			//memories.render();
-		}
-	});
-	var memory_display_view = new Memory_Display();
-	
-
-
-	// ---------------------
 	// View for Control Panel
 	var Control_Panel = Backbone.View.extend({
 		el: $('#control_panel'),
@@ -141,8 +104,12 @@
 		},
 		save_memory: function() {
 
-			if (!this.$el.find('#input_memory').val() || this.$el.find('.emotion_slider').slider('value') <= 0 ) {
-				this.render();
+			if (!this.$el.find('#input_memory').val()) {
+				display_noty('warning', 'topCenter', 'Please enter a memory');
+				return;
+			}
+			if (this.$el.find('.emotion_slider').slider('value') <= 0 ) {
+				display_noty('warning', 'topCenter', 'Please enter an emotion value(s)');
 				return;
 			}
 
@@ -200,11 +167,45 @@
 			new_memory.save();
 			this.render();								
 		},
-		display_error: function(type) {
-			
-		}
 	});
 	var control_panel = new Control_Panel();
+
+
+
+	// ---------------------
+	// View for Memory Display
+	var Memory_Display = Backbone.View.extend({
+		el: $('#memory_display'),
+		events: {
+			'click #memory-display-close': 'close_display',
+			'click .memory-display-delete': 'delete_memory' 
+		},
+		initialize: function() {
+		},
+		render: function(model) {
+			this.current_memory = model;
+			this.$el.animate({
+				top: '150px'
+			}, 850, 'easeOutQuart');
+			this.$el.find('.memory-display-date').text(model.attributes.date);
+			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
+		},
+		current_memory: '',
+		close_display: function() {
+			this.$el.animate({
+				top: '-205px'
+			}, 850, 'easeOutQuart', function() {
+				$('.memory-active').removeClass('memory-active');
+			});
+		},
+		delete_memory: function() {
+			this.current_memory.destroy();
+			this.close_display();
+			//memories.render();
+		}
+	});
+	var memory_display_view = new Memory_Display();
+	
 
 
 	// --------------------------
@@ -246,9 +247,6 @@
 		*/
 	}); 
 
-	$('#delete_everything').on('click', function() {
-		memories.delete_collection();
-	});
 
 	var $memory_display = $('#memory_display');
 	// --------------------------
@@ -374,6 +372,23 @@
 				break;																		
 		}
 	}
+
+
+	function display_noty(type, location, msg) {
+		var n = noty({
+			type: type,
+			layout: location,
+			text: msg,
+			timeout: 2000,
+			modal: false,
+			maxVisible: 5,
+			closeWith: ['click']
+		});
+	}
+	/*
+		types: alert, success, error, warning, information, confirm
+		layouts: top, topLeft, topCenter, topRight, centerLeft, center, centerRight, bottomLeft, bottomCenter, bottomRight, bottom
+	*/
 
 
 })();
