@@ -146,11 +146,12 @@ input[type="text"] { outline-width: 0; }
 	}
 }
 
-.emotion_slider {
+.emotion_slider.ui-slider {
 	width: 14.3%;
 	display: inline-block;
 	margin-right: 2%;
 	height: 8px;
+	border: 1px solid #efefef;
 }
 .slider_label > span:first-of-type {
 	color: #aaa;

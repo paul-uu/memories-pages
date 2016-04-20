@@ -104,16 +104,33 @@
 		},
 		save_memory: function() {
 
+
+			// -----------------------------------------------------------
+			// 1. Validate
+			// check for text input upon memory save
 			if (!this.$el.find('#input_memory').val()) {
 				display_noty('warning', 'topCenter', 'Please enter a memory');
 				return;
 			}
-			if (this.$el.find('.emotion_slider').slider('value') <= 0 ) {
-				display_noty('warning', 'topCenter', 'Please enter an emotion value(s)');
-				return;
-			}
+			// check for emotion slider value(s) upon memory save
+			var sliders_valid = false;
+			this.$el.find('.emotion_slider').each(function(i, el) {
+				if ( $(this).slider('value') > 0 ) {
+					sliders_valid = true;
+					return;
+				}
+			})
+			.promise()
+			.done(function() {
+				if (!sliders_valid) {
+					display_noty('warning', 'topCenter', 'Please enter an emotion value(s)');
+					return;
+				}
+			});
+			
 
-			// gather input values
+			// -----------------------------------------------------------
+			// 2. Gather input values
 			var emotions = {},
 				input = this.$el.find('#input_memory').val(),
 				joy = this.$el.find('#slider_joy').slider('value'),
@@ -200,6 +217,7 @@
 		},
 		delete_memory: function() {
 			this.current_memory.destroy();
+
 			this.close_display();
 			//memories.render();
 		}
@@ -223,10 +241,12 @@
 		render: function() {
 			this.$el.html(this.template(this.model));
 			//this.$el.css({'background': this.model.attributes.gradient.default.toString() });
+			console.log(this.model.attributes);
 			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
+
 			return this;
 		},
-		delete_memory: function() {
+		remove_memory: function() {
 			this.model.destroy();	// delete model
 			this.remove();			// delete view
 		},
@@ -316,15 +336,24 @@
 		if (m.neutral)
 			emotions['neutral'] = m.neutral;
 
+
+		// only one emotion value, no gradient
+		if (Object.keys(emotions).length == 1) return get_emotion_color(Object.keys(emotions)[0]);
+
+
+		// convert emotion slider value to it's percentage
 		var emotions_percent_obj = _.mapObject(emotions, function(val, key) {
 			return Math.floor( (val/sum_obj_values(emotions)) * 100 );
 		});
 
-		var gradient_str = 'linear-gradient(to bottom, ',
-			current_percentage = 0,
+
+		// build css linear gradient string
+		var current_percentage = 0,
 			i = 0,
 			obj_len = Object.keys(emotions_percent_obj).length,
-			value;
+			value,
+			gradient_str = 'linear-gradient(to bottom, ';
+
 
 		for (emotion in emotions_percent_obj) {
 			if (i === (obj_len - 1)) {
@@ -359,7 +388,7 @@
 				return 'blue';
 				break;
 			case 'anger':
-				return 'red';
+				return '#EA3F0B';
 				break;
 			case 'fear':
 				return 'purple';
@@ -374,6 +403,7 @@
 	}
 
 
+	/* Utility Functions */
 	function display_noty(type, location, msg) {
 		var n = noty({
 			type: type,
