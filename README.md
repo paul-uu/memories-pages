@@ -1,6 +1,6 @@
-# inside-out
+# Memory Collector
 
-Inspired by the aforementioned film, this small Backbone web app is tasked with keeping a collection of your memories. You can use this app to record your memories - big or small, the emotions associated with these memories, as well as any associated media, such as images, videos, or audio. As your collection of memories expands, you will be able to sort and filter your collection so you can easily recall those times you were strangely disgusted and happy, or see if you've had a happier month than the previous.
+Inspired by the film Inside Out, this small Backbone web app is tasked with keeping a collection of your memories. You can use this app to record your memories - big or small, the emotions associated with these memories, as well as associated media, such as images, videos, and audio. As your collection of memories expands, you will be able to sort and filter your collection so you can easily recall those times you were simultaneously disgusted and happy, or see if you've had a happier month than the previous.
 
 
 ### Getting started
