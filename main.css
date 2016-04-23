@@ -5,7 +5,10 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 /* Base Styles */
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html, 
+body { 
+	height: 100%; 
+}
 
 /* Layout */
 #page_container {
@@ -13,30 +16,32 @@ html, body { height: 100%; }
 	width: 100%;
 	position: relative;
 }
-section#page_header, section#control_panel {
-	position: fixed;
+#page_header, #control_panel {
 	width: 100%;
 	background-color: white;
 	z-index: 3;
 }
-section#page_header {
-	padding-left: 15px;
+#control_panel {
+	position: fixed;
+	padding: 0 15px;	
+	height: initial;
+	top: 0;
+
+	-webkit-box-shadow: 0px 2px 2px 0px rgba(170,170,170,1);
+	-moz-box-shadow: 0px 2px 2px 0px rgba(170,170,170,1);
+	box-shadow: 0px 2px 2px 0px rgba(170,170,170,1);
+}
+#page_header {
 	height: 40px;
 }
-section#page_header h3 {
+#page_header h3 {
 	margin: 15px 0;
 }
-section#control_panel {
-	padding: 0 15px;	
-	height: 110px;
-	top: 40px;
-	border-bottom: 1px solid #ccc;
-}
-section#memory_container {
+#memory_container {
 	padding: 150px 15px 1px 15px;
 	min-height: 100%;
 	z-index: 1;
-	background-color: steelblue;
+	background-color: #F7F7F7;
 	display: flex;
 	position: relative;
 	flex-wrap: wrap-reverse;
@@ -48,7 +53,7 @@ section#memory_container {
 	background-color: rgba(255, 255, 255, 0.8);
 	width: calc(100% - 30px);
 	position: absolute;
-	top: -205px;
+	top: -260px;
 	left: 15px;	
 	border-radius: 0 0 5px 5px;
 	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
@@ -63,94 +68,71 @@ section#memory_container {
 form {
 	height: 45px;
 }
-textarea, #input_attachments, #save_memory {
+textarea, #input_attachments {
 	height: 45px;
-	float: left;
 }
 textarea {
-	width: 80%;
-	height:45px;
+	width: 100%;
+	height:60px;
 	font-size: 16px;
     padding: 5px;
     resize: none;
     color: #555;
     border-color: #bbb;
     border-radius: 3px;
+    margin-bottom: 30px;
 }
 textarea:focus,
 input[type="text"] { outline-width: 0; }
 
-#input_attachments {
-	display: inline-block;
-	width:14%;
-	vertical-align: top;
-	margin-top: 12px;
-}
-#input_attachments ul {
-	padding: 0;
-	margin: 0;
-}
 
-#save_memory {
-	display: inline-block;
-	vertical-align: top;
-	padding-top: 14px;
-	margin-left: 30px;
-	border: 1px solid #bbb;
-	width: 10%;
-	text-align: center;
+#add_memory {
 	cursor: pointer;
-	background-color: #eee;
-	border-radius: 3px;
-
 }
-#save_memory:hover {
-	background-color: #ddd;
-}
-
-.input_attachments_tab {
-	display: inline-block;
-	width: 33%;
-	cursor: pointer;
-	text-align: left;
-	font-size: 37px;
-	color: #999;
-}
-.input_attachments_tab:hover {
-	color: #565656;
+#add_memory:hover {
+	color: #777;
 }
 
 
+
+/* Add Memory Modal */
+#add_memory_dialog {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 100;
+	opacity: 0;
+	-webkit-transition: opacity 300ms ease-in;
+	-moz-transition: opacity 300ms ease-in;
+	transition: opacity 300ms ease-in;
+	pointer-events: none;
+}
+#add_memory_dialog.view {
+	opacity: 1;
+	pointer-events: auto;
+}
+#add_memory_modal {
+	max-width: 1024px;
+	width: 80%;
+	height: 80%;
+	position: relative;
+	margin: 5% auto;
+	background-color: white;
+	border-radius: 5px;
+}
 /* Slider(s) */
 #emotion_sliders {
-	clear:both;
-	height: 45px;
-	margin-left: 4%;
-	margin-top: 14px;
-	width: 63%;
-	display: inline-block;
+	width: 100%;
+	margin-bottom: 45px;
 }
-@media only screen and (max-width: 900px) {
-	#input_attachments {
-		width: 20%;
-		margin-top: 16px;
-	}
-	.input_attachments_tab {
-		font-size: 28px;
-	}
-	#emotion_sliders {
-		width: 75%;
-	}
-	.emotion_slider {
-		width: 13.8% !important;
-	}
-}
-
 .emotion_slider.ui-slider {
-	width: 14.3%;
+	width: 14%;
 	display: inline-block;
-	margin-right: 2%;
-	height: 8px;
+	margin-right: 2.3%;
+	height: 11px;
 	border: 1px solid #efefef;
 }
 .slider_label > span:first-of-type {
@@ -168,8 +150,6 @@ input[type="text"] { outline-width: 0; }
 	border: 1px solid #cccccc;
 	background: #f6f6f6;
 }
-
-
 .slider_label {
 	margin-top: -27px;
 
@@ -177,10 +157,9 @@ input[type="text"] { outline-width: 0; }
 .slider_label strong {
 	color: #999;
 }
-
 #emotion_sliders > .emotion_slider > .ui-slider-handle {
-	height: 16px;
-	width: 16px;
+	height: 20px;
+	width: 20px;
 	border-radius: 50%;
 	cursor: pointer;
 }
@@ -209,10 +188,110 @@ input[type="text"] { outline-width: 0; }
 #slider_neutral > .ui-slider-range {
 	background: #ccc;
 }
-
 .ui-slider-horizontal {
 	
 }
+.modal_content {
+	padding: 30px 30px 65px 30px;
+	height: 100%;
+	overflow-y: auto;
+}
+.modal_header {
+	margin-top: 0;
+}
+#modal_buttons {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	border-radius: 0 0 5px 5px;
+}
+#save_new_memory {
+	border-right: 1px solid #666;
+	border-bottom-left-radius: 5px;
+}
+#modal_cancel {
+	border-bottom-right-radius: 5px;
+}
+.modal_button {
+	float: left;
+	width: 50%;
+	height: 49px;
+	border-top: 1px solid #666;
+	text-align: center;
+	padding-top: 15px;
+	cursor: pointer;
+	background-color: white;
+}
+#input_attachments {
+	width: 100%;
+	vertical-align: top;
+	margin-top: 45px;
+}
+#input_attachments ul {
+	padding: 0;
+	margin: 0;
+}
+.input_attachments_tab {
+	display: inline-block;
+	width: 33%;
+	cursor: pointer;
+	text-align: center;
+	font-size: 37px;
+	color: #999;
+}
+.input_attachments_tab:hover {
+	color: #565656;
+}
+@media only screen and (max-width: 480px) {
+	#add_memory_modal {
+		width: 95%;
+		height: 93%;
+		margin-top: 2%;
+	}
+	.modal_content {
+		padding: 15px;
+	}
+	#input_memory {
+		width: 100%;
+	}
+	#emotion_sliders {
+		margin-top: 40px;
+	}
+	.emotion_slider.ui-slider {
+		width: 95%;
+		display: block;
+		margin-bottom: 45px;
+	}
+	#input_attachments {
+		display: block;
+		margin-top: 15px;
+	}
+
+
+}
+
+
+
+
+#save_memory {
+	display: inline-block;
+	vertical-align: top;
+	padding-top: 14px;
+	margin-left: 30px;
+	border: 1px solid #bbb;
+	width: 10%;
+	text-align: center;
+	cursor: pointer;
+	background-color: #eee;
+	border-radius: 3px;
+
+}
+#save_memory:hover {
+	background-color: #ddd;
+}
+
+
+
 
 /* Memory display */
 .memory-display-header {
@@ -258,7 +337,7 @@ input[type="text"] { outline-width: 0; }
 .memory {
 	width: 35px;
 	height: 35px;
-	border: 1px solid #aaa;
+	border: 1px solid #ccc;
 	border-radius: 50%;
 	cursor: pointer;
 	display: inline-block;

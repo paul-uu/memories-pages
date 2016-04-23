@@ -4,7 +4,7 @@
 	<meta charset='utf-8'>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">	
-	<title>Inside Out</title>
+	<title>Memory Collector</title>
 
 	<!-- Stylesheets -->
 	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css'>
@@ -17,62 +17,18 @@
 
 	<div id='page_container'>
 
-		<section id='page_header'>
-			<h3>Inside Out thingy</h3>
-		</section>
-
+		<!-- Control Panel -->
 		<section id='control_panel'>
 
-			<form>
-				<textarea id='input_memory' placeholder='Type in your memory here...'></textarea>
-				<div id='save_memory'>Save</div>
-			</form>
+			<!-- Page Header -->
+			<h3 id='page_header'>Memory Collector</h3>
 
-			<div id='input_attachments'>
-				<ul>
-					<li id='attachment-button-audio' class='input_attachments_tab'>
-					<i class="fa fa-music"></i></li><li id='attachment-button-image' class='input_attachments_tab'>
-					<i class="fa fa-picture-o"></i></li><li id='attachment-button-video' class='input_attachments_tab'>
-					<i class="fa fa-video-camera"></i></li>
-				</ul>
-				<div id='attachments_dialog'>
-					<h1>attachments dialog</h1>
-					<input type='text'>
-				</div>
+			<!-- Control Panel Icons -->
+			<div class='control_row'>
+				<i id='add_memory' class="fa fa-plus" aria-hidden="true"></i>
 			</div>
 
-			<div id='emotion_sliders'>
-				<div class='emotion_slider' id='slider_joy'>
-					<div class='slider_label'>
-						<span>Joy</span>
-					</div>
-				</div>
-				<div class='emotion_slider' id='slider_sadness'>
-					<div class='slider_label'>
-						<span>Sadness</span>
-					</div>
-				</div>
-				<div class='emotion_slider' id='slider_anger'>
-					<div class='slider_label'>
-						<span>Anger</span>
-					</div>
-				</div>
-				<div class='emotion_slider' id='slider_fear'>
-					<div class='slider_label'>
-						<span>Fear</span>
-					</div>
-				</div>
-				<div class='emotion_slider' id='slider_disgust'>
-					<div class='slider_label'>
-						<span>Disgust</span>
-					</div>
-				</div>
-				<div class='emotion_slider' id='slider_neutral'>
-					<div class='slider_label'>
-						<span>Neutral</span>
-					</div>
-				</div>
-			</div>
+
 		</section>
 
 		<sction id='memory_display'>
@@ -98,6 +54,74 @@
 		</section>
 
 	</div>
+
+
+
+
+	<div id='add_memory_dialog'>
+		<div id='add_memory_modal'>
+			<!-- Text Input -->
+
+			<div class='modal_content'>
+
+				<h3 class='modal_header'>Add new memory:</h3>
+				<textarea id='input_memory' placeholder='Type in your memory here...'></textarea>
+				<br>
+
+				<!-- Sliders -->
+				<div id='emotion_sliders'>
+					<div class='emotion_slider' id='slider_joy'>
+						<div class='slider_label'>
+							<span>Joy</span>
+						</div>
+					</div>
+					<div class='emotion_slider' id='slider_sadness'>
+						<div class='slider_label'>
+							<span>Sadness</span>
+						</div>
+					</div>
+					<div class='emotion_slider' id='slider_anger'>
+						<div class='slider_label'>
+							<span>Anger</span>
+						</div>
+					</div>
+					<div class='emotion_slider' id='slider_fear'>
+						<div class='slider_label'>
+							<span>Fear</span>
+						</div>
+					</div>
+					<div class='emotion_slider' id='slider_disgust'>
+						<div class='slider_label'>
+							<span>Disgust</span>
+						</div>
+					</div>
+					<div class='emotion_slider' id='slider_neutral'>
+						<div class='slider_label'>
+							<span>Neutral</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Attachments -->
+				<div id='input_attachments'>
+					<ul>
+						<li id='attachment-button-audio' class='input_attachments_tab'>
+						<i class="fa fa-music"></i></li><li id='attachment-button-image' class='input_attachments_tab'>
+						<i class="fa fa-picture-o"></i></li><li id='attachment-button-video' class='input_attachments_tab'>
+						<i class="fa fa-video-camera"></i></li>
+					</ul>
+				</div>
+
+			</div> <!-- end .modal_content -->
+
+			<div id='modal_buttons'>
+				<div id='save_new_memory' class='modal_button'>Save Memory</div>
+				<div id='modal_cancel' class='modal_button'>Cancel</div>
+			</div>
+		</div>
+	</div>
+
+
 
 
 	<!-- Underscore Templates -->

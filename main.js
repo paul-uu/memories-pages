@@ -93,7 +93,8 @@
 	var Control_Panel = Backbone.View.extend({
 		el: $('#control_panel'),
 		events: {
-			'click #save_memory': 'save_memory'
+			'click #save_memory': 'save_memory',
+			'click #add_memory': 'add_memory'
 		},
 		initialize: function() {
 			this.render();
@@ -102,6 +103,12 @@
 			this.$el.find('#input_memory').val('');
 			this.$el.find('.emotion_slider').slider('value', 0);
 		},
+
+		add_memory: function() {
+			console.log('test');
+			$('#add_memory_dialog').toggleClass('view');
+		},
+
 		save_memory: function() {
 
 
@@ -119,9 +126,7 @@
 					sliders_valid = true;
 					return;
 				}
-			})
-			.promise()
-			.done(function() {
+			}).promise().done(function() {
 				if (!sliders_valid) {
 					display_noty('warning', 'topCenter', 'Please enter an emotion value(s)');
 					return;
@@ -188,6 +193,27 @@
 	var control_panel = new Control_Panel();
 
 
+	// -------------------------
+	// View for Add Memory Modal
+	var Memory_Add_Modal = Backbone.View.extend({
+		el: $('#add_memory_dialog'),
+		events: {
+			'click #modal_cancel': 'close'
+		},
+		initialize: function() {
+		},
+		render: function() {
+		},
+		close: function() {
+			this.$el.removeClass('view');
+		},
+		display: function() {
+			this.$el.addClass('view');
+		},
+	});
+	var memory_add_modal = new Memory_Add_Modal();
+
+
 
 	// ---------------------
 	// View for Memory Display
@@ -202,7 +228,7 @@
 		render: function(model) {
 			this.current_memory = model;
 			this.$el.animate({
-				top: '150px'
+				top: '96px'
 			}, 850, 'easeOutQuart');
 			this.$el.find('.memory-display-date').text(model.attributes.date);
 			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
@@ -210,7 +236,7 @@
 		current_memory: '',
 		close_display: function() {
 			this.$el.animate({
-				top: '-205px'
+				top: '-260px'
 			}, 850, 'easeOutQuart', function() {
 				$('.memory-active').removeClass('memory-active');
 			});
@@ -241,7 +267,6 @@
 		render: function() {
 			this.$el.html(this.template(this.model));
 			//this.$el.css({'background': this.model.attributes.gradient.default.toString() });
-			console.log(this.model.attributes);
 			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
 
 			return this;
@@ -252,9 +277,13 @@
 		},
 		// Custom Events
 		view_memory: function() {
-			$('.memory-active').removeClass('memory-active')
-			this.$el.addClass('memory-active');
-			memory_display_view.render(this.model);
+			if (this.$el.hasClass('memory-active')) {
+				memory_display_view.close_display();
+			} else {
+				$('.memory-active').removeClass('memory-active')
+				this.$el.addClass('memory-active');
+				memory_display_view.render(this.model);				
+			}
 		},
 		/*
 		add_gradient: function($el) {
@@ -382,19 +411,19 @@
 	function get_emotion_color(emotion_str) {
 		switch (emotion_str) {
 			case 'joy':
-				return 'yellow';
+				return '#F5F317';
 				break;
 			case 'sadness':
-				return 'blue';
+				return '#5380be';
 				break;
 			case 'anger':
-				return '#EA3F0B';
+				return '#db373e';
 				break;
 			case 'fear':
-				return 'purple';
+				return '#c3648e';
 				break;
 			case 'disgust':
-				return 'green';
+				return '#73c557';
 				break;
 			case 'neutral':
 				return '#ddd';
