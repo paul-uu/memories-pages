@@ -25,28 +25,6 @@
 		}*/
 	});
 
-	var attachments_dialog = $('#attachments_dialog').dialog({
-		autoOpen: false,
-		height: 300,
-		width: 350,
-		modal: true,
-		buttons: {
-			"Add attachment": add_attachment,
-			Cancel: function() {
-				attachments_dialog.dialog('close');
-			}
-		},
-		close: function() {
-			console.log('close modal');
-		}
-	});
-	function add_attachment() {
-		console.log('add attachment');
-	}
-	$('.input_attachments_tab').on('click', function() {
-		attachments_dialog.dialog('open');
-	});
-
 
 	// ----------------------------------------------------------
 	// Backbone stuff:
@@ -105,8 +83,8 @@
 		},
 
 		add_memory: function() {
-			console.log('test');
-			$('#add_memory_dialog').toggleClass('view');
+			memory_add_modal.render();
+			//$('#add_memory_dialog').toggleClass('view');
 		},
 
 		save_memory: function() {
@@ -198,18 +176,52 @@
 	var Memory_Add_Modal = Backbone.View.extend({
 		el: $('#add_memory_dialog'),
 		events: {
-			'click #modal_cancel': 'close'
+			'click #modal_cancel' : 'close',
+			'click .modal_close'  : 'close',
+			'click .input_attachment_icon': 'toggle_attachment'
 		},
 		initialize: function() {
 		},
 		render: function() {
+			this.$el.addClass('view');
+			this.$el.find('#input_memory').elastic().focus();
 		},
 		close: function() {
 			this.$el.removeClass('view');
 		},
-		display: function() {
-			this.$el.addClass('view');
+
+		toggle_attachment: function(e) {
+			var $icon = $(e.target),
+				$icon_id = $icon.attr('id');
+			$('.input_attachment_icon > .fa').removeClass('active');
+			$icon.addClass('active');
+
+			var attachment_type = 	($icon_id == 'attachment_button_audio') ? 'audio' : 
+									($icon_id == 'attachment_button_image') ? 'image' :
+									($icon_id == 'attachment_button_video') ? 'video' : false;
+
+			this.toggle_attachment_input(attachment_type);
+
 		},
+		toggle_attachment_input: function(type) {
+			if (type) {
+
+				var $input_div = $('.attachments_input');
+				switch (type) {
+					case 'audio':
+						$input_div.html('<input type="text" placeholder="enter audio url here"><button>add</button>');
+						break;
+					case 'image':
+						$input_div.html('<input type="text" placeholder="enter image url here"><button>add</button>');
+						break;
+					case 'video':
+						$input_div.html('<input type="text" placeholder="enter video url here"><button>add</button>');
+						break;
+					default: 
+						break;												
+				}
+			}
+		}
 	});
 	var memory_add_modal = new Memory_Add_Modal();
 
@@ -450,5 +462,25 @@
 	*/
 
 
+
+
+/**
+*	@name							Elastic
+*	@descripton						Elastic is jQuery plugin that grow and shrink your textareas automatically
+*	@version						1.6.11
+*	@requires						jQuery 1.2.6+
+*
+*	@author							Jan Jarfalk
+*	@author-email					jan.jarfalk@unwrongest.com
+*	@author-website					http://www.unwrongest.com
+*
+*	@licence						MIT License - http://www.opensource.org/licenses/mit-license.php
+*/
+!function(e){jQuery.fn.extend({elastic:function(){var e=["paddingTop","paddingRight","paddingBottom","paddingLeft","fontSize","lineHeight","fontFamily","width","fontWeight","border-top-width","border-right-width","border-bottom-width","border-left-width","borderTopStyle","borderTopColor","borderRightStyle","borderRightColor","borderBottomStyle","borderBottomColor","borderLeftStyle","borderLeftColor"];return this.each(function(){function t(){var e=Math.floor(parseInt(o.width(),10));n.width()!==e&&(n.css({width:e+"px"}),i(!0))}function r(e,t){var r=Math.floor(parseInt(e,10));o.height()!==r&&o.css({height:r+"px",overflow:t})}function i(e){var t=o.val().replace(/&/g,"&amp;").replace(/ {2}/g,"&nbsp;").replace(/<|>/g,"&gt;").replace(/\n/g,"<br />"),i=n.html().replace(/<br>/gi,"<br />");if((e||t+"&nbsp;"!==i)&&(n.html(t+"&nbsp;"),Math.abs(n.height()+h-o.height())>3)){var s=n.height()+h;s>=a?r(a,"auto"):d>=s?r(d,"hidden"):r(s,"hidden")}}if("textarea"!==this.type)return!1;var o=jQuery(this),n=jQuery("<div />").css({position:"absolute",display:"none","word-wrap":"break-word","white-space":"pre-wrap"}),h=parseInt(o.css("line-height"),10)||parseInt(o.css("font-size"),"10"),d=parseInt(o.css("height"),10)||3*h,a=parseInt(o.css("max-height"),10)||Number.MAX_VALUE;0>a&&(a=Number.MAX_VALUE),n.appendTo(o.parent());for(var s=e.length;s--;)n.css(e[s].toString(),o.css(e[s].toString()));o.css({overflow:"hidden"}),o.bind("keyup change cut paste",function(){i()}),jQuery(window).bind("resize",t),o.bind("resize",t),o.bind("update",i),o.bind("blur",function(){n.height()<a&&(n.height()>d?o.height(n.height()):o.height(d))}),o.bind("input paste",function(e){setTimeout(i,250)}),i()})}})}(jQuery);
+
 })();
+
+
+
+
 

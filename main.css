@@ -27,9 +27,9 @@ body {
 	height: initial;
 	top: 0;
 
-	-webkit-box-shadow: 0px 2px 2px 0px rgba(170,170,170,1);
-	-moz-box-shadow: 0px 2px 2px 0px rgba(170,170,170,1);
-	box-shadow: 0px 2px 2px 0px rgba(170,170,170,1);
+	-webkit-box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
+	-moz-box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
+	box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
 }
 #page_header {
 	height: 40px;
@@ -71,15 +71,17 @@ form {
 textarea, #input_attachments {
 	height: 45px;
 }
-textarea {
+textarea#input_memory {
+	border-top: none;
+	border-right: none;
+	border-left: none;
 	width: 100%;
-	height:60px;
+	height: 30px;
 	font-size: 16px;
-    padding: 5px;
     resize: none;
     color: #555;
-    border-color: #bbb;
-    border-radius: 3px;
+    border-color: #999;
+    /*border-radius: 3px;*/
     margin-bottom: 30px;
 }
 textarea:focus,
@@ -193,12 +195,24 @@ input[type="text"] { outline-width: 0; }
 }
 .modal_content {
 	padding: 30px 30px 65px 30px;
-	height: 100%;
+	height: calc(100% - 50px);
 	overflow-y: auto;
 }
 .modal_header {
 	margin-top: 0;
+	font-weight: 300;
+	color: #999;
 }
+.modal_close {
+	position: absolute;
+	right: 29px;
+	top: 25px;
+	color: #999;
+	font-size: 21px;
+	cursor: pointer;
+}
+
+
 #modal_buttons {
 	position: absolute;
 	bottom: 0;
@@ -206,47 +220,52 @@ input[type="text"] { outline-width: 0; }
 	border-radius: 0 0 5px 5px;
 }
 #save_new_memory {
-	border-right: 1px solid #666;
-	border-bottom-left-radius: 5px;
+	border-left: 1px solid #666;
+	border-bottom-right-radius: 5px;
 }
 #modal_cancel {
-	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
 .modal_button {
 	float: left;
 	width: 50%;
-	height: 49px;
+	height: 50px;
 	border-top: 1px solid #666;
 	text-align: center;
-	padding-top: 15px;
+	padding-top: 16px;
 	cursor: pointer;
 	background-color: white;
 }
 #input_attachments {
 	width: 100%;
 	vertical-align: top;
-	margin-top: 45px;
 }
 #input_attachments ul {
 	padding: 0;
 	margin: 0;
 }
-.input_attachments_tab {
+.input_attachment_icon {
 	display: inline-block;
 	width: 33%;
 	cursor: pointer;
 	text-align: center;
 	font-size: 37px;
 	color: #999;
+	margin-right: -4px;
 }
-.input_attachments_tab:hover {
-	color: #565656;
+.input_attachment_icon .fa.active {
+	color: red;
 }
+
 @media only screen and (max-width: 480px) {
 	#add_memory_modal {
 		width: 95%;
 		height: 93%;
 		margin-top: 2%;
+	}
+	.modal_close {
+		right: 15px;
+		top: 15px;
 	}
 	.modal_content {
 		padding: 15px;
@@ -255,7 +274,7 @@ input[type="text"] { outline-width: 0; }
 		width: 100%;
 	}
 	#emotion_sliders {
-		margin-top: 40px;
+		margin-top: 5px;
 	}
 	.emotion_slider.ui-slider {
 		width: 95%;
