@@ -195,6 +195,7 @@
 				icon_id = $icon.attr('id');
 				$icon.toggleClass('active').siblings().removeClass('active');
 
+<<<<<<< HEAD
 			if ($icon.hasClass('active')) {
 				var attachment_type = 	(icon_id == 'attachment_button_audio') ? 'audio' : 
 										(icon_id == 'attachment_button_image') ? 'image' :
@@ -204,6 +205,11 @@
 			} else {
 				this.toggle_attachment_input(false);
 			}
+=======
+			var attachment_type = 	($icon_id == 'attachment_button_audio') ? 'audio' : 
+						($icon_id == 'attachment_button_image') ? 'image' :
+						($icon_id == 'attachment_button_video') ? 'video' : false;
+>>>>>>> 6faa5602159281f0d02bd0a15d122ab9aa02f381
 
 
 		},
