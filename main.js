@@ -197,8 +197,8 @@
 			$icon.addClass('active');
 
 			var attachment_type = 	($icon_id == 'attachment_button_audio') ? 'audio' : 
-									($icon_id == 'attachment_button_image') ? 'image' :
-									($icon_id == 'attachment_button_video') ? 'video' : false;
+						($icon_id == 'attachment_button_image') ? 'image' :
+						($icon_id == 'attachment_button_video') ? 'video' : false;
 
 			this.toggle_attachment_input(attachment_type);
 
