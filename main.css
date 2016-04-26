@@ -253,8 +253,20 @@ input[type="text"] { outline-width: 0; }
 	color: #999;
 	margin-right: -4px;
 }
-.input_attachment_icon .fa.active {
+.input_attachment_icon.active {
 	color: red;
+}
+.input_attachment_icon.attached {
+	color: teal;
+}
+.attachments_input {
+	margin-top: 15px;
+}
+.attachments_input input {
+	width: 80%;
+}
+.attachments_input button {
+	width: 20%;
 }
 
 @media only screen and (max-width: 480px) {

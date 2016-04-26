@@ -191,22 +191,25 @@
 		},
 
 		toggle_attachment: function(e) {
-			var $icon = $(e.target),
-				$icon_id = $icon.attr('id');
-			$('.input_attachment_icon > .fa').removeClass('active');
-			$icon.addClass('active');
+			var $icon = $(e.target).closest('.input_attachment_icon'),
+				icon_id = $icon.attr('id');
+				$icon.toggleClass('active').siblings().removeClass('active');
 
-			var attachment_type = 	($icon_id == 'attachment_button_audio') ? 'audio' : 
-									($icon_id == 'attachment_button_image') ? 'image' :
-									($icon_id == 'attachment_button_video') ? 'video' : false;
+			if ($icon.hasClass('active')) {
+				var attachment_type = 	(icon_id == 'attachment_button_audio') ? 'audio' : 
+										(icon_id == 'attachment_button_image') ? 'image' :
+										(icon_id == 'attachment_button_video') ? 'video' : false;
 
-			this.toggle_attachment_input(attachment_type);
+				this.toggle_attachment_input(attachment_type);
+			} else {
+				this.toggle_attachment_input(false);
+			}
+
 
 		},
 		toggle_attachment_input: function(type) {
+			var $input_div = $('.attachments_input');
 			if (type) {
-
-				var $input_div = $('.attachments_input');
 				switch (type) {
 					case 'audio':
 						$input_div.html('<input type="text" placeholder="enter audio url here"><button>add</button>');
@@ -220,7 +223,8 @@
 					default: 
 						break;												
 				}
-			}
+			} else 
+				$input_div.html('');
 		}
 	});
 	var memory_add_modal = new Memory_Add_Modal();
