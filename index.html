@@ -67,7 +67,7 @@
 				<h3 class='modal_header'>Add New Memory</h3>
 				<span class='modal_close'><i class="fa fa-times" aria-hidden="true"></i></span>
 
-				<textarea id='input_memory' placeholder='here...' autofocus></textarea>
+				<textarea id='input_memory' autofocus></textarea>
 				<br>
 
 				<!-- Sliders -->
@@ -107,9 +107,15 @@
 				<!-- Attachments -->
 				<div id='input_attachments'>
 					<ul>
-						<li id='attachment_button_audio' class='input_attachment_icon'><i class="fa fa-music"></i></li>
-						<li id='attachment_button_image' class='input_attachment_icon'><i class="fa fa-picture-o"></i></li>
-						<li id='attachment_button_video' class='input_attachment_icon'><i class="fa fa-video-camera"></i></li>
+						<li id='attachment_button_audio' class='input_attachment_icon' data-attachment-type='audio'>
+							<i class="fa fa-music"></i>
+						</li>
+						<li id='attachment_button_image' class='input_attachment_icon' data-attachment-type='image'>
+							<i class="fa fa-picture-o"></i>
+						</li>
+						<li id='attachment_button_video' class='input_attachment_icon' data-attachment-type='video'>
+							<i class="fa fa-video-camera"></i>
+						</li>
 					</ul>
 				</div>
 				<div class='attachments_input'></div>

@@ -201,7 +201,7 @@ input[type="text"] { outline-width: 0; }
 .modal_header {
 	margin-top: 0;
 	font-weight: 300;
-	color: #999;
+	color: #bbb;
 }
 .modal_close {
 	position: absolute;
@@ -220,8 +220,15 @@ input[type="text"] { outline-width: 0; }
 	border-radius: 0 0 5px 5px;
 }
 #save_new_memory {
-	border-left: 1px solid #666;
+	cursor: default;
+	border-left: 1px solid #bbb;
+	color: #bbb;
 	border-bottom-right-radius: 5px;
+}
+#save_new_memory.enabled {
+	cursor: pointer;
+	color: #555;
+	border-left-color: #555;
 }
 #modal_cancel {
 	border-bottom-left-radius: 5px;

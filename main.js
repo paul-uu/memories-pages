@@ -1,36 +1,19 @@
+// ----------------------------------------------------------
+// Date stuff:
+Date.prototype.today = function () {  // today's date;
+	return (((this.getMonth()+1) < 10) ? '0':'') + (this.getMonth()+1) +'/'+ ( (this.getDate() < 10) ? '0':'') + this.getDate() +'/'+ this.getFullYear();
+};
+Date.prototype.timeNow = function () {  // current time
+	return ((this.getHours() < 10) ? '0':'') + this.getHours() +':'+ ((this.getMinutes() < 10) ? '0':'') + this.getMinutes();
+};
+var today = new Date();
+var date = today.today();
+
 (function() {
 
-	// ----------------------------------------------------------
-	// Date stuff:
-	Date.prototype.today = function () {  // today's date;
-		return (((this.getMonth()+1) < 10) ? '0':'') + (this.getMonth()+1) +'/'+ ( (this.getDate() < 10) ? '0':'') + this.getDate() +'/'+ this.getFullYear();
-	};
-	Date.prototype.timeNow = function () {  // current time
-		return ((this.getHours() < 10) ? '0':'') + this.getHours() +':'+ ((this.getMinutes() < 10) ? '0':'') + this.getMinutes();
-	};
-	var today = new Date();
-	var date = today.today();
-
-
-	/* jQuery UI Slider */
-	var $slide_handles = $('#emotion_sliders .ui-slider-handle');
-
-	$('.emotion_slider').slider({
-		range: 'min',
-		value: 0,
-		min: 0,
-		max: 5,
-		/*slide: function(e, ui) {
-			$(this).find('.slider_value').text(ui.value);
-		}*/
-	});
-
-
-	// ----------------------------------------------------------
-	// Backbone stuff:
 	
 	// --------------------
-	// Model
+	// Memory Model
 	var Memory_Model = Backbone.Model.extend({
 		defaults: {
 			'date': date,
@@ -56,8 +39,10 @@
 		}
 	});
 
+
+
 	// --------------------
-	// Collection (rename to hippocampus?)
+	// Memories Collection (rename to hippocampus?)
 	var Memory_Collection = Backbone.Collection.extend({
 		model: Memory_Model,
 		localStorage: new Backbone.LocalStorage('Memory_LocalStorage')
@@ -66,37 +51,104 @@
 	my_memory.fetch();
 
 
+
+
 	// ---------------------
 	// View for Control Panel
 	var Control_Panel = Backbone.View.extend({
 		el: $('#control_panel'),
 		events: {
-			'click #save_memory': 'save_memory',
 			'click #add_memory': 'add_memory'
 		},
 		initialize: function() {
 			this.render();
 		},
 		render: function() {
-			this.$el.find('#input_memory').val('');
-			this.$el.find('.emotion_slider').slider('value', 0);
 		},
 
 		add_memory: function() {
 			memory_add_modal.render();
-			//$('#add_memory_dialog').toggleClass('view');
+		}
+	});
+	var control_panel = new Control_Panel();
+
+
+
+
+	// -------------------------
+	// View for Add Memory Modal
+	var Memory_Add_Modal = Backbone.View.extend({
+		el: $('#add_memory_dialog'),
+		events: {
+			'click #modal_cancel'          : 'close',
+			'click .modal_close'           : 'close',
+			'click .input_attachment_icon' : 'toggle_attachment',
+			'click #save_new_memory'       : 'save_memory',
+			'keyup #input_memory'          : function() { 
+												this.validate();
+												this.new_memory.attributes.memory_text = $('#input_memory').val();
+											}
+
+		},
+		initialize: function() {
+			var view = this;
+
+			view.initialize_new_memory();
+
+			autosize($('#input_memory'));
+
+			$('.emotion_slider').slider({
+				//orientation: 'vertical',
+				change: function(e, ui) {
+					view.validate(e, ui);
+
+					var el_id = $(e.target).attr('id');
+					var prop = el_id.substring(el_id.indexOf('_') + 1, el_id.length);
+					view.new_memory.attributes.emotions[prop] = ui.value;
+				},
+				range: 'min',
+				value: 0,
+				min: 0,
+				max: 5,
+			});
+		},
+		render: function() {
+			this.$el.addClass('view');
+			$('.input_attachment_icon').removeClass('active');
+			$('#input_memory').focus();
+		},
+		values: {
+		},
+		clear: function() {
+			$('#input_memory').val('');
+			$('.emotion_slider').slider('value', 0);
+		},
+		close: function() {
+			this.$el.removeClass('view');
 		},
 
-		save_memory: function() {
+		toggle_attachment: function(e) {
+			var $icon = $(e.target).closest('.input_attachment_icon'),
+				attachment_type = $icon.attr('data-attachment-type');
+			
+			$icon.toggleClass('active').siblings().removeClass('active');
 
+			if ($icon.hasClass('active')) {
+				this.toggle_attachment_input(attachment_type);
+			} else {
+				this.toggle_attachment_input(false);
+			}
+		},
+		validate: function(slide_event, slide_ui) {
+			var view = this;
 
-			// -----------------------------------------------------------
-			// 1. Validate
 			// check for text input upon memory save
-			if (!this.$el.find('#input_memory').val()) {
-				display_noty('warning', 'topCenter', 'Please enter a memory');
+			if (! $('#input_memory').val() ) {
+				//display_noty('warning', 'topCenter', 'Please enter a memory');
+				view.handle_save_button('disable')
 				return;
 			}
+
 			// check for emotion slider value(s) upon memory save
 			var sliders_valid = false;
 			this.$el.find('.emotion_slider').each(function(i, el) {
@@ -106,112 +158,20 @@
 				}
 			}).promise().done(function() {
 				if (!sliders_valid) {
-					display_noty('warning', 'topCenter', 'Please enter an emotion value(s)');
+					//display_noty('warning', 'topCenter', 'Please enter an emotion value(s)');
+					view.handle_save_button('disable');
 					return;
-				}
-			});
-			
-
-			// -----------------------------------------------------------
-			// 2. Gather input values
-			var emotions = {},
-				input = this.$el.find('#input_memory').val(),
-				joy = this.$el.find('#slider_joy').slider('value'),
-				sadness = this.$el.find('#slider_sadness').slider('value'),
-				anger = this.$el.find('#slider_anger').slider('value'),
-				fear = this.$el.find('#slider_fear').slider('value'),
-				disgust = this.$el.find('#slider_disgust').slider('value'),
-				neutral = this.$el.find('#slider_neutral').slider('value');
-
-			if (joy)
-				emotions['joy'] = joy;
-			else if (sadness)
-				emotions['sadness'] = sadness;
-			else if (anger)
-				emotions['anger'] = anger;
-			else if (fear)
-				emotions['fear'] = fear;
-			else if (disgust)
-				emotions['disgust'] = disgust;
-			else if (neutral)
-				emotions['neutral'] = neutral;
-			else {
-				this.render();
-				return;
-			}
-
-			var new_memory = new Memory_Model({
-				'date': date,
-				'memory_text': input,
-				'emotions': {
-					'joy': joy,
-					'sadness': sadness,
-					'anger': anger,
-					'fear': fear,
-					'disgust': disgust,
-					'neutral': neutral
-				},
-				'gradient': {
-					'default': '',
-					'webkit': '',
-					'moz': ''
+				} else {
+					view.handle_save_button('enable');
 				}
 			});
 
-			// access model data via: new_memory.attributes.(properties here)
-			// convert slider input values to a linear gradient string
-			var gradient_str = emotions_to_gradient(new_memory);
-			new_memory.attributes.gradient.default = gradient_str;
-
-			my_memory.add(new_memory);
-			new_memory.save();
-			this.render();								
 		},
-	});
-	var control_panel = new Control_Panel();
-
-
-	// -------------------------
-	// View for Add Memory Modal
-	var Memory_Add_Modal = Backbone.View.extend({
-		el: $('#add_memory_dialog'),
-		events: {
-			'click #modal_cancel' : 'close',
-			'click .modal_close'  : 'close',
-			'click .input_attachment_icon': 'toggle_attachment'
-		},
-		initialize: function() {
-		},
-		render: function() {
-			this.$el.addClass('view');
-			autosize($('#input_memory'));
-			$('#input_memory').focus();
-			//this.$el.find('#input_memory').elastic().focus();
-		},
-		close: function() {
-			this.$el.removeClass('view');
-		},
-
-		toggle_attachment: function(e) {
-			var $icon = $(e.target).closest('.input_attachment_icon'),
-				icon_id = $icon.attr('id');
-				$icon.toggleClass('active').siblings().removeClass('active');
-
-
-			if ($icon.hasClass('active')) {
-				var attachment_type = 	(icon_id == 'attachment_button_audio') ? 'audio' : 
-										(icon_id == 'attachment_button_image') ? 'image' :
-										(icon_id == 'attachment_button_video') ? 'video' : false;
-
-				this.toggle_attachment_input(attachment_type);
-			} else {
-				this.toggle_attachment_input(false);
-			}
-
-			var attachment_type = 	($icon_id == 'attachment_button_audio') ? 'audio' : 
-						($icon_id == 'attachment_button_image') ? 'image' :
-						($icon_id == 'attachment_button_video') ? 'video' : false;
-
+		handle_save_button: function(action) {
+			if (action === 'enable')
+				$('#save_new_memory').addClass('enabled');
+			else if (action === 'disable')
+				$('#save_new_memory').removeClass('enabled');
 		},
 		toggle_attachment_input: function(type) {
 			var $input_div = $('.attachments_input');
@@ -226,14 +186,52 @@
 					case 'video':
 						$input_div.html('<input type="text" placeholder="enter video url here"><button>add</button>');
 						break;
-					default: 
+					default:
+						console.log('error - toggle_attachment_input');
 						break;												
 				}
 			} else 
 				$input_div.html('');
+		},
+		initialize_new_memory: function() {
+			this.new_memory = new Memory_Model({
+				'date': date,
+				'memory_text': '',
+				'emotions': {
+					'joy': '',
+					'sadness': '',
+					'anger': '',
+					'fear': '',
+					'disgust': '',
+					'neutral': ''
+				},
+				'gradient': {
+					'default': '',
+					'webkit': '',
+					'moz': ''
+				}
+			});
+		},
+		update_new_memory: function(obj_prop, value) {
+			this.new_memory[obj_prop] = value;
+		},			
+		save_memory: function() {
+
+			// access model data via: new_memory.attributes.(properties here)
+			// convert slider input values to a linear gradient string
+			var gradient_str = emotions_to_gradient(this.new_memory);
+			this.new_memory.attributes.gradient.default = gradient_str;
+
+			my_memory.add(this.new_memory);
+			this.new_memory.save();
+	
+			this.close();	
+			this.clear();		
 		}
 	});
 	var memory_add_modal = new Memory_Add_Modal();
+
+
 
 
 
@@ -272,6 +270,8 @@
 	});
 	var memory_display_view = new Memory_Display();
 	
+
+
 
 
 	// --------------------------
@@ -317,6 +317,9 @@
 		}
 		*/
 	}); 
+
+
+
 
 
 	var $memory_display = $('#memory_display');
@@ -366,6 +369,8 @@
 
 
 
+
+
 	/* --------------------------------------------------------------------------- */
 	/* Extra Functions */
 
@@ -407,9 +412,9 @@
 
 
 		for (emotion in emotions_percent_obj) {
-			if (i === (obj_len - 1)) {
+			if (i === (obj_len - 1))
 				value = ');'; // last object property / emotion; end gradient_str
-			} else {
+			else {
 				current_percentage += emotions_percent_obj[emotion];
 				value = current_percentage + '%, ';
 			}
@@ -470,5 +475,8 @@
 		types: alert, success, error, warning, information, confirm
 		layouts: top, topLeft, topCenter, topRight, centerLeft, center, centerRight, bottomLeft, bottomCenter, bottomRight, bottom
 	*/
-	
+
+
+
+
 })();
