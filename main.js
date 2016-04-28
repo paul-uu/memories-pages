@@ -84,11 +84,13 @@ var date = today.today();
 			'click .modal_close'           : 'close',
 			'click .input_attachment_icon' : 'toggle_attachment',
 			'click #save_new_memory'       : 'save_memory',
+			'click #add_audio_attachment'  : 'add_audio_attachment',
+			'click #add_image_attachment'  : 'add_image_attachment',
+			'click #add_video_attachment'  : 'add_video_attachment',						
 			'keyup #input_memory'          : function() { 
 												this.validate();
 												this.new_memory.attributes.memory_text = $('#input_memory').val();
 											}
-
 		},
 		initialize: function() {
 			var view = this;
@@ -178,13 +180,14 @@ var date = today.today();
 			if (type) {
 				switch (type) {
 					case 'audio':
-						$input_div.html('<input type="text" placeholder="enter audio url here"><button>add</button>');
+						$input_div.html('<input id="audio_text_input" data-attachment-type="audio" type="text" placeholder="enter audio url here"><button id="add_audio_attachment">add</button>');
+						$('#audio_text_input').val(this.new_memory.attributes.media.audio);
 						break;
 					case 'image':
-						$input_div.html('<input type="text" placeholder="enter image url here"><button>add</button>');
+						$input_div.html('<input id="image_text_input" data-attachment-type="image" type="text" placeholder="enter image url here"><button id="add_image_attachment">add</button>');
 						break;
 					case 'video':
-						$input_div.html('<input type="text" placeholder="enter video url here"><button>add</button>');
+						$input_div.html('<input id="video_text_input" data-attachment-type="video" type="text" placeholder="enter video url here"><button id="add_video_attachment">add</button>');
 						break;
 					default:
 						console.log('error - toggle_attachment_input');
@@ -193,10 +196,26 @@ var date = today.today();
 			} else 
 				$input_div.html('');
 		},
+		add_audio_attachment: function() {
+			var $input_val = $('#audio_text_input').val();
+			if ($input_val)
+				this.new_memory.attributes.media.audio = $input_val;
+		},
+		add_image_attachment: function() {
+			console.log('add_image_attachment()');
+		},
+		add_video_attachment: function() {
+			console.log('add_video_attachment()');
+		},					
 		initialize_new_memory: function() {
 			this.new_memory = new Memory_Model({
 				'date': date,
 				'memory_text': '',
+				'media': {
+					'image': '',
+					'video':'',
+					'audio':''
+				},				
 				'emotions': {
 					'joy': '',
 					'sadness': '',
