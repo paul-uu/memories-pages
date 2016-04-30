@@ -2,13 +2,16 @@
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}
 
 
-
 /* Base Styles */
 * { box-sizing: border-box; }
 html, 
 body { 
 	height: 100%; 
 }
+
+/* Utility Classes */
+
+.hide { display: none; }
 
 /* Layout */
 #page_container {
@@ -63,7 +66,6 @@ body {
 }
 
 
-
 /* Components */
 form {
 	height: 45px;
@@ -87,14 +89,12 @@ textarea#input_memory {
 textarea:focus,
 input[type="text"] { outline-width: 0; }
 
-
 #add_memory {
 	cursor: pointer;
 }
 #add_memory:hover {
 	color: #777;
 }
-
 
 
 /* Add Memory Modal */
@@ -199,7 +199,7 @@ input[type="text"] { outline-width: 0; }
 	overflow-y: auto;
 }
 .modal_header {
-	margin-top: 0;
+	margin: 0;
 	font-weight: 300;
 	color: #bbb;
 }
@@ -219,23 +219,25 @@ input[type="text"] { outline-width: 0; }
 	width: 100%;
 	border-radius: 0 0 5px 5px;
 }
+#modal_cancel {
+	border-right: 1px solid #555;
+	border-bottom-left-radius: 5px;
+}
 #save_new_memory {
 	cursor: default;
 	border-left: 1px solid #bbb;
 	color: #bbb;
 	border-bottom-right-radius: 5px;
+	
 }
 #save_new_memory.enabled {
 	cursor: pointer;
 	color: #555;
 	border-left-color: #555;
 }
-#modal_cancel {
-	border-bottom-left-radius: 5px;
-}
 .modal_button {
 	float: left;
-	width: 50%;
+	width: 33.3%;
 	height: 50px;
 	border-top: 1px solid #666;
 	text-align: center;
@@ -243,6 +245,7 @@ input[type="text"] { outline-width: 0; }
 	cursor: pointer;
 	background-color: white;
 }
+
 #input_attachments {
 	width: 100%;
 	vertical-align: top;
@@ -251,8 +254,16 @@ input[type="text"] { outline-width: 0; }
 	padding: 0;
 	margin: 0;
 }
+.attachment_check {
+	position: absolute;
+	top: 28px;
+	left: 56%;
+	font-size: 14px;
+	color: #555;
+}
 .input_attachment_icon {
 	display: inline-block;
+	position: relative;
 	width: 33%;
 	cursor: pointer;
 	text-align: center;
@@ -278,9 +289,9 @@ input[type="text"] { outline-width: 0; }
 
 @media only screen and (max-width: 480px) {
 	#add_memory_modal {
-		width: 95%;
+		width: 93%;
 		height: 93%;
-		margin-top: 2%;
+		margin-top: 6.5%;
 	}
 	.modal_close {
 		right: 15px;
@@ -288,6 +299,9 @@ input[type="text"] { outline-width: 0; }
 	}
 	.modal_content {
 		padding: 15px;
+	}
+	#modal_buttons {
+		font-size: 14px;
 	}
 	#input_memory {
 		width: 100%;
@@ -297,6 +311,7 @@ input[type="text"] { outline-width: 0; }
 	}
 	.emotion_slider.ui-slider {
 		width: 95%;
+		margin-left: 3%;
 		display: block;
 		margin-bottom: 45px;
 	}
@@ -304,11 +319,7 @@ input[type="text"] { outline-width: 0; }
 		display: block;
 		margin-top: 15px;
 	}
-
-
 }
-
-
 
 
 #save_memory {
@@ -327,8 +338,6 @@ input[type="text"] { outline-width: 0; }
 #save_memory:hover {
 	background-color: #ddd;
 }
-
-
 
 
 /* Memory display */
@@ -387,7 +396,3 @@ input[type="text"] { outline-width: 0; }
 	-moz-box-shadow: 0 0 8px #f0f8ff; 
 	box-shadow:0 0 8px #f0f8ff;
 }
-
-
-
-

@@ -86,7 +86,7 @@ var date = today.today();
 			'click #save_new_memory'       : 'save_memory',
 			'click #add_audio_attachment'  : 'add_audio_attachment',
 			'click #add_image_attachment'  : 'add_image_attachment',
-			'click #add_video_attachment'  : 'add_video_attachment',						
+			'click #add_video_attachment'  : 'add_video_attachment',			
 			'keyup #input_memory'          : function() { 
 												this.validate();
 												this.new_memory.attributes.memory_text = $('#input_memory').val();
@@ -118,6 +118,31 @@ var date = today.today();
 			this.$el.addClass('view');
 			$('.input_attachment_icon').removeClass('active');
 			$('#input_memory').focus();
+		},
+		render_model_data: function() {
+
+			var memory = this.new_memory.attributes;
+
+			// attachments:
+			for (attachment in memory.media) {
+				this.render_attachment_status(attachment, memory.media[attachment])
+			}
+		},
+		render_attachment_status: function(attachment_type, attachment_value) {
+			switch (attachment_type) {
+				case 'audio':
+					var $attch_icon = $('#attachment_button_audio > .attachment_check');
+					attachment_value ? $attch_icon.removeClass('hide') : $attch_icon.addClass('hide');
+					break;
+				case 'image':
+					var $attch_icon = $('#attachment_button_image > .attachment_check');
+					attachment_value ? $attch_icon.removeClass('hide') : $attch_icon.addClass('hide');
+					break;
+				case 'video':
+					var $attch_icon = $('#attachment_button_video > .attachment_check');
+					attachment_value ? $attch_icon.removeClass('hide') : $attch_icon.addClass('hide');
+					break;
+			}
 		},
 		values: {
 		},
@@ -170,24 +195,26 @@ var date = today.today();
 
 		},
 		handle_save_button: function(action) {
-			if (action === 'enable')
+			if (action === 'enable') {
 				$('#save_new_memory').addClass('enabled');
-			else if (action === 'disable')
+			}
+			else if (action === 'disable') {
 				$('#save_new_memory').removeClass('enabled');
+			}
 		},
 		toggle_attachment_input: function(type) {
 			var $input_div = $('.attachments_input');
 			if (type) {
 				switch (type) {
 					case 'audio':
-						$input_div.html('<input id="audio_text_input" data-attachment-type="audio" type="text" placeholder="enter audio url here"><button id="add_audio_attachment">add</button>');
+						$input_div.html('<input id="audio_text_input" data-attachment-type="audio" type="text" placeholder="enter audio url here"><button id="add_audio_attachment">update</button>');
 						$('#audio_text_input').val(this.new_memory.attributes.media.audio);
 						break;
 					case 'image':
-						$input_div.html('<input id="image_text_input" data-attachment-type="image" type="text" placeholder="enter image url here"><button id="add_image_attachment">add</button>');
+						$input_div.html('<input id="image_text_input" data-attachment-type="image" type="text" placeholder="enter image url here"><button id="add_image_attachment">update</button>');
 						break;
 					case 'video':
-						$input_div.html('<input id="video_text_input" data-attachment-type="video" type="text" placeholder="enter video url here"><button id="add_video_attachment">add</button>');
+						$input_div.html('<input id="video_text_input" data-attachment-type="video" type="text" placeholder="enter video url here"><button id="add_video_attachment">update</button>');
 						break;
 					default:
 						console.log('error - toggle_attachment_input');
@@ -198,15 +225,22 @@ var date = today.today();
 		},
 		add_audio_attachment: function() {
 			var $input_val = $('#audio_text_input').val();
-			if ($input_val)
-				this.new_memory.attributes.media.audio = $input_val;
+			this.new_memory.attributes.media.audio = $input_val;
+			this.render_model_data();
 		},
 		add_image_attachment: function() {
-			console.log('add_image_attachment()');
+			var $input_val = $('#image_text_input').val();
+			this.new_memory.attributes.media.image = $input_val;
+			this.render_model_data();
 		},
 		add_video_attachment: function() {
-			console.log('add_video_attachment()');
-		},					
+			var $input_val = $('#video_text_input').val();
+			this.new_memory.attributes.media.video = $input_val;
+			this.render_model_data();
+		},
+		validate_url: function(url) {
+			return url.match(/^HTTP|HTTP|http(s)?:\/\/(www\.)?[A-Za-z0-9]+([\-\.]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,40}(:[0-9]{1,40})?(\/.*)?$/);		
+		},		
 		initialize_new_memory: function() {
 			this.new_memory = new Memory_Model({
 				'date': date,
@@ -215,7 +249,7 @@ var date = today.today();
 					'image': '',
 					'video':'',
 					'audio':''
-				},				
+				},
 				'emotions': {
 					'joy': '',
 					'sadness': '',
@@ -494,8 +528,6 @@ var date = today.today();
 		types: alert, success, error, warning, information, confirm
 		layouts: top, topLeft, topCenter, topRight, centerLeft, center, centerRight, bottomLeft, bottomCenter, bottomRight, bottom
 	*/
-
-
 
 
 })();
