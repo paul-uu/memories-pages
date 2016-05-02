@@ -9,6 +9,7 @@ Date.prototype.timeNow = function () {  // current time
 var today = new Date();
 var date = today.today();
 
+
 (function() {
 
 	
@@ -45,7 +46,10 @@ var date = today.today();
 	// Memories Collection (rename to hippocampus?)
 	var Memory_Collection = Backbone.Collection.extend({
 		model: Memory_Model,
-		localStorage: new Backbone.LocalStorage('Memory_LocalStorage')
+		localStorage: new Backbone.LocalStorage('Memory_LocalStorage'),
+		comparator: function(a, b) {
+			return a.get('date') < b.get('date') ? -1 : 1;
+		}
 	});
 	var my_memory = new Memory_Collection();
 	my_memory.fetch();
@@ -58,17 +62,35 @@ var date = today.today();
 	var Control_Panel = Backbone.View.extend({
 		el: $('#control_panel'),
 		events: {
-			'click #add_memory': 'add_memory'
+			'click #add_memory'      : 'add_memory',
+			'change #sort_select'    : 'collection_sort'
 		},
 		initialize: function() {
 			this.render();
 		},
 		render: function() {
 		},
-
 		add_memory: function() {
 			memory_add_modal.render();
-		}
+		},
+		collection_sort: function(e) {
+			var val = $(e.currentTarget).val();
+
+			if ( val === 'newest' || val === 'oldest' ) {
+				console.log('by date');
+			} else {
+				//memories.sort( val );
+				memories.sort_by_emotion(val);
+				/*
+				memories.collection.sortBy(function(model) {
+					return model.attributes.emotions[val];
+				});
+				*/
+			}
+			//console.log(memories);
+			//memories.render();
+
+		},
 	});
 	var control_panel = new Control_Panel();
 
@@ -336,14 +358,9 @@ var date = today.today();
 			'click': 'view_memory',
 		},
 		template: _.template($('#memory_template').html()),
-		initialize: function() {
-			this.render();
-		},
 		render: function() {
 			this.$el.html(this.template(this.model));
-			//this.$el.css({'background': this.model.attributes.gradient.default.toString() });
 			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
-
 			return this;
 		},
 		remove_memory: function() {
@@ -381,29 +398,25 @@ var date = today.today();
 	var Memories_View = Backbone.View.extend({
 		el: $('#memory_container'),
 		events: {
+			'click .sort_by_emotion' : 'sort_by_emotion'
 		},
 		initialize: function() {
+
 			this.collection = my_memory;
-			this.collection.toJSON();
 			this.render();
-			this.collection.on('add', this.render_item, this);
-			this.collection.on('remove', this.remove_item, this);
+
+			this.collection.on('add', this.render, this);
+			this.collection.on('remove', this.render, this);
 		},
+
 		render: function() {
 			this.$el.html('');
-			var that = this;
-			_.each(this.collection.models, function(model) {
-				that.render_item(model);
+			this.collection.each(function(memory) {
+				var memory_view = new Memory_View({model: memory});
+				this.$el.append(memory_view.render().el);
 			}, this);
-		},
-		render_item: function(model) {
-			if (model) {
-				var model_view = new Memory_View({ model: model });
-				this.$el.append(model_view.render().el);
-			}
-		},
-		remove_item: function() {
-			this.render();
+
+			return this;
 		},
 		delete_collection: function() {
 			this.collection.each(function(model) {
@@ -412,8 +425,18 @@ var date = today.today();
 			this.render();
 		},
 		sort_by_emotion: function(emotion) {
+			this.collection.comparator = function(a, b) {
+				return a.get('emotions')[emotion] < b.get('emotions')[emotion] ? -1 : 1;
+			}
+			this.collection.sort();
+			this.render();
 		},
-		sort_by_date: function() {
+		sort_bt_date: function(direction) {
+			this.collection.comparator = function(a, b) {
+				return a.get('date') < b.get('date') ? -1 : 1;
+			}
+			this.collection.sort();
+			this.render();
 		}
 
 	});
@@ -529,5 +552,5 @@ var date = today.today();
 		layouts: top, topLeft, topCenter, topRight, centerLeft, center, centerRight, bottomLeft, bottomCenter, bottomRight, bottom
 	*/
 
-
 })();
+
