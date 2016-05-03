@@ -41,7 +41,7 @@ body {
 	margin: 15px 0;
 }
 #memory_container {
-	padding: 150px 5px 1px 5px;
+	padding: 150px 2px 1px 2px;
 	min-height: 100%;
 	z-index: 1;
 	background-color: #F7F7F7;

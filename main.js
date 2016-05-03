@@ -18,24 +18,24 @@ var date = today.today();
 	var Memory_Model = Backbone.Model.extend({
 		defaults: {
 			'date': date,
-			'memory_text': '',
+			'memory_text': null,
 			'media': {
-				'image': '',
-				'video':'',
-				'audio':''
+				'image': null,
+				'video':null,
+				'audio':null
 			},
 			'emotions': {
-				'joy': 0,
-				'sadness': 0,
-				'anger': 0,
-				'fear': 0,
-				'disgust': 0,
-				'neutral': 0
+				'joy': null,
+				'sadness': null,
+				'anger': null,
+				'fear': null,
+				'disgust': null,
+				'neutral': null
 			},
 			'gradient': {
-				'default': '',
-				'webkit': '',
-				'moz': ''
+				'default': null,
+				'webkit': null,
+				'moz': null
 			}
 		}
 	});
@@ -75,21 +75,10 @@ var date = today.today();
 		},
 		collection_sort: function(e) {
 			var val = $(e.currentTarget).val();
-
-			if ( val === 'newest' || val === 'oldest' ) {
+			if ( val === 'newest' || val === 'oldest' )
 				console.log('by date');
-			} else {
-				//memories.sort( val );
+			else
 				memories.sort_by_emotion(val);
-				/*
-				memories.collection.sortBy(function(model) {
-					return model.attributes.emotions[val];
-				});
-				*/
-			}
-			//console.log(memories);
-			//memories.render();
-
 		},
 	});
 	var control_panel = new Control_Panel();
@@ -105,6 +94,7 @@ var date = today.today();
 			'click #modal_cancel'          : 'close',
 			'click .modal_close'           : 'close',
 			'click .input_attachment_icon' : 'toggle_attachment',
+			'click #modal_reset'           : 'reset',
 			'click #save_new_memory'       : 'save_memory',
 			'click #add_audio_attachment'  : 'add_audio_attachment',
 			'click #add_image_attachment'  : 'add_image_attachment',
@@ -117,15 +107,13 @@ var date = today.today();
 		initialize: function() {
 			var view = this;
 
+			view.new_memory = null;
 			view.initialize_new_memory();
-
 			autosize($('#input_memory'));
-
 			$('.emotion_slider').slider({
 				//orientation: 'vertical',
 				change: function(e, ui) {
 					view.validate(e, ui);
-
 					var el_id = $(e.target).attr('id');
 					var prop = el_id.substring(el_id.indexOf('_') + 1, el_id.length);
 					view.new_memory.attributes.emotions[prop] = ui.value;
@@ -145,10 +133,19 @@ var date = today.today();
 
 			var memory = this.new_memory.attributes;
 
+			// emotions:
+			for (emotion in memory.emotions) {
+				this.render_emotion_slider(emotion, memory.emotions[emotion]);
+			}
+
 			// attachments:
 			for (attachment in memory.media) {
 				this.render_attachment_status(attachment, memory.media[attachment])
 			}
+		},
+		render_emotion_slider: function(emotion_type, emotion_value) {
+			console.log('emotion_type: ' + emotion_type + ', emotion_value: ' + emotion_value);
+			$('#slider_' + emotion_type).slider('value', emotion_value);
 		},
 		render_attachment_status: function(attachment_type, attachment_value) {
 			switch (attachment_type) {
@@ -273,12 +270,12 @@ var date = today.today();
 					'audio':''
 				},
 				'emotions': {
-					'joy': '',
-					'sadness': '',
-					'anger': '',
-					'fear': '',
-					'disgust': '',
-					'neutral': ''
+					'joy': 0,
+					'sadness': 0,
+					'anger': 0,
+					'fear': 0,
+					'disgust': 0,
+					'neutral': 0
 				},
 				'gradient': {
 					'default': '',
@@ -286,13 +283,10 @@ var date = today.today();
 					'moz': ''
 				}
 			});
-		},
-		update_new_memory: function(obj_prop, value) {
-			this.new_memory[obj_prop] = value;
-		},			
+		},		
 		save_memory: function() {
 
-			// access model data via: new_memory.attributes.(properties here)
+
 			// convert slider input values to a linear gradient string
 			var gradient_str = emotions_to_gradient(this.new_memory);
 			this.new_memory.attributes.gradient.default = gradient_str;
@@ -302,6 +296,11 @@ var date = today.today();
 	
 			this.close();	
 			this.clear();		
+		},
+		reset: function() {
+			console.log('reset()');
+			this.initialize_new_memory();
+			this.render_model_data();
 		}
 	});
 	var memory_add_modal = new Memory_Add_Modal();
@@ -338,9 +337,7 @@ var date = today.today();
 		},
 		delete_memory: function() {
 			this.current_memory.destroy();
-
 			this.close_display();
-			//memories.render();
 		}
 	});
 	var memory_display_view = new Memory_Display();
@@ -376,18 +373,8 @@ var date = today.today();
 				this.$el.addClass('memory-active');
 				memory_display_view.render(this.model);				
 			}
-		},
-		/*
-		add_gradient: function($el) {
-			var m = this.model.attributes;
-			$(this).css({
-				'background-color': m.gradient,
-				'background-color': m.webkit_gradient
-			});
 		}
-		*/
 	}); 
-
 
 
 
@@ -438,10 +425,8 @@ var date = today.today();
 			this.collection.sort();
 			this.render();
 		}
-
 	});
 	var memories = new Memories_View();
-
 
 
 
