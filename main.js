@@ -9,7 +9,6 @@ Date.prototype.timeNow = function () {  // current time
 var today = new Date();
 var date = today.today();
 
-
 (function() {
 
 	
