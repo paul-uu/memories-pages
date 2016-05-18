@@ -24,18 +24,88 @@ var date = today.today();
 				'audio':null
 			},
 			'emotions': {
-				'joy': null,
-				'sadness': null,
-				'anger': null,
-				'fear': null,
-				'disgust': null,
-				'neutral': null
+				'joy': {
+					'value': null,
+					'percentage': null
+				},
+				'sadness': {
+					'value': null,
+					'percentage': null
+				},
+				'anger': {
+					'value': null,
+					'percentage': null
+				},
+				'fear': {
+					'value': null,
+					'percentage': null
+				},
+				'disgust': {
+					'value': null,
+					'percentage': null
+				},
+				'neutral': {
+					'value': null,
+					'percentage': null
+				}
 			},
 			'gradient': {
 				'default': null,
 				'webkit': null,
 				'moz': null
 			}
+		},
+		emotion_vals_to_percentages: function() {
+
+			var emotions = this.attributes.emotions,
+				total = 0;
+			/* calculate total of emotion values */
+			for(var emotion in emotions) {
+				if (emotions[emotion].value)
+					total += emotions[emotion].value;
+			}
+			/* assign percentage values to emotions using total */
+			for (var emotion in emotions) {
+				if (emotions[emotion].value)
+					emotions[emotion].percentage = Math.floor( (emotions[emotion].value / total) * 100);
+			}
+		},
+		percentages_to_gradient_string: function() {
+
+			var current_percentage = 0,
+				emotions = this.attributes.emotions,
+				num_of_emotions = 0,
+				i = 1, /* to act as index in the for in loop */
+				str_value,
+				gradient_str = 'linear-gradient(to bottom, '; /* partial css linear-gradient string */
+
+			// determine number of emotions with values/percentages
+			for ( var emotion in emotions ) 
+				if (emotions[emotion].percentage) num_of_emotions++;
+
+			// if only 1 emotion value, linear gradient is not used
+			if (num_of_emotions === 1) {
+				for (emotion in emotions)
+					if (emotions[emotion].percentage) {
+						this.attributes.gradient.default = get_emotion_color(emotion);
+						return;
+					}
+			}
+
+			// build linear-gradient string
+			for (emotion in emotions) {
+				if (emotions[emotion].percentage) {
+					if (i === num_of_emotions)
+						str_value = ');'; /* this ends the css gradient_str */
+					else {
+						current_percentage += emotions[emotion].percentage;
+						str_value = current_percentage + '%, ';
+					}
+					gradient_str += get_emotion_color(emotion) + ' ' + str_value;
+					i++;		
+				}
+			}
+			this.attributes.gradient.default = gradient_str;
 		}
 	});
 
@@ -47,6 +117,7 @@ var date = today.today();
 		model: Memory_Model,
 		localStorage: new Backbone.LocalStorage('Memory_LocalStorage'),
 		comparator: function(a, b) {
+			/*console.log('a: ' + a.get('date') + ' --- b: ' + b.get('date'));*/
 			return a.get('date') < b.get('date') ? -1 : 1;
 		}
 	});
@@ -115,7 +186,7 @@ var date = today.today();
 					view.validate(e, ui);
 					var el_id = $(e.target).attr('id');
 					var prop = el_id.substring(el_id.indexOf('_') + 1, el_id.length);
-					view.new_memory.attributes.emotions[prop] = ui.value;
+					view.new_memory.attributes.emotions[prop]['value'] = ui.value;
 				},
 				range: 'min',
 				value: 0,
@@ -269,12 +340,30 @@ var date = today.today();
 					'audio':''
 				},
 				'emotions': {
-					'joy': 0,
-					'sadness': 0,
-					'anger': 0,
-					'fear': 0,
-					'disgust': 0,
-					'neutral': 0
+					'joy': {
+						'value': 0,
+						'percentage': 0
+					},
+					'sadness': {
+						'value': 0,
+						'percentage': 0
+					},
+					'anger': {
+						'value': 0,
+						'percentage': 0
+					},
+					'fear': {
+						'value': 0,
+						'percentage': 0
+					},
+					'disgust': {
+						'value': 0,
+						'percentage': 0
+					},
+					'neutral': {
+						'value': 0,
+						'percentage': 0
+					}
 				},
 				'gradient': {
 					'default': '',
@@ -285,16 +374,14 @@ var date = today.today();
 		},		
 		save_memory: function() {
 
-
-			// convert slider input values to a linear gradient string
-			var gradient_str = emotions_to_gradient(this.new_memory);
-			this.new_memory.attributes.gradient.default = gradient_str;
+			this.new_memory.emotion_vals_to_percentages();
+			this.new_memory.percentages_to_gradient_string();
 
 			my_memory.add(this.new_memory);
 			this.new_memory.save();
 	
-			this.close();	
-			this.clear();		
+			this.close();
+			this.clear();
 		},
 		reset: function() {
 			console.log('reset()');
@@ -303,8 +390,6 @@ var date = today.today();
 		}
 	});
 	var memory_add_modal = new Memory_Add_Modal();
-
-
 
 
 
@@ -378,7 +463,8 @@ var date = today.today();
 
 
 
-	var $memory_display = $('#memory_display');
+	var $memory_display = $('#memory_display'),
+		$memory_number  = $('#memories_num');
 	// --------------------------
 	// View for Memory Collection
 	var Memories_View = Backbone.View.extend({
@@ -401,7 +487,7 @@ var date = today.today();
 				var memory_view = new Memory_View({model: memory});
 				this.$el.append(memory_view.render().el);
 			}, this);
-
+			$memory_number.text( this.$el.children('.memory').length );
 			return this;
 		},
 		delete_collection: function() {
@@ -412,7 +498,7 @@ var date = today.today();
 		},
 		sort_by_emotion: function(emotion) {
 			this.collection.comparator = function(a, b) {
-				return a.get('emotions')[emotion] < b.get('emotions')[emotion] ? -1 : 1;
+				return a.get('emotions')[emotion]['percentage'] < b.get('emotions')[emotion]['percentage'] ? -1 : 1;
 			}
 			this.collection.sort();
 			this.render();
@@ -433,57 +519,6 @@ var date = today.today();
 
 	/* --------------------------------------------------------------------------- */
 	/* Extra Functions */
-
-	function emotions_to_gradient(memory_model) {
-
-		var emotions = {},
-			m = memory_model.attributes.emotions;
-
-		if (m.joy)
-			emotions['joy'] = m.joy;
-		if (m.sadness)
-			emotions['sadness'] = m.sadness;
-		if (m.anger)
-			emotions['anger'] = m.anger;
-		if (m.fear)
-			emotions['fear'] = m.fear;
-		if (m.disgust)
-			emotions['disgust'] = m.disgust;
-		if (m.neutral)
-			emotions['neutral'] = m.neutral;
-
-
-		// only one emotion value, no gradient
-		if (Object.keys(emotions).length == 1) return get_emotion_color(Object.keys(emotions)[0]);
-
-
-		// convert emotion slider value to it's percentage
-		var emotions_percent_obj = _.mapObject(emotions, function(val, key) {
-			return Math.floor( (val/sum_obj_values(emotions)) * 100 );
-		});
-
-
-		// build css linear gradient string
-		var current_percentage = 0,
-			i = 0,
-			obj_len = Object.keys(emotions_percent_obj).length,
-			value,
-			gradient_str = 'linear-gradient(to bottom, ';
-
-
-		for (emotion in emotions_percent_obj) {
-			if (i === (obj_len - 1))
-				value = ');'; // last object property / emotion; end gradient_str
-			else {
-				current_percentage += emotions_percent_obj[emotion];
-				value = current_percentage + '%, ';
-			}
-			gradient_str += get_emotion_color(emotion) + ' ' + value;
-			i++;
-		}
-		return gradient_str;
-	}
-
 
 	// Sum all values (that are numbers) in an object
 	function sum_obj_values(obj) {
