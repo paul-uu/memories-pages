@@ -1,16 +1,40 @@
-// ----------------------------------------------------------
-// Date stuff:
-Date.prototype.today = function () {  // today's date;
-	return (((this.getMonth()+1) < 10) ? '0':'') + (this.getMonth()+1) +'/'+ ( (this.getDate() < 10) ? '0':'') + this.getDate() +'/'+ this.getFullYear();
-};
-Date.prototype.timeNow = function () {  // current time
-	return ((this.getHours() < 10) ? '0':'') + this.getHours() +':'+ ((this.getMinutes() < 10) ? '0':'') + this.getMinutes();
-};
-var today = new Date(),
-	date = today.today(),
-	time = today.timeNow();
+/* --------------------------------------------------------------- */
+/* Date stuff: */
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var days   = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var today = new Date();
+var year  = today.getFullYear(),
+	month = months[today.getMonth()],
+	date  = today.getDate(),
+	day   = days[today.getDay()],
+	hour = today.getHours(),
+	mins = today.getMinutes(),
+	raw  = Date.now();
+
+var am_pm = hour > 12 ? 'pm': 'am';
+var time_string = (hour % 12).toString() + ':' + mins.toString() + ' ' + am_pm;
 
 
+/* --------------------------------------------------------------- */
+/* dynamically correct height of #aggregate_meter */
+var $control_panel = $('#control_panel'),
+	$aggregate_meter = $('#aggregate_meter'),
+	$window = $(window);
+
+function update_aggregate_meter_height() {
+	var cp_height = $control_panel.height();	
+	$aggregate_meter.css('height','calc(100% - ' + cp_height.toString() + 'px)');
+}
+$window.on('resize', function() {
+	update_aggregate_meter_height();	
+});
+update_aggregate_meter_height();
+
+
+
+
+
+/* --------------------------------------------------------------- */
 (function() {
 
 	
@@ -18,8 +42,15 @@ var today = new Date(),
 	// Memory Model
 	var Memory_Model = Backbone.Model.extend({
 		defaults: {
-			'date': date,
-			'time': time,
+
+			'date_time': {
+				'year': year,
+				'month': month,
+				'date': date,
+				'day': day,
+				'time': time_string,
+				'raw': raw
+			},
 			'memory_text': null,
 			'media': {
 				'image': null,
@@ -90,7 +121,7 @@ var today = new Date(),
 			if (num_of_emotions === 1) {
 				for (emotion in emotions)
 					if (emotions[emotion].percentage) {
-						this.attributes.gradient.default = get_emotion_color(emotion);
+						this.attributes.gradient.default = emotion_translate(emotion, 'color');
 						return;
 					}
 			}
@@ -104,7 +135,7 @@ var today = new Date(),
 						current_percentage += emotions[emotion].percentage;
 						str_value = current_percentage + '%, ';
 					}
-					gradient_str += get_emotion_color(emotion) + ' ' + str_value;
+					gradient_str += emotion_translate(emotion, 'color') + ' ' + str_value;
 					i++;		
 				}
 			}
@@ -160,7 +191,7 @@ var today = new Date(),
 		collection_sort: function(e) {
 			var val = $(e.currentTarget).val();
 			if ( val === 'newest' || val === 'oldest' )
-				console.log('by date');
+				memories.sort_by_date(val);
 			else
 				memories.sort_by_emotion(val);
 		},
@@ -426,7 +457,16 @@ var today = new Date(),
 			this.$el.animate({
 				top: '96px'
 			}, 850, 'easeOutQuart');
-			this.$el.find('.memory-display-date').text(model.attributes.date);
+
+			this.$el.find('.memory-display-day').text(model.attributes.date_time.day);
+			this.$el.find('.memory-display-time').text(model.attributes.date_time.time);			
+			this.$el.find('.memory-display-month').text(model.attributes.date_time.month);
+			this.$el.find('.memory-display-date').text(model.attributes.date_time.date);
+			this.$el.find('.memory-display-year').text(model.attributes.date_time.year);
+
+								
+
+
 			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
 		},
 		current_memory: '',
@@ -514,6 +554,7 @@ var today = new Date(),
 			});
 			this.render();
 		},
+
 		sort_by_emotion: function(emotion) {
 			this.collection.comparator = function(a, b) {
 				return a.get('emotions')[emotion]['percentage'] < b.get('emotions')[emotion]['percentage'] ? -1 : 1;
@@ -522,9 +563,16 @@ var today = new Date(),
 			this.render();
 		},
 		sort_by_date: function(direction) {
-			this.collection.comparator = function(a, b) {
-				return a.get('date') < b.get('date') ? -1 : 1;
+			if (direction === 'newest') {
+				this.collection.comparator = function(a, b) {
+					return a.get('date_time')['raw'] < b.get('date_time')['raw'] ? -1 : 1;
+				}				
+			} else if (direction === 'oldest') {
+				this.collection.comparator = function(a, b) {
+					return a.get('date_time')['raw'] > b.get('date_time')['raw'] ? -1 : 1;
+				}		
 			}
+
 			this.collection.sort();
 			this.render();
 		},
@@ -541,10 +589,11 @@ var today = new Date(),
 			var filtered = this.collection.filter(function(memory) {
 				return (memory.get('emotions')[emotion]['value'] > 0);
 			});
-			$('#memories_qty_label_prefix').text(emotion);
+			$('#memories_qty_label_prefix').text( emotion_translate(emotion, 'adjective') );
 			this.collection.reset(filtered);
 			this.sort_by_emotion(emotion);
-		}
+		},
+		/* todo: filter by date - month/year/range/day of week */
 	});
 	var memories = new Memories_View(my_memory);
 
@@ -565,28 +614,37 @@ var today = new Date(),
 		return sum;
 	}
 
-	function get_emotion_color(emotion_str) {
-		switch (emotion_str) {
+
+
+	function emotion_translate(emotion, flag) {
+		/* 
+			emotion => flag
+			flags:
+			'color' returns corresponding hex value
+			'adjective' returns corresponding adjective
+		*/
+		switch (emotion) {
 			case 'joy':
-				return '#F5F317';
+				return flag === 'color' ? '#F5F317' : 'happy';
 				break;
 			case 'sadness':
-				return '#5380be';
+				return flag === 'color' ? '#5380be' : 'sad';
 				break;
 			case 'anger':
-				return '#db373e';
+				return flag === 'color' ? '#db373e' : 'angry';
 				break;
 			case 'fear':
-				return '#c3648e';
+				return flag === 'color' ? '#c3648e' : 'scary';
 				break;
 			case 'disgust':
-				return '#73c557';
+				return flag === 'color' ? '#73c557' : 'disgusting';
 				break;
 			case 'neutral':
-				return '#ddd';
+				return flag === 'color' ? '#ddd' : 'neutral';
 				break;																		
-		}
+		}		
 	}
+
 
 
 	/* Utility Functions */
