@@ -6,8 +6,10 @@ Date.prototype.today = function () {  // today's date;
 Date.prototype.timeNow = function () {  // current time
 	return ((this.getHours() < 10) ? '0':'') + this.getHours() +':'+ ((this.getMinutes() < 10) ? '0':'') + this.getMinutes();
 };
-var today = new Date();
-var date = today.today();
+var today = new Date(),
+	date = today.today(),
+	time = today.timeNow();
+
 
 (function() {
 
@@ -17,6 +19,7 @@ var date = today.today();
 	var Memory_Model = Backbone.Model.extend({
 		defaults: {
 			'date': date,
+			'time': time,
 			'memory_text': null,
 			'media': {
 				'image': null,
@@ -119,10 +122,20 @@ var date = today.today();
 		comparator: function(a, b) {
 			/*console.log('a: ' + a.get('date') + ' --- b: ' + b.get('date'));*/
 			return a.get('date') < b.get('date') ? -1 : 1;
+		},
+		greaterThan: function(value) {
+			
+			var filtered = this.filter(function(memory) {
+				return memory.get('emotions')[value].percentage > 0;
+			});
+			return new Memory_Collection(filtered);
 		}
 	});
 	var my_memory = new Memory_Collection();
+	var superset = new Memory_Collection();
 	my_memory.fetch();
+	superset.fetch();
+
 
 
 
@@ -133,7 +146,8 @@ var date = today.today();
 		el: $('#control_panel'),
 		events: {
 			'click #add_memory'      : 'add_memory',
-			'change #sort_select'    : 'collection_sort'
+			'change #sort_select'    : 'collection_sort',
+			'change #filter_select'  : 'filter_by'
 		},
 		initialize: function() {
 			this.render();
@@ -150,6 +164,10 @@ var date = today.today();
 			else
 				memories.sort_by_emotion(val);
 		},
+		filter_by: function(e) {
+			var filter = $(e.currentTarget).val();
+			memories.filter_by_emotion(filter);
+		}
 	});
 	var control_panel = new Control_Panel();
 
@@ -172,7 +190,7 @@ var date = today.today();
 			'keyup #input_memory'          : function() { 
 												this.validate();
 												this.new_memory.attributes.memory_text = $('#input_memory').val();
-											}
+											 }
 		},
 		initialize: function() {
 			var view = this;
@@ -470,7 +488,7 @@ var date = today.today();
 	var Memories_View = Backbone.View.extend({
 		el: $('#memory_container'),
 		events: {
-			'click .sort_by_emotion' : 'sort_by_emotion'
+			'click .sort_by_emotion' : 'sort_by_emotion',
 		},
 		initialize: function() {
 
@@ -503,15 +521,32 @@ var date = today.today();
 			this.collection.sort();
 			this.render();
 		},
-		sort_bt_date: function(direction) {
+		sort_by_date: function(direction) {
 			this.collection.comparator = function(a, b) {
 				return a.get('date') < b.get('date') ? -1 : 1;
 			}
 			this.collection.sort();
 			this.render();
+		},
+
+		// triggered from control panel view
+		filter_by_emotion: function(emotion) {
+
+			this.collection.reset(superset.toJSON());
+			if (emotion === 'all') {
+				$('#memories_qty_label_prefix').text('');
+				this.render();
+				return;
+			}
+			var filtered = this.collection.filter(function(memory) {
+				return (memory.get('emotions')[emotion]['value'] > 0);
+			});
+			$('#memories_qty_label_prefix').text(emotion);
+			this.collection.reset(filtered);
+			this.sort_by_emotion(emotion);
 		}
 	});
-	var memories = new Memories_View();
+	var memories = new Memories_View(my_memory);
 
 
 
