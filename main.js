@@ -151,11 +151,9 @@ update_aggregate_meter_height();
 		model: Memory_Model,
 		localStorage: new Backbone.LocalStorage('Memory_LocalStorage'),
 		comparator: function(a, b) {
-			/*console.log('a: ' + a.get('date') + ' --- b: ' + b.get('date'));*/
-			return a.get('date') < b.get('date') ? -1 : 1;
+			return a.get('date_time')['raw'] < b.get('date_time')['raw'] ? -1 : 1;
 		},
 		greaterThan: function(value) {
-			
 			var filtered = this.filter(function(memory) {
 				return memory.get('emotions')[value].percentage > 0;
 			});
@@ -263,7 +261,6 @@ update_aggregate_meter_height();
 			}
 		},
 		render_emotion_slider: function(emotion_type, emotion_value) {
-			console.log('emotion_type: ' + emotion_type + ', emotion_value: ' + emotion_value);
 			$('#slider_' + emotion_type).slider('value', emotion_value);
 		},
 		render_attachment_status: function(attachment_type, attachment_value) {
@@ -281,8 +278,6 @@ update_aggregate_meter_height();
 					attachment_value ? $attch_icon.removeClass('hide') : $attch_icon.addClass('hide');
 					break;
 			}
-		},
-		values: {
 		},
 		clear: function() {
 			$('#input_memory').val('');
@@ -455,24 +450,28 @@ update_aggregate_meter_height();
 		render: function(model) {
 			this.current_memory = model;
 			this.$el.animate({
-				top: '96px'
+				top: '98px'
 			}, 850, 'easeOutQuart');
+
+			$('.emotions-meter-segment').css('width', 0);
+
+			var emotions = model.attributes.emotions;
+			for (var emotion in emotions) {
+				if (emotions[emotion]['percentage'])
+					$('.segment-' + emotion).css('width', emotions[emotion]['percentage']+'%');
+			}
 
 			this.$el.find('.memory-display-day').text(model.attributes.date_time.day);
 			this.$el.find('.memory-display-time').text(model.attributes.date_time.time);			
 			this.$el.find('.memory-display-month').text(model.attributes.date_time.month);
 			this.$el.find('.memory-display-date').text(model.attributes.date_time.date);
 			this.$el.find('.memory-display-year').text(model.attributes.date_time.year);
-
-								
-
-
 			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
 		},
 		current_memory: '',
 		close_display: function() {
 			this.$el.animate({
-				top: '-260px'
+				top: '-265px'
 			}, 850, 'easeOutQuart', function() {
 				$('.memory-active').removeClass('memory-active');
 			});

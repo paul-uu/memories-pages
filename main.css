@@ -41,12 +41,11 @@ body {
 	margin: 15px 0;
 }
 #memory_display {
-	height: 350px;
 	z-index: 2;
 	background-color: rgba(255, 255, 255, 0.8);
 	width: calc(100% - 30px);
 	position: absolute;
-	top: -260px;
+	top: -265px;
 	left: 15px;	
 	border-radius: 0 0 5px 5px;
 	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
@@ -56,7 +55,7 @@ body {
 }
 #memory_container {
 	padding: 150px 2px 1px 2px;
-	width: calc(100% - 10px);
+	width: 100%;
 	min-height: 100%;
 	z-index: 1;
 	background-color: #F7F7F7;
@@ -64,14 +63,6 @@ body {
 	position: relative;
 	flex-wrap: wrap-reverse;
 	align-content: flex-start;
-}
-#aggregate_meter {
-	width: 10px;
-	height: 100%;
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	border-left: 1px solid #ccc;
 }
 
 
@@ -354,6 +345,23 @@ input[type="text"] { outline-width: 0; }
 .memory-display-header {
 	height: 50px;
 }
+.memory-display-emotions-meter {
+	height: 10px;
+	background-color: white;
+}
+.emotions-meter-segment {
+	width: 0%;
+	float: left;
+	height: inherit;
+}
+.segment-joy     { background-color: #F5F317; }
+.segment-sadness { background-color: #5380be; }
+.segment-anger   { background-color: #db373e; }
+.segment-fear    { background-color: #c3648e; }
+.segment-disgust { background-color: #73c557; }
+.segment-neutral { background-color: #dddddd; }
+
+
 .memory-display-header,
 .memory-display-body {
 	padding: 10px 20px;	
