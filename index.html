@@ -171,7 +171,23 @@
 						</li>
 					</ul>
 				</div>
-				<div class='attachments_input'></div>
+				<div class='attachments_input_container'>
+					
+					<div class='attachments_input hide' data-attachment-type="audio">
+						<input id="audio_text_input" class="attachment_text_input" type="text" placeholder="enter audio url here">
+						<button class='add_attachment_url' data-attachment-type="audio" >update</button>
+					</div>
+					<div class='attachments_input hide' data-attachment-type="image">
+						<input id="image_text_input" class="attachment_text_input" type="text" placeholder="enter image url here">
+						<button class='add_attachment_url' data-attachment-type="image" >update</button>
+					</div>
+					<div class='attachments_input hide' data-attachment-type="video">
+						<input id="video_text_input" class="attachment_text_input" type="text" placeholder="enter video url here">
+						<button class='add_attachment_url' data-attachment-type="video" >update</button>
+					</div>					
+
+
+				</div>
 
 			</div> <!-- end .modal_content -->
 

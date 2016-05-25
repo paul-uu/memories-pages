@@ -196,7 +196,7 @@ update_aggregate_meter_height();
 		filter_by: function(e) {
 			var filter = $(e.currentTarget).val();
 			memories.filter_by_emotion(filter);
-		}
+		}	
 	});
 	var control_panel = new Control_Panel();
 
@@ -213,9 +213,12 @@ update_aggregate_meter_height();
 			'click .input_attachment_icon' : 'toggle_attachment',
 			'click #modal_reset'           : 'reset',
 			'click #save_new_memory'       : 'save_memory',
+			/*
 			'click #add_audio_attachment'  : 'add_audio_attachment',
 			'click #add_image_attachment'  : 'add_image_attachment',
-			'click #add_video_attachment'  : 'add_video_attachment',			
+			'click #add_video_attachment'  : 'add_video_attachment',	
+			*/
+			'click .add_attachment_url'	   : 'add_attachment',
 			'keyup #input_memory'          : function() { 
 												this.validate();
 												this.new_memory.attributes.memory_text = $('#input_memory').val();
@@ -252,10 +255,11 @@ update_aggregate_meter_height();
 
 			// emotions:
 			for (emotion in memory.emotions) {
-				this.render_emotion_slider(emotion, memory.emotions[emotion]);
+				this.render_emotion_slider(emotion, memory.emotions[emotion]['value']);
 			}
 
 			// attachments:
+			// display checkmark icon if attachment has been added for each type
 			for (attachment in memory.media) {
 				this.render_attachment_status(attachment, memory.media[attachment])
 			}
@@ -299,6 +303,31 @@ update_aggregate_meter_height();
 				this.toggle_attachment_input(false);
 			}
 		},
+		toggle_attachment_input: function(type) {
+			var $input_div = $('.attachments_input[data-attachment-type="' + type + '"]');
+			$('.attachments_input').addClass('hide');
+			if (type) {
+				
+				switch (type) {
+					case 'audio':
+						$input_div.removeClass('hide');
+						$('#audio_text_input').val(this.new_memory.attributes.media.audio);
+						break;
+					case 'image':
+						$input_div.removeClass('hide');
+						$('#image_text_input').val(this.new_memory.attributes.media.image);
+						break;
+					case 'video':
+						$input_div.removeClass('hide');
+						$('#video_text_input').val(this.new_memory.attributes.media.video);
+						break;
+					default:
+						console.log('error - toggle_attachment_input');
+						break;												
+				}
+			} else 
+				$input_div.html('');
+		},		
 		validate: function(slide_event, slide_ui) {
 			var view = this;
 
@@ -335,32 +364,78 @@ update_aggregate_meter_height();
 				$('#save_new_memory').removeClass('enabled');
 			}
 		},
-		toggle_attachment_input: function(type) {
-			var $input_div = $('.attachments_input');
-			if (type) {
+
+		add_attachment: function(e) {
+
+			var type = $(e.target).attr('data-attachment-type');
+			
+			var input_val = $('#'+type+'_text_input').val();
+			input_val = $.trim(input_val);
+			if (input_val === '') {
+				this.new_memory.attributes.media[type] = input_val;
+				this.render_model_data();
+				return;	
+			}	
+			if (this.validate_url(input_val)) {
+
 				switch (type) {
 					case 'audio':
-						$input_div.html('<input id="audio_text_input" data-attachment-type="audio" type="text" placeholder="enter audio url here"><button id="add_audio_attachment">update</button>');
-						$('#audio_text_input').val(this.new_memory.attributes.media.audio);
+						if (this.validate_audio_url(input_val)) {
+							this.new_memory.attributes.media.audio = input_val;
+							this.render_model_data();
+							return;				
+						} 
+						else
+							alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube');
 						break;
 					case 'image':
-						$input_div.html('<input id="image_text_input" data-attachment-type="image" type="text" placeholder="enter image url here"><button id="add_image_attachment">update</button>');
+						if (this.validate_image_url(input_val)) {
+							this.new_memory.attributes.media.image = input_val;
+							this.render_model_data();
+							return;				
+						} 
+						else
+							alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube');
 						break;
 					case 'video':
-						$input_div.html('<input id="video_text_input" data-attachment-type="video" type="text" placeholder="enter video url here"><button id="add_video_attachment">update</button>');
-						break;
-					default:
-						console.log('error - toggle_attachment_input');
-						break;												
+						if (this.validate_video_url(input_val)) {
+							this.new_memory.attributes.media.video = input_val;
+							this.render_model_data();
+							return;				
+						} 
+						else
+							alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube');
+						break;										
 				}
-			} else 
-				$input_div.html('');
+			} 
+			else
+				alert('Please enter a valid url\nex: https://google.com');	
+
+			
 		},
+		/*
 		add_audio_attachment: function() {
-			var $input_val = $('#audio_text_input').val();
-			this.new_memory.attributes.media.audio = $input_val;
-			this.render_model_data();
+			var input_val = $('#audio_text_input').val();
+			input_val = $.trim(input_val);
+			if (input_val === '') {
+				this.new_memory.attributes.media.audio = input_val;
+				this.render_model_data();
+				return;	
+			}
+			if (this.validate_url(input_val)) {
+				if (this.validate_audio_url(input_val)) {
+					this.new_memory.attributes.media.audio = input_val;
+					this.render_model_data();
+					return;				
+				} 
+				else
+					alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube')
+			} 
+			else
+				alert('Please enter a valid url\nex: https://google.com');
+
 		},
+		*/
 		add_image_attachment: function() {
 			var $input_val = $('#image_text_input').val();
 			this.new_memory.attributes.media.image = $input_val;
@@ -372,7 +447,16 @@ update_aggregate_meter_height();
 			this.render_model_data();
 		},
 		validate_url: function(url) {
-			return url.match(/^HTTP|HTTP|http(s)?:\/\/(www\.)?[A-Za-z0-9]+([\-\.]{1}[A-Za-z0-9]+)*\.[A-Za-z]{2,40}(:[0-9]{1,40})?(\/.*)?$/);		
+			return /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
+		},
+		validate_audio_url: function(url) {
+			return /soundcloud|bandcamp|youtube|\.(mp3|wav|ogg)$/i.test(url);
+		},
+		validate_video_url: function(url) {
+			return /youtube|vimeo|vine|\.(mp4|mov|mkv|avi|m4v)$/i.test(url);
+		},
+		validate_image_url: function(url) {
+			return /imgur|\.(jpg|jpeg|gif|png)$/i.test(url);
 		},		
 		initialize_new_memory: function() {
 			this.new_memory = new Memory_Model({

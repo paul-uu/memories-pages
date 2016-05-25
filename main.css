@@ -278,14 +278,14 @@ input[type="text"] { outline-width: 0; }
 .input_attachment_icon.attached {
 	color: teal;
 }
-.attachments_input {
+.attachments_input_container {
 	margin-top: 15px;
 }
-.attachments_input input {
-	width: 80%;
+.attachments_input_container input {
+	width: 79%;
 }
-.attachments_input button {
-	width: 20%;
+.attachments_input_container button {
+	width: 19%;
 }
 
 @media only screen and (max-width: 480px) {
