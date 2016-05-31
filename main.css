@@ -6,12 +6,24 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 * { box-sizing: border-box; }
 html, 
 body { 
-	height: 100%; 
+	height: 100%;
+	font-family: sans-serif;
+
+	color: #555;
 }
 
 /* Utility Classes */
+.hide { display: none !important; }
 
-.hide { display: none; }
+/* Blink/fade-in/out */
+.blink-fade {
+	-webkit-transition: opacity 250ms ease-in-out;
+	-moz-transition: opacity 250ms ease-in-out;
+	-o-transition: opacity 250ms ease-in-out;
+	transition: opacity 250ms ease-in-out;
+}
+
+
 
 /* Layout */
 #page_container {
@@ -45,7 +57,7 @@ body {
 	background-color: rgba(255, 255, 255, 0.8);
 	width: calc(100% - 30px);
 	position: absolute;
-	top: -265px;
+	top: -278px;
 	left: 15px;	
 	border-radius: 0 0 5px 5px;
 	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
@@ -136,7 +148,10 @@ input[type="text"] { outline-width: 0; }
 	display: inline-block;
 	margin-right: 2.3%;
 	height: 11px;
-	border: 1px solid #efefef;
+	border: 1px solid #f3f3f3;
+
+	font-family: sans-serif;
+	font-weight: 300;
 }
 .slider_label > span:first-of-type {
 	color: #aaa;
@@ -160,11 +175,12 @@ input[type="text"] { outline-width: 0; }
 .slider_label strong {
 	color: #999;
 }
-#emotion_sliders > .emotion_slider > .ui-slider-handle {
+.emotion_slider > .ui-slider-handle {
 	height: 20px;
 	width: 20px;
 	border-radius: 50%;
 	cursor: pointer;
+	border-color: #eee;
 }
 
 #slider_joy > span.ui-slider-handle,
@@ -219,14 +235,19 @@ input[type="text"] { outline-width: 0; }
 	bottom: 0;
 	width: 100%;
 	border-radius: 0 0 5px 5px;
+	font-size: 14px;
+	font-weight: 300;
+
+	-webkit-box-shadow: 0px -1px 3px 0px rgba(195,195,195,1);
+	-moz-box-shadow: 0px -1px 3px 0px rgba(195,195,195,1);
+	box-shadow: 0px -1px 3px 0px rgba(195,195,195,1);
+
 }
 #modal_cancel {
-	border-right: 1px solid #555;
 	border-bottom-left-radius: 5px;
 }
 #save_new_memory {
 	cursor: default;
-	border-left: 1px solid #bbb;
 	color: #bbb;
 	border-bottom-right-radius: 5px;
 	
@@ -240,7 +261,6 @@ input[type="text"] { outline-width: 0; }
 	float: left;
 	width: 33.3%;
 	height: 50px;
-	border-top: 1px solid #666;
 	text-align: center;
 	padding-top: 16px;
 	cursor: pointer;
@@ -367,32 +387,133 @@ input[type="text"] { outline-width: 0; }
 	padding: 10px 20px;	
 }
 
+#memory-audio-player { 
+	display: none; 
+}
+
+.memory-display-date-time {
+	float: left;
+	font-weight: 300;
+	color: #999;
+	width: calc(100% - 15px);
+}
+
 #memory-display-close {
 	float: right;
+	width: 10px;
 	cursor: pointer;
 }
+#memory-display-close .fa {
+	color: #999;
+}
+#memory-display-close .fa:hover {
+	color: initial;
+}
+
+
 .memory-display-body {
 	clear: both;
 	height: 250px;
 }
+
+
 .memory-display-footer {
-	height: 50px;
-	border-top: 1px solid #aaa;
+	height: 63px;
+	padding: 0 20px;
+	position: relative;
 }
+
+.memory-display-footer .fa {
+	font-size: 21px;
+	cursor: pointer;
+	color: #aaa;
+}
+.memory-display-footer .fa:hover {
+	color: initial;
+}
+
 .memory-display-controls,
 .memory-display-delete {
-	width: 50%;
 	height: 49px;
-	text-align: center;
-	padding: 15px 20px 0 20px;
+	padding: 15px 0 0 0;
+}
+.memory-media-text {
+	height: 14px;
+	font-size: 12px;
+	font-weight: 300;
+	color: #aaa;
 }
 .memory-display-controls {
 	float: left;
 }
+.memory-display-controls .fa {
+	margin-right: 10px;
+}
+
+
+
 .memory-display-delete {
 	float: right;
-	border-left: 1px solid #aaa;
+	text-align: right;
+}
+
+.memory-delete-text,
+.memory-delete-cancel,
+.delete-memory-icon {
+	position: absolute;
+	top: 35px;
+	right: 20px;
+	color: #999;
+	font-size: 12px;
 	cursor: pointer;
+	pointer-events: none;
+	opacity: 0.0;	
+}
+.memory-delete-text.visible,
+.memory-delete-cancel.visible,
+.delete-memory-icon.visible {
+	pointer-events: auto;
+	opacity: 1.0;
+}
+.memory-delete-icon:hover,
+.memory-delete-cancel:hover,
+.memory-delete-text:hover {
+	color: initial;
+}
+.memory-delete-text {
+	-webkit-transition: opacity 75ms ease-out;
+	-moz-transition: opacity 75ms ease-out;
+	-o-transition: opacity 75ms ease-out;
+	transition: opacity 75ms ease-out;	
+}
+.memory-delete-text.visible {
+	-webkit-transition: opacity 150ms ease-in;
+	-moz-transition: opacity 150ms ease-in;
+	-o-transition: opacity 150ms ease-in;
+	transition: opacity 150ms ease-in;
+}
+.memory-delete-cancel.visible {
+	right: 45px;
+	-webkit-transition: right 200ms ease-out;
+	-moz-transition: right 200ms ease-out;
+	-o-transition: right 200ms ease-out;
+	transition: right 200ms ease-out;
+}
+.delete-memory-icon {
+	top: 30px;
+}
+.delete-memory-icon.visible {
+	-webkit-transition: opacity 250ms ease-in-out;
+	-moz-transition: opacity 250ms ease-in-out;
+	-o-transition: opacity 250ms ease-in-out;
+	transition: opacity 250ms ease-in-out;		
+}
+
+
+
+
+.youtube-iframe {
+	width: 100%;
 }
 
 

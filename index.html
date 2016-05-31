@@ -73,28 +73,37 @@
 			<div class='memory-display-header'>
 
 				<div class='memory-display-date-time'>
-					<span class='memory-display-month'></span>&nbsp;
-					<span class='memory-display-date'></span>&nbsp;,&nbsp;
-					<span class='memory-display-year'></span>&nbsp;-&nbsp;
-					<span class='memory-display-day'></span>&nbsp;at&nbsp;
-					<span class='memory-display-time'></span>
+					<span class='memory-display-month'></span>&nbsp;<span class='memory-display-date'></span>,&nbsp;<span class='memory-display-year'></span>&nbsp;-&nbsp;<span class='memory-display-day'></span>&nbsp;at&nbsp;<span class='memory-display-time'></span>
 				</div>
-				<div id='memory-display-close'>x</div>
+				<div id='memory-display-close'>
+					<i class="fa fa-times" aria-hidden="true"></i>
+				</div>
 			</div>
 
 
 			<div class='memory-display-body'>
 				<div class='memory-display-text'></div>
+				<div class='memory-video-container'></div>
+				<audio id='memory-audio-player' controls></audio>
 			</div>
 
 
 			<div class='memory-display-footer'>
+
+				<div class='memory-media-text'>&nbsp;</div>
 				<div class='memory-display-controls'>
-					Controls
+					<i class="fa fa-music memory-toggle-audio hide"></i>
+					<i class="fa fa-picture-o memory-toggle-image hide"></i>
+					<i class="fa fa-video-camera memory-toggle-video hide"></i>
 				</div>
 				<div class='memory-display-delete'>
-					Delete Memory
+
+					<span class='memory-delete-cancel'>cancel</span>
+					<span class='memory-delete-text visible'>delete</span>
+					<i class="fa fa-trash-o delete-memory-icon" aria-hidden="true"></i>
+
 				</div>
+
 			</div>
 
 
@@ -220,6 +229,9 @@
 	
 
 	<!-- JavaScripts -->
+	<script src="https://connect.soundcloud.com/sdk/sdk-3.1.1.js"></script>
+	<script src='keys.js'></script>
+
 	<script src='node_modules/jquery/dist/jquery.min.js'></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
 	<script src='node_modules/noty/js/noty/packaged/jquery.noty.packaged.min.js'></script>

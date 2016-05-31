@@ -32,8 +32,6 @@ update_aggregate_meter_height();
 
 
 
-
-
 /* --------------------------------------------------------------- */
 (function() {
 
@@ -253,6 +251,8 @@ update_aggregate_meter_height();
 
 			var memory = this.new_memory.attributes;
 
+			$('#input_memory').val(memory.memory_text);
+
 			// emotions:
 			for (emotion in memory.emotions) {
 				this.render_emotion_slider(emotion, memory.emotions[emotion]['value']);
@@ -369,7 +369,7 @@ update_aggregate_meter_height();
 
 			var type = $(e.target).attr('data-attachment-type');
 			
-			var input_val = $('#'+type+'_text_input').val();
+			var input_val = $('#' + type + '_text_input').val();
 			input_val = $.trim(input_val);
 			if (input_val === '') {
 				this.new_memory.attributes.media[type] = input_val;
@@ -386,7 +386,8 @@ update_aggregate_meter_height();
 							return;				
 						} 
 						else
-							alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube');
+							//alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube');
+							display_noty('warning', 'topCenter', 'Please enter an accepted audio/music website url');
 						break;
 					case 'image':
 						if (this.validate_image_url(input_val)) {
@@ -413,29 +414,6 @@ update_aggregate_meter_height();
 
 			
 		},
-		/*
-		add_audio_attachment: function() {
-			var input_val = $('#audio_text_input').val();
-			input_val = $.trim(input_val);
-			if (input_val === '') {
-				this.new_memory.attributes.media.audio = input_val;
-				this.render_model_data();
-				return;	
-			}
-			if (this.validate_url(input_val)) {
-				if (this.validate_audio_url(input_val)) {
-					this.new_memory.attributes.media.audio = input_val;
-					this.render_model_data();
-					return;				
-				} 
-				else
-					alert ('Please enter on of the accepted audio/music based website urls:\nSoundcloud, Bandcamp, Youtube')
-			} 
-			else
-				alert('Please enter a valid url\nex: https://google.com');
-
-		},
-		*/
 		add_image_attachment: function() {
 			var $input_val = $('#image_text_input').val();
 			this.new_memory.attributes.media.image = $input_val;
@@ -500,19 +478,20 @@ update_aggregate_meter_height();
 				}
 			});
 		},		
-		save_memory: function() {
+		save_memory: function(e) {
 
-			this.new_memory.emotion_vals_to_percentages();
-			this.new_memory.percentages_to_gradient_string();
+			if ($(e.target).hasClass('enabled')) {
+				this.new_memory.emotion_vals_to_percentages();
+				this.new_memory.percentages_to_gradient_string();
 
-			my_memory.add(this.new_memory);
-			this.new_memory.save();
-	
-			this.close();
-			this.clear();
+				my_memory.add(this.new_memory);
+				this.new_memory.save();
+		
+				this.close();
+				this.clear();
+			}
 		},
 		reset: function() {
-			console.log('reset()');
 			this.initialize_new_memory();
 			this.render_model_data();
 		}
@@ -526,23 +505,77 @@ update_aggregate_meter_height();
 	var Memory_Display = Backbone.View.extend({
 		el: $('#memory_display'),
 		events: {
-			'click #memory-display-close': 'close_display',
-			'click .memory-display-delete': 'delete_memory' 
+			'click #memory-display-close'      : 'close_display',
+			'click .memory-delete-text'        : 'toggle_confirm',
+			'click .memory-delete-cancel'      : 'toggle_confirm',
+			'click .memory-display-delete .fa' : 'delete_memory',
+			'click .memory-toggle-audio'       : 'toggle_audio',
 		},
+
+		visible: false,
+
 		initialize: function() {
+
+			this.$media_text = $('.memory-media-text');
+
+			/* Music/audio info */
+			this.audio_player = document.getElementById('memory-audio-player');
+			this.current_audio = {
+				artist: '',
+				track: '',
+				uri: ''
+			}
+
 		},
 		render: function(model) {
-			this.current_memory = model;
-			this.$el.animate({
-				top: '98px'
-			}, 850, 'easeOutQuart');
+			var that = this;
+			if (!this.visible) {
+				this.$el.animate({
+					top: '98px'
+				}, 850, 'easeOutQuart', function() {
+					that.visible = true;
+					that.render_callback(model);
+				});
+			} else this.render_callback(model);
+		},
 
-			$('.emotions-meter-segment').css('width', 0);
+		render_callback: function(model) {
+
+			/* Reset state */
+			/*
+			this.set_audio_text(' ');
+			this.reset_delete_confirm();
+			$('.emotions-meter-segment').css('width', 0);	
+			*/
+
+			this.reset_memory_display_state();		
+
+			this.current_memory = model;
 
 			var emotions = model.attributes.emotions;
 			for (var emotion in emotions) {
+				/* render emotions segment meter */
 				if (emotions[emotion]['percentage'])
 					$('.segment-' + emotion).css('width', emotions[emotion]['percentage']+'%');
+			}
+
+			/* todo: refactor into above loop */
+			$('.memory-display-controls > i').addClass('hide');
+			var media = model.attributes.media;
+			for (var media_type in media) {
+				if (media[media_type]) {
+					switch (media_type) {
+						case 'audio':
+							$('.memory-display-controls > .fa-music').removeClass('hide');
+							break;
+						case 'image':
+							$('.memory-display-controls > .fa-picture-o').removeClass('hide');
+							break;	
+						case 'video':
+							$('.memory-display-controls > .fa-video-camera').removeClass('hide');
+							break;					
+					}
+				}
 			}
 
 			this.$el.find('.memory-display-day').text(model.attributes.date_time.day);
@@ -550,17 +583,100 @@ update_aggregate_meter_height();
 			this.$el.find('.memory-display-month').text(model.attributes.date_time.month);
 			this.$el.find('.memory-display-date').text(model.attributes.date_time.date);
 			this.$el.find('.memory-display-year').text(model.attributes.date_time.year);
+
 			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
+
+			/* Auto-play/display media */
+			this.load_audio(model);
+			this.load_video(model);			
 		},
+
+		reset_memory_display_state: function() {
+			/* Reset state */
+			this.set_audio_text(' ');
+			this.reset_delete_confirm();
+			$('.emotions-meter-segment').css('width', 0);
+			this.$el.find('.memory-video-container').html('');		
+		},
+
+		load_audio: function(model) {
+			var that = this;
+			var audio_url = model.attributes.media.audio;
+			if (audio_url) {
+
+				var get_url = 'http://api.soundcloud.com/resolve.json?url=' + audio_url + '&client_id=' + soundcloud_client_id;
+				$.ajax({
+					url: get_url,
+					type: 'get',
+					success: function(result) {
+						var uri = result.uri + '/stream?client_id=' + soundcloud_client_id;
+
+						that.current_audio.artist = result.user.username;
+						that.current_audio.track = result.title;
+						that.current_audio.uri = uri;
+
+						$('#memory-audio-player').attr('src', uri);	
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+			}
+		},
+		play_audio: function() {
+			this.audio_player.play();
+		},
+		toggle_audio: function() {
+			if (this.audio_player.paused) {
+				this.play_audio();
+				this.set_audio_text(this.current_audio.artist + ' : ' + this.current_audio.track);
+				// toggle music icon class to active
+			} else {
+				this.audio_player.pause();
+				// toggle music icon class to inactive
+			}
+		},
+		set_audio_text: function(text) {
+			this.$media_text.text(text);
+			//this.$media_text.text(this.current_audio.track);
+		},
+
+		load_video: function(model) {
+			// determine domain
+			//return /youtube|vimeo|vine|\.(mp4|mov|mkv|avi|m4v)$/i.test(url);
+
+			var video_url = model.attributes.media.video;
+
+			if ( /youtube/i.test(video_url) ) {
+				var youtube_embed = video_url.replace(/watch\?v=/, 'embed/');
+				var iframe_str = '<iframe class="youtube-iframe" width="560" height="315" src="' + youtube_embed + '" frameborder="0"></iframe>'; 
+				this.$el.find('.memory-video-container').append(iframe_str);
+			}
+
+
+		},
+
 		current_memory: '',
 		close_display: function() {
+			this.audio_player.pause();
 			this.$el.animate({
-				top: '-265px'
+				top: '-278px'
 			}, 850, 'easeOutQuart', function() {
 				$('.memory-active').removeClass('memory-active');
 			});
 		},
-		delete_memory: function() {
+		toggle_confirm: function() {
+			$('.memory-delete-text').toggleClass('visible');
+			$('.delete-memory-icon').toggleClass('visible');
+			$('.memory-delete-cancel').toggleClass('visible');
+		},
+		reset_delete_confirm: function() {
+			$('.memory-delete-text').addClass('visible');
+			$('.delete-memory-icon').removeClass('visible');
+			$('.memory-delete-cancel').removeClass('visible');			
+		},
+		delete_memory: function(e) {
+			this.toggle_confirm();
 			this.current_memory.destroy();
 			this.close_display();
 		}

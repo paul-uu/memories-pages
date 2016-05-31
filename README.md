@@ -7,4 +7,6 @@ Inspired by the film Inside Out, this small Backbone web app is tasked with keep
 
 1. Clone or download the repository
 2. npm install
-3. Open index.html in your favorite browser
+3. Register app with [SoundCloud to get a Client ID](http://soundcloud.com/you/apps) in order to use their API
+4. Create file keys.js in the project directory to [authenticate](https://developers.soundcloud.com/docs/api/sdks#authentication) your SoundCloud Client ID
+5. Open index.html in your favorite browser
