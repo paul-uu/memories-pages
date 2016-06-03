@@ -430,11 +430,11 @@ update_aggregate_meter_height();
 		validate_audio_url: function(url) {
 			return /soundcloud|bandcamp|youtube|\.(mp3|wav|ogg)$/i.test(url);
 		},
-		validate_video_url: function(url) {
-			return /youtube|vimeo|vine|\.(mp4|mov|mkv|avi|m4v)$/i.test(url);
-		},
 		validate_image_url: function(url) {
 			return /imgur|\.(jpg|jpeg|gif|png)$/i.test(url);
+		},		
+		validate_video_url: function(url) {
+			return /youtube|vimeo|vine|\.(mp4|mov|mkv|avi|m4v)$/i.test(url);
 		},		
 		initialize_new_memory: function() {
 			this.new_memory = new Memory_Model({
@@ -583,11 +583,11 @@ update_aggregate_meter_height();
 			this.$el.find('.memory-display-month').text(model.attributes.date_time.month);
 			this.$el.find('.memory-display-date').text(model.attributes.date_time.date);
 			this.$el.find('.memory-display-year').text(model.attributes.date_time.year);
-
 			this.$el.find('.memory-display-text').text(model.attributes.memory_text);
 
 			/* Auto-play/display media */
 			this.load_audio(model);
+			this.load_image(model);
 			this.load_video(model);			
 		},
 
@@ -596,7 +596,10 @@ update_aggregate_meter_height();
 			this.set_audio_text(' ');
 			this.reset_delete_confirm();
 			$('.emotions-meter-segment').css('width', 0);
+			this.$el.find('.memory-image-link').attr('href', '');
+			this.$el.find('.memory-image-placeholder').attr('src', '').addClass('hide');
 			this.$el.find('.memory-video-container').html('');		
+			this.$el.find('.memory-display-text').html('');
 		},
 
 		load_audio: function(model) {
@@ -640,6 +643,23 @@ update_aggregate_meter_height();
 			this.$media_text.text(text);
 		},
 
+		load_image: function(model) {
+			var img_url = model.attributes.media.image;
+
+			if ( (/\.(gif|jpg|jpeg|tiff|png)$/i).test(img_url) ) {
+				$('.memory-image-placeholder').attr('src', img_url).removeClass('hide');
+				$('.memory-image-link').attr('href', img_url);
+			}
+
+			else if ( /imgur/i.test(img_url) ) {
+				$('.memory-image-placeholder').attr('src', (img_url + '.jpg')).removeClass('hide');
+				$('.memory-image-link').attr('href', img_url);
+			}
+
+			else 
+				 $('.memory-image-placeholder').addClass('hide');
+		},
+
 		load_video: function(model) {
 
 			var video_url = model.attributes.media.video;
@@ -670,6 +690,7 @@ update_aggregate_meter_height();
 				that.visible = false;
 				/* todo: empty memory display */
 				$('.memory-active').removeClass('memory-active');
+				that.reset_memory_display_state();
 			});
 		},
 		toggle_confirm: function() {

@@ -517,10 +517,14 @@ input[type="text"] { outline-width: 0; }
 	top: 30px;
 }
 .delete-memory-icon.visible {
-	-webkit-transition: opacity 250ms ease-in-out;
-	-moz-transition: opacity 250ms ease-in-out;
-	-o-transition: opacity 250ms ease-in-out;
-	transition: opacity 250ms ease-in-out;		
+	-webkit-transition: opacity 350ms ease-in-out;
+	-moz-transition: opacity 350ms ease-in-out;
+	-o-transition: opacity 350ms ease-in-out;
+	transition: opacity 350ms ease-in-out;		
+}
+
+.memory-image-placeholder {
+	width: 100%;
 }
 
 .memory-video-container {
