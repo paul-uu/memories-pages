@@ -14,6 +14,7 @@ body {
 
 /* Utility Classes */
 .hide { display: none !important; }
+.invisible { visibility: none !important; }
 
 /* Blink/fade-in/out */
 .blink-fade {
@@ -56,10 +57,10 @@ body {
 #memory_display {
 	z-index: 2;
 	background-color: rgba(255, 255, 255, 0.8);
-	height: 450px;
 	width: calc(100% - 30px);
+	height: calc(100% - 200px);
 	position: absolute;
-	top: -381px;
+	top: -1000px;
 	left: 15px;	
 	border-radius: 0 0 5px 5px;
 	-webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
@@ -420,7 +421,7 @@ input[type="text"] { outline-width: 0; }
 
 .memory-display-body {
 	clear: both;
-	height: 337px;
+	height: calc(100% - 94px); /* memory-display-emotions-meter + memory-display-header + memory-display-footer = 94px */
 	overflow-y: auto;
 	background-color: #f3f3f3;
 }
@@ -430,7 +431,7 @@ input[type="text"] { outline-width: 0; }
 }
 
 .memory-display-footer {
-	height: 63px;
+	height: 45px;
 	padding: 0 20px;
 	position: relative;
 	background-color: white;
@@ -448,14 +449,14 @@ input[type="text"] { outline-width: 0; }
 
 .memory-display-controls,
 .memory-display-delete {
-	height: 49px;
-	padding: 15px 0 0 0;
+	padding: 12px 0 0 0;
 }
-.memory-media-text {
+.memory-audio-text {
 	height: 14px;
 	font-size: 12px;
 	font-weight: 300;
 	color: #aaa;
+	padding-top: 10px;
 }
 .memory-display-controls {
 	float: left;
@@ -475,7 +476,7 @@ input[type="text"] { outline-width: 0; }
 .memory-delete-cancel,
 .delete-memory-icon {
 	position: absolute;
-	top: 35px;
+	top: 16px;
 	right: 20px;
 	color: #999;
 	font-size: 12px;
@@ -507,20 +508,20 @@ input[type="text"] { outline-width: 0; }
 	transition: opacity 150ms ease-in;
 }
 .memory-delete-cancel.visible {
-	right: 45px;
+	right: 70px;
 	-webkit-transition: right 200ms ease-out;
 	-moz-transition: right 200ms ease-out;
 	-o-transition: right 200ms ease-out;
 	transition: right 200ms ease-out;
 }
 .delete-memory-icon {
-	top: 30px;
+	top: 12px;
 }
 .delete-memory-icon.visible {
 	-webkit-transition: opacity 350ms ease-in-out;
 	-moz-transition: opacity 350ms ease-in-out;
 	-o-transition: opacity 350ms ease-in-out;
-	transition: opacity 350ms ease-in-out;		
+	transition: opacity 350ms ease-in-out;
 }
 
 .memory-image-placeholder {
@@ -533,12 +534,32 @@ input[type="text"] { outline-width: 0; }
 	padding-top: 30px;
 	padding-bottom: 56.25%;
 }
+
 .video-iframe {
+	max-width: 536px;
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
+}
+
+/* max width to be 1200px */
+@media only screen and (min-width: 991px) {
+	.memory-display-text,
+	.media-container {
+		display: inline-block;
+		width: 50%;
+		margin-right: -4px;
+		padding:;
+	}
+	.memory-display-text {
+		vertical-align: top;
+		padding-right: 10px;
+	}
+	.media-container {
+		padding-left: 10px;
+	}
 }
 
 /*  */

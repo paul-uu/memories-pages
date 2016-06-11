@@ -59,7 +59,7 @@
 
 		</section>
 
-		<section id='memory_display'>
+		<section id='memory_display' class='invisible'>
 
 			<div class='memory-display-emotions-meter'>
 				<span class="emotions-meter-segment segment-joy"></span>
@@ -83,17 +83,20 @@
 
 			<div class='memory-display-body'>
 				<div class='memory-display-text'></div>
-				<a href='' class='memory-image-link' target='_blank'>
-					<img class='memory-image-placeholder hide' src='' />
-				</a>
-				<div class='memory-video-container'></div>
-				<audio id='memory-audio-player' controls></audio>
+
+				<div class='media-container'>
+					<a href='' class='memory-image-link' target='_blank'>
+						<img class='memory-image-placeholder hide' src='' />
+					</a>
+					<div class='memory-video-container'></div>
+					<div class='memory-audio-text'>&nbsp;</div>
+					<audio id='memory-audio-player' controls></audio>
+				</div>
 			</div>
 
 
 			<div class='memory-display-footer'>
 
-				<div class='memory-media-text'>&nbsp;</div>
 				<div class='memory-display-controls'>
 					<i class="fa fa-music memory-toggle-audio hide"></i>
 					<i class="fa fa-picture-o memory-toggle-image hide"></i>
@@ -102,8 +105,8 @@
 				<div class='memory-display-delete'>
 
 					<span class='memory-delete-cancel'>cancel</span>
-					<span class='memory-delete-text visible'>delete</span>
-					<i class="fa fa-trash-o delete-memory-icon" aria-hidden="true"></i>
+					<span class='memory-delete-text'>delete</span>
+					<i class="fa fa-trash-o delete-memory-icon visible" aria-hidden="true"></i>
 
 				</div>
 

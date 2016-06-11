@@ -17,6 +17,8 @@ var time_string = (hour % 12).toString() + ':' + mins.toString() + ' ' + am_pm;
 
 /* --------------------------------------------------------------- */
 /* dynamically correct height of #aggregate_meter */
+
+/*
 var $control_panel = $('#control_panel'),
 	$aggregate_meter = $('#aggregate_meter'),
 	$window = $(window);
@@ -29,12 +31,21 @@ $window.on('resize', function() {
 	update_aggregate_meter_height();	
 });
 update_aggregate_meter_height();
-
+*/
 
 
 /* --------------------------------------------------------------- */
 (function() {
 
+
+
+	var $window = $(window),
+		device_width = $window.width(),
+		device_height = $window.height();
+	$window.on('resize', function() {
+		device_width = $window.width();
+		device_height = $window.height();
+	});
 	
 	// --------------------
 	// Memory Model
@@ -506,9 +517,9 @@ update_aggregate_meter_height();
 		el: $('#memory_display'),
 		events: {
 			'click #memory-display-close'      : 'close_display',
-			'click .memory-delete-text'        : 'toggle_confirm',
+			'click .memory-delete-text'        : 'delete_memory', 
 			'click .memory-delete-cancel'      : 'toggle_confirm',
-			'click .memory-display-delete .fa' : 'delete_memory',
+			'click .memory-display-delete .fa' : 'toggle_confirm', 
 			'click .memory-toggle-audio'       : 'toggle_audio',
 		},
 
@@ -516,7 +527,7 @@ update_aggregate_meter_height();
 
 		initialize: function() {
 
-			this.$media_text = $('.memory-media-text');
+			this.$media_text = $('.memory-audio-text');
 
 			/* Music/audio info */
 			this.audio_player = document.getElementById('memory-audio-player');
@@ -526,9 +537,13 @@ update_aggregate_meter_height();
 				uri: ''
 			}
 
+			this.close_display( this.$el.removeClass('invisible') );
+
+
 		},
 		render: function(model) {
 			var that = this;
+
 			if (!this.visible) {
 				this.$el.animate({
 					top: '72px'
@@ -541,17 +556,8 @@ update_aggregate_meter_height();
 
 		render_callback: function(model) {
 
-			/* Reset state */
-			/*
-			this.set_audio_text(' ');
-			this.reset_delete_confirm();
-			$('.emotions-meter-segment').css('width', 0);	
-			*/
-
 			this.reset_memory_display_state();		
-
 			this.current_memory = model;
-
 			var emotions = model.attributes.emotions;
 			for (var emotion in emotions) {
 				/* render emotions segment meter */
@@ -598,7 +604,7 @@ update_aggregate_meter_height();
 			$('.emotions-meter-segment').css('width', 0);
 			this.$el.find('.memory-image-link').attr('href', '');
 			this.$el.find('.memory-image-placeholder').attr('src', '').addClass('hide');
-			this.$el.find('.memory-video-container').html('');		
+			this.$el.find('.memory-video-container').html('').addClass('hide');	
 			this.$el.find('.memory-display-text').html('');
 		},
 
@@ -664,33 +670,48 @@ update_aggregate_meter_height();
 
 			var video_url = model.attributes.media.video;
 
-			if ( /youtube/i.test(video_url) ) {
+			if (video_url) {
 
-				var youtube_embed = video_url.replace(/watch\?v=/, 'embed/');
-				var iframe_str = '<iframe class="video-iframe" src="' + youtube_embed + '" frameborder="0"></iframe>'; 
-				this.$el.find('.memory-video-container').append(iframe_str);
+				this.$el.find('.memory-video-container').removeClass('hide');
 
-			} else if ( /vimeo/i.test(video_url) ) {
+				if ( /youtube/i.test(video_url) ) {
 
-				var video_id = video_url.replace(/\D/g,'');
-				var embed_url = 'https://player.vimeo.com/video/' + video_id;
-				var iframe_str = '<iframe src="' + embed_url + '" class="video-iframe" frameborder="0"></iframe>';
-				this.$el.find('.memory-video-container').append(iframe_str);
+					var youtube_embed = video_url.replace(/watch\?v=/, 'embed/');
+					var iframe_str = '<iframe class="video-iframe" src="' + youtube_embed + '" frameborder="0"></iframe>'; 
+					this.$el.find('.memory-video-container').append(iframe_str);
+
+				} else if ( /vimeo/i.test(video_url) ) {
+
+					var video_id = video_url.replace(/\D/g,'');
+					var embed_url = 'https://player.vimeo.com/video/' + video_id;
+					var iframe_str = '<iframe src="' + embed_url + '" class="video-iframe" frameborder="0"></iframe>';
+					this.$el.find('.memory-video-container').append(iframe_str);
+				}
+			} 
+			else {
+
+				this.$el.find('.memory-video-container').addClass('hide');
+				return;
 			}
 
 		},
 
 		current_memory: '',
-		close_display: function() {
+		close_display: function(callback) {
 			var that = this;
 			this.audio_player.pause();
+
+			var display_height = this.$el.height();
+
 			this.$el.animate({
-				top: '-381px'
+				top: '-'+display_height+'px',
 			}, 850, 'easeOutQuart', function() {
 				that.visible = false;
 				/* todo: empty memory display */
 				$('.memory-active').removeClass('memory-active');
 				that.reset_memory_display_state();
+
+				callback;
 			});
 		},
 		toggle_confirm: function() {
@@ -699,8 +720,8 @@ update_aggregate_meter_height();
 			$('.memory-delete-cancel').toggleClass('visible');
 		},
 		reset_delete_confirm: function() {
-			$('.memory-delete-text').addClass('visible');
-			$('.delete-memory-icon').removeClass('visible');
+			$('.memory-delete-text').removeClass('visible');
+			$('.delete-memory-icon').addClass('visible');
 			$('.memory-delete-cancel').removeClass('visible');			
 		},
 		delete_memory: function(e) {

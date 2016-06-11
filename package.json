@@ -1,5 +1,5 @@
 {
-  "name": "inside_out",
+  "name": "memory_collector",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -15,5 +15,9 @@
     "jquery": "^2.2.2",
     "noty": "^2.3.8",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.1"
   }
 }
