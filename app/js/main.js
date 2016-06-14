@@ -1,3 +1,14 @@
+/*
+var $ = require('jquery');
+require('jquery-ui/slider');
+require('jquery-ui/effect');
+var noty = require('noty');
+var autosize = require('autosize');
+var _ = require('underscore');
+var Backbone = require('backbone');
+Backbone.LocalStorage = require('backbone.localstorage');
+*/
+
 /* --------------------------------------------------------------- */
 /* Date stuff: */
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -537,8 +548,9 @@ update_aggregate_meter_height();
 				uri: ''
 			}
 
-			this.close_display( this.$el.removeClass('invisible') );
+			this.close_display();
 
+			this.$el.removeClass('invisible');
 
 		},
 		render: function(model) {
@@ -697,7 +709,7 @@ update_aggregate_meter_height();
 		},
 
 		current_memory: '',
-		close_display: function(callback) {
+		close_display: function() {
 			var that = this;
 			this.audio_player.pause();
 
@@ -710,8 +722,6 @@ update_aggregate_meter_height();
 				/* todo: empty memory display */
 				$('.memory-active').removeClass('memory-active');
 				that.reset_memory_display_state();
-
-				callback;
 			});
 		},
 		toggle_confirm: function() {
