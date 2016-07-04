@@ -15,6 +15,7 @@ body {
 /* Utility Classes */
 .hide { display: none !important; }
 .invisible { visibility: none !important; }
+.clear { clear: both; }
 
 /* Blink/fade-in/out */
 .blink-fade {
@@ -50,6 +51,13 @@ body {
 #page_header {
 	margin: 10px 0 0 0;
 }
+.page-title {
+	float: left;
+	font-weight: 300;
+	font-size: 16px;
+	color: #999;
+}
+
 .control_row {
 	padding: 10px 0;
 }
@@ -107,6 +115,7 @@ input[type="text"] { outline-width: 0; }
 
 #add_memory {
 	cursor: pointer;
+	float: right;
 }
 #add_memory:hover {
 	color: #777;
@@ -184,6 +193,9 @@ input[type="text"] { outline-width: 0; }
 	border-radius: 50%;
 	cursor: pointer;
 	border-color: #eee;
+}
+.emotion_slider > .ui-slider-handle:focus {
+	outline: none;
 }
 
 #slider_joy > span.ui-slider-handle,
@@ -304,12 +316,23 @@ input[type="text"] { outline-width: 0; }
 .attachments_input_container {
 	margin-top: 15px;
 }
-.attachments_input_container input {
-	width: 79%;
+
+.attachment_text_input {
+	width: 100%;
+	font-weight: 100;
+	text-align: center;
+	border: 1px solid #bbb;
+	border-radius: 3px;
 }
-.attachments_input_container button {
-	width: 19%;
+
+.add-attachment-btn {
+	display: block;
+	width: 100px;
+	margin: 15px auto 0 auto;
+	font-weight: 100;
+	background-color: white;
 }
+
 
 @media only screen and (max-width: 480px) {
 	#add_memory_modal {
@@ -427,7 +450,7 @@ input[type="text"] { outline-width: 0; }
 }
 
 .memory-display-text {
-	padding-bottom: 10px;
+	padding-bottom: 15px;
 }
 
 .memory-display-footer {
@@ -526,6 +549,7 @@ input[type="text"] { outline-width: 0; }
 
 .memory-image-placeholder {
 	width: 100%;
+	margin-bottom: 15px;
 }
 
 .memory-video-container {

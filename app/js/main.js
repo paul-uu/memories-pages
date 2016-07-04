@@ -12,37 +12,45 @@ Backbone.LocalStorage = require('backbone.localstorage');
 /* --------------------------------------------------------------- */
 /* Date stuff: */
 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var days   = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-var today = new Date();
-var year  = today.getFullYear(),
-	month = months[today.getMonth()],
-	date  = today.getDate(),
-	day   = days[today.getDay()],
-	hour = today.getHours(),
-	mins = today.getMinutes(),
-	raw  = Date.now();
+var days   = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-var am_pm = hour > 12 ? 'pm': 'am';
-var time_string = (hour % 12).toString() + ':' + mins.toString() + ' ' + am_pm;
+function get_date_time() {
+	var today = new Date();
+	var year  = today.getFullYear(),
+		month = months[today.getMonth()],
+		date  = today.getDate(),
+		day   = days[today.getDay()],
+		hour = today.getHours(),
+		mins = today.getMinutes(),
+		raw  = Date.now();
 
+	var am_pm = hour > 12 ? 'pm': 'am';
 
-/* --------------------------------------------------------------- */
-/* dynamically correct height of #aggregate_meter */
+	/* correct 'hour' format */
+	if ( hour === 0 )   hour = 12;        /* convert hour value 0 -> 12, as in 12am midnight */
+	else if (hour > 12) hour = hour % 12; /* prevent values over 12, maintain 12 hour clock */
+	else                hour = hour;
 
-/*
-var $control_panel = $('#control_panel'),
-	$aggregate_meter = $('#aggregate_meter'),
-	$window = $(window);
+	/* correct 'minute' format */
+	if (mins.toString().length < 2)
+		/* minute value (09).toString() would otherwise be represented as '9', as in 1:9, instead of 1:09 */
+		mins = '0' + mins.toString();
+	else
+		mins = mins.toString();
 
-function update_aggregate_meter_height() {
-	var cp_height = $control_panel.height();	
-	$aggregate_meter.css('height','calc(100% - ' + cp_height.toString() + 'px)');
+	var time_string = hour.toString() + ':' + mins + ' ' + am_pm;
+
+	return {
+		'year': year,
+		'month': month,
+		'date': date,
+		'day': day,
+		'raw': raw,
+		'time': time_string
+	};
 }
-$window.on('resize', function() {
-	update_aggregate_meter_height();	
-});
-update_aggregate_meter_height();
-*/
+
+
 
 
 /* --------------------------------------------------------------- */
@@ -64,12 +72,12 @@ update_aggregate_meter_height();
 		defaults: {
 
 			'date_time': {
-				'year': year,
-				'month': month,
-				'date': date,
-				'day': day,
-				'time': time_string,
-				'raw': raw
+				'year': null,
+				'month': null,
+				'date': null,
+				'day': null,
+				'time': null,
+				'raw': null
 			},
 			'memory_text': null,
 			'media': {
@@ -108,6 +116,16 @@ update_aggregate_meter_height();
 				'webkit': null,
 				'moz': null
 			}
+		},
+		get_current_time: function() {
+			/* set date/time values once a new memory is saved */
+			var current_time = get_date_time();
+			this.attributes.date_time.year = current_time.year;
+			this.attributes.date_time.month = current_time.month;
+			this.attributes.date_time.date = current_time.date;
+			this.attributes.date_time.day = current_time.day;
+			this.attributes.date_time.time = current_time.time;
+			this.attributes.date_time.raw = current_time.raw;
 		},
 		emotion_vals_to_percentages: function() {
 
@@ -238,7 +256,7 @@ update_aggregate_meter_height();
 			'click #add_image_attachment'  : 'add_image_attachment',
 			'click #add_video_attachment'  : 'add_video_attachment',	
 			*/
-			'click .add_attachment_url'	   : 'add_attachment',
+			'click .add-attachment-btn'	   : 'add_attachment',
 			'keyup #input_memory'          : function() { 
 												this.validate();
 												this.new_memory.attributes.memory_text = $('#input_memory').val();
@@ -460,7 +478,14 @@ update_aggregate_meter_height();
 		},		
 		initialize_new_memory: function() {
 			this.new_memory = new Memory_Model({
-				'date': date,
+				'date_time': {
+					'year': '',
+					'month': '',
+					'date': '',
+					'day': '',
+					'time': '',
+					'raw': ''
+				},
 				'memory_text': '',
 				'media': {
 					'image': '',
@@ -503,6 +528,19 @@ update_aggregate_meter_height();
 		save_memory: function(e) {
 
 			if ($(e.target).hasClass('enabled')) {
+				/*
+				var current_date_time = get_date_time();
+				this.new_memory.date_time.year = current_date_time.year;
+				this.new_memory.date_time.month = current_date_time.month;
+				this.new_memory.date_time.date = current_date_time.date;
+				this.new_memory.date_time.day = current_date_time.day;
+				this.new_memory.date_time.time = current_date_time.time;
+				this.new_memory.date_time.raw = current_date_time.raw;
+				*/
+
+				this.new_memory.get_current_time();
+
+
 				this.new_memory.emotion_vals_to_percentages();
 				this.new_memory.percentages_to_gradient_string();
 
@@ -883,22 +921,22 @@ update_aggregate_meter_height();
 		*/
 		switch (emotion) {
 			case 'joy':
-				return flag === 'color' ? '#F5F317' : 'happy';
+				return flag === 'color' ? '#F5F317' : 'Happy';
 				break;
 			case 'sadness':
-				return flag === 'color' ? '#5380be' : 'sad';
+				return flag === 'color' ? '#5380be' : 'Sad';
 				break;
 			case 'anger':
-				return flag === 'color' ? '#db373e' : 'angry';
+				return flag === 'color' ? '#db373e' : 'Angry';
 				break;
 			case 'fear':
-				return flag === 'color' ? '#c3648e' : 'scary';
+				return flag === 'color' ? '#c3648e' : 'Scary';
 				break;
 			case 'disgust':
-				return flag === 'color' ? '#73c557' : 'disgusting';
+				return flag === 'color' ? '#73c557' : 'Disgusting';
 				break;
 			case 'neutral':
-				return flag === 'color' ? '#ddd' : 'neutral';
+				return flag === 'color' ? '#ddd' : 'Neutral';
 				break;																		
 		}		
 	}

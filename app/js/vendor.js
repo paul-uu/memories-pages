@@ -1,3 +1,5 @@
+'use strict';
+
 global.$ = require('jquery');
 require('jquery-ui/slider');
 require('jquery-ui/effect');
