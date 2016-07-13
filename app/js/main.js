@@ -596,7 +596,7 @@ function get_date_time() {
 
 			if (!this.visible) {
 				this.$el.animate({
-					top: '72px'
+					top: '81px'
 				}, 850, 'easeOutQuart', function() {
 					that.visible = true;
 					that.render_callback(model);

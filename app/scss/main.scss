@@ -585,7 +585,6 @@ input[type="text"] { outline-width: 0; }
 	}
 }
 
-/*  */
 @media only screen and (max-width: 480px) {
 	#memory_display {
 		width: calc(100% - 20px);
@@ -596,7 +595,6 @@ input[type="text"] { outline-width: 0; }
 		padding: 10px;
 	}
 }
-
 
 
 /* Memories */
@@ -615,3 +613,33 @@ input[type="text"] { outline-width: 0; }
 	-moz-box-shadow: 0 0 8px #f0f8ff; 
 	box-shadow:0 0 8px #f0f8ff;
 }
+
+
+.available-memories {
+	padding-top: 14px;
+}
+.available-memories    { float: right;  }
+.sort-filter-container { float: left; }
+.sort-container,
+.filter-container {
+	display: inline-block;
+	margin-right: -4px;
+}
+.sort-container {
+	margin-right: 15px;
+}
+.sort-label,
+.filter-label {
+	font-size: 10px;
+	color: #aaa;
+}
+#filter_select,
+#sort_select {
+	background: transparent;
+	font-size: 14px;
+	border-color: #ccc;
+}
+#filter_select:focus,
+#sort_select:active {
+	outline: none;
+}	
