@@ -116,6 +116,8 @@ input[type="text"] { outline-width: 0; }
 #add_memory {
   cursor: pointer;
   float: right;
+  font-weight: normal;
+  font-size: 16px;
 }
 #add_memory:hover {
   color: #777;

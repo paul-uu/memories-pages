@@ -528,25 +528,15 @@ function get_date_time() {
 		save_memory: function(e) {
 
 			if ($(e.target).hasClass('enabled')) {
-				/*
-				var current_date_time = get_date_time();
-				this.new_memory.date_time.year = current_date_time.year;
-				this.new_memory.date_time.month = current_date_time.month;
-				this.new_memory.date_time.date = current_date_time.date;
-				this.new_memory.date_time.day = current_date_time.day;
-				this.new_memory.date_time.time = current_date_time.time;
-				this.new_memory.date_time.raw = current_date_time.raw;
-				*/
 
 				this.new_memory.get_current_time();
-
-
 				this.new_memory.emotion_vals_to_percentages();
 				this.new_memory.percentages_to_gradient_string();
 
 				my_memory.add(this.new_memory);
 				this.new_memory.save();
 		
+				this.initialize_new_memory();
 				this.close();
 				this.clear();
 			}
@@ -557,7 +547,6 @@ function get_date_time() {
 		}
 	});
 	var memory_add_modal = new Memory_Add_Modal();
-
 
 
 	// ---------------------
