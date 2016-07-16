@@ -152,6 +152,14 @@ input[type="text"] { outline-width: 0; }
   background-color: white;
   border-radius: 5px;
 }
+@media only screen and (min-width: 481px) and (max-width: 767px) {
+  #add_memory_modal {
+    width: 90%;
+  }
+}
+
+
+
 /* Slider(s) */
 #emotion_sliders {
   width: 100%;
@@ -224,9 +232,24 @@ input[type="text"] { outline-width: 0; }
 #slider_neutral > .ui-slider-range {
   background: #ccc;
 }
-.ui-slider-horizontal {
-  
+@media only screen and (min-width: 481px) and (max-width: 767px) {
+  .emotion_slider.ui-slider {
+    width: 12px;
+    height: 60px;
+    margin: 0 7%;
+  }
+  .emotion_slider.ui-slider:first-child {
+    margin-left: 0;
+  }
+  .emotion_slider.ui-slider:last-child {
+    margin-right: 0;
+  }  
 }
+
+
+
+
+
 .modal_content {
   padding: 30px 30px 65px 30px;
   height: calc(100% - 50px);

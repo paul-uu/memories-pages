@@ -1,13 +1,3 @@
-/*
-var $ = require('jquery');
-require('jquery-ui/slider');
-require('jquery-ui/effect');
-var noty = require('noty');
-var autosize = require('autosize');
-var _ = require('underscore');
-var Backbone = require('backbone');
-Backbone.LocalStorage = require('backbone.localstorage');
-*/
 
 /* --------------------------------------------------------------- */
 /* Date stuff: */
@@ -16,14 +6,8 @@ var days   = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function get_date_time() {
 	var today = new Date();
-	var year  = today.getFullYear(),
-		month = months[today.getMonth()],
-		date  = today.getDate(),
-		day   = days[today.getDay()],
-		hour = today.getHours(),
-		mins = today.getMinutes(),
-		raw  = Date.now();
-
+	var hour = today.getHours(),
+		mins = today.getMinutes();
 	var am_pm = hour > 12 ? 'pm': 'am';
 
 	/* correct 'hour' format */
@@ -41,31 +25,63 @@ function get_date_time() {
 	var time_string = hour.toString() + ':' + mins + ' ' + am_pm;
 
 	return {
-		'year': year,
-		'month': month,
-		'date': date,
-		'day': day,
-		'raw': raw,
+		'year': today.getFullYear(),
+		'month': months[today.getMonth()],
+		'date': today.getDate(),
+		'day': days[today.getDay()],
+		'raw': Date.now(),
 		'time': time_string
 	};
 }
-
-
 
 
 /* --------------------------------------------------------------- */
 (function() {
 
 
-
+	/* ---------------------------------------------------------------- */
+	/* Handle any style/visual changes done by JS based on screen width */
 	var $window = $(window),
 		device_width = $window.width(),
 		device_height = $window.height();
+		breakpoint = '',
+		new_breakpoint = '';
+
+	/* determine current screen width and associated breakpoint */
 	$window.on('resize', function() {
+
 		device_width = $window.width();
-		device_height = $window.height();
+
+		if (device_width >= 768) {
+			new_breakpoint = 'desktop';
+		} else if (device_width < 768 && device_width > 480) {
+			new_breakpoint = 'tablet';
+		} else {
+			new_breakpoint = 'phone';
+		}
+		update_breakpoints(new_breakpoint);
 	});
+
+	/* if the breakpoint has changed, make changes as necessary */
+	function update_breakpoints(updated_breakpoint) {
+		if (breakpoint === updated_breakpoint) {
+			return;
+		} else {
+			/* update views w/ new breakpoint */
+			update_slider_orientation(updated_breakpoint);
+		}
+	}
+
+	/* update jquery ui slider orientation */
+	function update_slider_orientation(breakpoint) {
+		if (breakpoint === 'desktop' || breakpoint === 'phone')
+			$('.emotion_slider').slider({ orientation: 'horizontal'});
+		else
+			$('.emotion_slider').slider({ orientation: 'vertical'});
+	}
 	
+
+
 	// --------------------
 	// Memory Model
 	var Memory_Model = Backbone.Model.extend({
@@ -268,8 +284,16 @@ function get_date_time() {
 			view.new_memory = null;
 			view.initialize_new_memory();
 			autosize($('#input_memory'));
+
+			/* determine orientation of sliders based on screen width */
+			/* to be it's own function */
+			/*  */
+			var orientation = 'horizontal';
+			if ((device_width > 480) && (device_width < 768))
+				orientation = 'vertical';
+
 			$('.emotion_slider').slider({
-				//orientation: 'vertical',
+				orientation: orientation,
 				change: function(e, ui) {
 					view.validate(e, ui);
 					var el_id = $(e.target).attr('id');
@@ -900,7 +924,7 @@ function get_date_time() {
 	}
 
 
-
+	/* emotion => color or adjective string */
 	function emotion_translate(emotion, flag) {
 		/* 
 			emotion => flag
