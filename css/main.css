@@ -32,6 +32,7 @@ body {
   height: 100%;
   width: 100%;
   position: relative;
+  overflow-x: hidden;
 }
 #page_header, #control_panel {
   width: 100%;
@@ -643,8 +644,8 @@ input[type="text"] { outline-width: 0; }
 .available-memories {
   padding-top: 14px;
 }
-.available-memories    { float: right;  }
-.sort-filter-container { float: left; }
+.available-memories    { float: left;  }
+.sort-filter-container { float: right; }
 .sort-container,
 .filter-container {
   display: inline-block;
@@ -662,9 +663,48 @@ input[type="text"] { outline-width: 0; }
 #sort_select {
   background: transparent;
   font-size: 14px;
-  border-color: #ccc;
+  border-color: #999;
 }
 #filter_select:focus,
 #sort_select:active {
   outline: none;
 } 
+
+
+
+
+
+/* d3 view */
+#d3-view-toggle {
+  color: #555;
+  float: right;
+  font-weight: normal;
+  font-size: initial;
+  margin-right: 15px;
+  cursor: pointer;
+}
+#d3-view-toggle:hover {
+  color: #777;
+}
+#d3-view-toggle.selected,
+#d3-view-toggle.selected:hover {
+  color: #13a3fd;
+}
+
+
+#d3-container {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 82px);
+  top: 82px;
+  left: 100%;
+  background-color: white;
+  z-index: 5;
+  -webkit-transition: left 500ms ease-in-out;
+  -moz-transition: left 500ms ease-in-out;
+  -o-transition: left 500ms ease-in-out;
+  transition: left 500ms ease-in-out;
+}
+#d3-container.visible {
+  left: 0;
+}
