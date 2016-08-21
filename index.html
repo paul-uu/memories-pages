@@ -24,16 +24,15 @@
 		<section id='control_panel'>
 
 			<!-- Page Header -->
-			<h3 id='page_header'>
+			<div id='page_header'>
 				<span class='page-title'>Memory Collector</span>
-				<span id='add_memory'>
-					<span>New&nbsp;</span>
-					<i class="fa fa-plus" aria-hidden="true"></i>
-				</span>
 
-				<span id='d3-view-toggle'>
-					<i class="fa fa-bar-chart" aria-hidden="true"></i>
-				</span>
+				<div class='available-memories'>
+					<span id='memories_num'></span>&nbsp;<span id='memories_qty_label_prefix'></span>&nbsp;Memories&nbsp;<span id='memories_qty_label_suffix'></span>
+				</div>				
+
+
+
 				
 				<div class="clear"></div>
 			</h3>
@@ -41,9 +40,13 @@
 			<!-- Control Panel Icons -->
 			<div class='control_row'>
 				
-				<div class='available-memories'>
-					<span id='memories_num'></span>&nbsp;<span id='memories_qty_label_prefix'></span>&nbsp;Memories&nbsp;<span id='memories_qty_label_suffix'></span>
-				</div>
+				<span id='add_memory'>
+					<i class="fa fa-plus" aria-hidden="true"></i>
+				</span>
+
+				<span id='d3-view-toggle'>
+					<i class="fa fa-bar-chart" aria-hidden="true"></i>
+				</span>
 
 				<div class='sort-filter-container'>
 					<div class='sort-container'>
@@ -127,7 +130,7 @@
 
 				</div>
 			</div>
-
+                       
 		</section>
 
 		<!-- Saved Memories populated here -->
@@ -153,6 +156,11 @@
 
 				<textarea id='input_memory' autofocus></textarea>
 				<br>
+
+				<div class='core-memory-checkbox-container'>
+					<span class='core-memory-checkbox-label'>Core Memory</span>
+					<input type='checkbox' class='core-memory-checkbox'>
+				</div>
 
 				<!-- Sliders -->
 				<div id='emotion_sliders'>

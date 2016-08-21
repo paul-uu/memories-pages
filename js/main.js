@@ -324,6 +324,8 @@ function get_date_time() {
 
 			$('#input_memory').val(memory.memory_text);
 
+			/* bind model 'Core Memory' bool to checkbox state */
+
 			// emotions:
 			for (emotion in memory.emotions) {
 				this.render_emotion_slider(emotion, memory.emotions[emotion]['value']);
@@ -922,6 +924,10 @@ function get_date_time() {
 		data_obj: {	
 		},
 		initialize: function() {
+
+			this.canvas = d3.select('#d3-graph').append('svg')
+							.attr('height', 400);
+
 			this.reset_data_obj();
 			this.render();
 		},
@@ -954,20 +960,31 @@ function get_date_time() {
 			};
 		},
 		render: function() {
-			this.calculate();
 
+			var self = this;
+			var data = this.calculate();
+
+			var keys = Object.keys(data);
+			keys.forEach(function(key, i) {
+				self.canvas.append('rect')
+					.attr('height', data[key].percentage + '%')
+					.attr('width', 20)
+					.attr('fill', emotion_translate(key, 'color'))
+					.attr('x', 30 * i)
+					.attr('y', (100 - data[key].percentage) + '%');
+			});
 
 		},
 		calculate: function() {
 
-			var self = this;
-			var data = self.data_obj;
-			var val_total = 0;
+			var self = this,
+				data = self.data_obj,
+				val_total = 0;
+
+			self.reset_data_obj();
 
 			my_memory.each(function(memory) {
-
 				var emotions = memory.attributes.emotions;
-
 				if (emotions.joy) {
 					data.joy.value += emotions.joy.value;
 					val_total += emotions.joy.value;
@@ -994,13 +1011,16 @@ function get_date_time() {
 				} 
 			});
 
-			/* convert value for each emotion into a percentage */
+			/* convert value for each emotion into a percentage as XX.X% */
 			data.joy.percentage     = parseFloat( ((data.joy.value / val_total) * 100).toFixed(1) );
 			data.sadness.percentage = parseFloat( ((data.sadness.value / val_total) * 100).toFixed(1) );
 			data.anger.percentage   = parseFloat( ((data.anger.value / val_total) * 100).toFixed(1) );
 			data.fear.percentage    = parseFloat( ((data.fear.value / val_total) * 100).toFixed(1) );
 			data.disgust.percentage = parseFloat( ((data.disgust.value / val_total) * 100).toFixed(1) );
 			data.neutral.percentage = parseFloat( ((data.neutral.value / val_total) * 100).toFixed(1) );
+
+			return data;
+			//console.log(data);
 		}
 	});
 	var d3_view = new D3_View();
