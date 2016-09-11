@@ -140,10 +140,17 @@ input[type="text"] { outline-width: 0; }
   color: #13a3fd;
 }
 
+#d3-container {
+  overflow: auto;
+}
+.d3-header {
+  padding-left: 30px;
+}
+
 #d3-graph > svg {
   width: 100%;
   height: 100%;
-  padding: 15px;
+  padding: 15px 0 30px 30px;
 }
 
 

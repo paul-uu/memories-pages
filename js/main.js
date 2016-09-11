@@ -921,107 +921,146 @@ function get_date_time() {
 		events: {
 			'click #d3-view-toggle': 'toggle_visibility'
 		},
-		data_obj: {	
+		data_arr: {
 		},
 		initialize: function() {
 
-			this.canvas = d3.select('#d3-graph').append('svg')
-							.attr('height', 400);
-
-			this.reset_data_obj();
+			this.reset_data_arr();
 			this.render();
-		},
-		reset_data_obj: function() {
-			this.data_obj = {
-				'joy': {
-					'value': 0,
-					'percentage': 0
-				},
-				'sadness': {
-					'value': 0,
-					'percentage': 0
-				},
-				'anger': {
-					'value': 0,
-					'percentage': 0
-				},
-				'fear': {
-					'value': 0,
-					'percentage': 0
-				},
-				'disgust': {
-					'value': 0,
-					'percentage': 0
-				},
-				'neutral': {
-					'value': 0,
-					'percentage': 0			
-				}
-			};
 		},
 		render: function() {
 
 			var self = this;
 			var data = this.calculate();
 
-			var keys = Object.keys(data);
-			keys.forEach(function(key, i) {
-				self.canvas.append('rect')
-					.attr('height', data[key].percentage + '%')
-					.attr('width', 20)
-					.attr('fill', emotion_translate(key, 'color'))
-					.attr('x', 30 * i)
-					.attr('y', (100 - data[key].percentage) + '%');
+			var max = d3.max(data, function(d) { return d.value; });
+			var x_axis_len = data.length - 1;
+
+			var margin = { 
+				top: 0,
+				right: 0,
+				bottom: 0,
+				left: 10
+			};
+			var width = 360 - margin.left - margin.right;
+			var height = 350 - margin.top - margin.bottom;		
+
+			var x = d3.scaleBand()
+						.range([0, width])
+						.padding(0.1);
+
+			var y = d3.scaleLinear()
+						.range([height, 0]);
+
+			var svg = d3.select('#d3-graph').append('svg')
+						.attr('width', width + margin.left + margin.right)
+						.attr('height', height + margin.top + margin.bottom)
+						.append('g')
+							.attr( 'transform', 'translate(' + margin.left + ',' + margin.top + ')' );
+
+			data.forEach(function(d) {
+				d.value = +d.value;
 			});
+
+			x.domain(data.map(function(d) { return d.emotion; }));
+			y.domain([0, d3.max(data, function(d) { return d.value })]);
+
+			svg.selectAll('.bar')
+				.data(data)
+				.enter()
+					.append('rect')
+					.attr('class', 'bar')
+					.attr('x', function(d) { return x(d.emotion); })
+					.attr('width', x.bandwidth())
+					.attr('y', function(d) { return y(d.value); })
+					.attr('height', function(d) { return height - y(d.value); })
+					.attr('fill', function(d) { return emotion_translate(d.emotion, 'color') });
+
+			svg.append('g')
+				.attr('transform', 'translate(0,' + height + ')')
+				.call(d3.axisBottom(x));
+
+			svg.append('g')
+				.call(d3.axisLeft(y));
 
 		},
 		calculate: function() {
 
-			var self = this,
-				data = self.data_obj,
-				val_total = 0;
+			this.reset_data_arr();
 
-			self.reset_data_obj();
+			var self = this,
+				data = self.data_arr,
+				val_total = 0;
 
 			my_memory.each(function(memory) {
 				var emotions = memory.attributes.emotions;
 				if (emotions.joy) {
-					data.joy.value += emotions.joy.value;
+					data[0].value += emotions.joy.value;
 					val_total += emotions.joy.value;
 				} 
 				if (emotions.sadness) {
-					data.sadness.value += emotions.sadness.value;
+					data[1].value += emotions.sadness.value;
 					val_total += emotions.sadness.value;
 				} 
 				if (emotions.anger) {
-					data.anger.value += emotions.anger.value;
+					data[2].value += emotions.anger.value;
 					val_total += emotions.anger.value;
 				} 
 				if (emotions.fear) {
-					data.fear.value += emotions.fear.value;
+					data[3].value += emotions.fear.value;
 					val_total += emotions.fear.value;
 				} 
 				if (emotions.disgust) {
-					data.disgust.value += emotions.disgust.value;
+					data[4].value += emotions.disgust.value;
 					val_total += emotions.disgust.value;
 				} 
 				if (emotions.neutral) {
-					data.neutral.value += emotions.neutral.value;
+					data[5].value += emotions.neutral.value;
 					val_total += emotions.neutral.value;
 				} 
 			});
-
+			
 			/* convert value for each emotion into a percentage as XX.X% */
-			data.joy.percentage     = parseFloat( ((data.joy.value / val_total) * 100).toFixed(1) );
-			data.sadness.percentage = parseFloat( ((data.sadness.value / val_total) * 100).toFixed(1) );
-			data.anger.percentage   = parseFloat( ((data.anger.value / val_total) * 100).toFixed(1) );
-			data.fear.percentage    = parseFloat( ((data.fear.value / val_total) * 100).toFixed(1) );
-			data.disgust.percentage = parseFloat( ((data.disgust.value / val_total) * 100).toFixed(1) );
-			data.neutral.percentage = parseFloat( ((data.neutral.value / val_total) * 100).toFixed(1) );
+			data.forEach(function(item, i) {
+				data[i].percentage = parseFloat( ((data[i].value / val_total) * 100).toFixed(1) );
+			});
 
 			return data;
-			//console.log(data);
-		}
+		},
+		reset_data_arr: function() {
+			this.data_arr = [
+				{
+					'emotion': 'joy',
+					'value': 0,
+					'percentage': 0
+				},
+				{
+					'emotion': 'sadness',
+					'value': 0,
+					'percentage': 0
+				},
+				{
+					'emotion': 'anger',
+					'value': 0,
+					'percentage': 0
+				},
+				{
+					'emotion': 'fear',
+					'value': 0,
+					'percentage': 0
+				},
+				{
+					'emotion': 'disgust',
+					'value': 0,
+					'percentage': 0
+				},
+				{
+					'emotion': 'neutral',
+					'value': 0,
+					'percentage': 0
+				}
+			]
+		},		
 	});
 	var d3_view = new D3_View();
 
