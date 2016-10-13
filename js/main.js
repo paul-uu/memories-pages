@@ -36,8 +36,6 @@ function get_date_time() {
 
 
 
-
-/* --------------------------------------------------------------- */
 (function() {
 
 
@@ -230,10 +228,11 @@ function get_date_time() {
 	var Control_Panel = Backbone.View.extend({
 		el: $('#control_panel'),
 		events: {
-			'click #add_memory'      : 'add_memory',
-			'change #sort_select'    : 'collection_sort',
-			'change #filter_select'  : 'filter_by',
-			'click #d3-view-toggle'  : 'toggle_d3_view'
+			'click #add_memory'              : 'add_memory',
+			'change #sort_select'            : 'collection_sort',
+			'change #filter_select'          : 'filter_by',
+			'click #d3-view-toggle'          : 'open_d3_view',
+			'click #d3-view-toggle.selected' : 'close_d3_view'
 		},
 		initialize: function() {
 			this.render();
@@ -242,6 +241,7 @@ function get_date_time() {
 		},
 		add_memory: function() {
 			memory_add_modal.render();
+			app_router.navigate('new-memory');
 		},
 		collection_sort: function(e) {
 			var val = $(e.currentTarget).val();
@@ -254,9 +254,15 @@ function get_date_time() {
 			var filter = $(e.currentTarget).val();
 			memories.filter_by_emotion(filter);
 		},
-		toggle_d3_view: function() {
-			$('#d3-view-toggle').toggleClass('selected');
-			$('#d3-container').toggleClass('visible');
+		open_d3_view: function() {
+			$('#d3-view-toggle').addClass('selected');
+			$('#d3-container').addClass('visible');
+			app_router.navigate('analytics');
+		},
+		close_d3_view: function() {
+			$('#d3-view-toggle').removeClass('selected');
+			$('#d3-container').removeClass('visible');
+			app_router.navigate('');		
 		}
 	});
 	var control_panel = new Control_Panel();
@@ -274,11 +280,6 @@ function get_date_time() {
 			'click .input_attachment_icon' : 'toggle_attachment',
 			'click #modal_reset'           : 'reset',
 			'click #save_new_memory'       : 'save_memory',
-			/*
-			'click #add_audio_attachment'  : 'add_audio_attachment',
-			'click #add_image_attachment'  : 'add_image_attachment',
-			'click #add_video_attachment'  : 'add_video_attachment',	
-			*/
 			'click .add-attachment-btn'	   : 'add_attachment',
 			'keyup #input_memory'          : function() { 
 												this.validate();
@@ -362,6 +363,7 @@ function get_date_time() {
 		},
 		close: function() {
 			this.$el.removeClass('view');
+			app_router.navigate('');
 		},
 
 		toggle_attachment: function(e) {
@@ -608,10 +610,9 @@ function get_date_time() {
 				uri: ''
 			}
 
-			this.close_display();
+			//this.close_display();
 
 			this.$el.removeClass('invisible');
-
 		},
 		render: function(model) {
 			var that = this;
@@ -628,8 +629,10 @@ function get_date_time() {
 
 		render_callback: function(model) {
 
-			this.reset_memory_display_state();		
+			this.reset_memory_display_state();	
 			this.current_memory = model;
+			app_router.navigate('memory/' + (model.cid));
+
 			var emotions = model.attributes.emotions;
 			for (var emotion in emotions) {
 				/* render emotions segment meter */
@@ -783,6 +786,7 @@ function get_date_time() {
 				$('.memory-active').removeClass('memory-active');
 				that.reset_memory_display_state();
 			});
+			app_router.navigate('');
 		},
 		toggle_confirm: function() {
 			$('.memory-delete-text').toggleClass('visible');
@@ -922,6 +926,11 @@ function get_date_time() {
 			'click #d3-view-toggle': 'toggle_visibility'
 		},
 		data_arr: {
+		},
+		close_view: function() {
+			$('#d3-view-toggle').removeClass('selected');
+			$('#d3-container').removeClass('visible');
+			app_router.navigate('/');
 		},
 		initialize: function() {
 
@@ -1064,6 +1073,34 @@ function get_date_time() {
 	});
 	var d3_view = new D3_View();
 
+
+	/* --------------------------------------------------------------------------- */
+	/* Router */
+	var App_Router = Backbone.Router.extend({
+		routes: {
+			''            : 'home_view',
+			'new-memory'  : 'new_memory',
+			'analytics'   : 'analytics',
+			'memory/:cid' : 'memory' 
+		},
+		home_view: function() {
+			memory_add_modal.close();
+			d3_view.close_view();
+		},
+		new_memory: function() {
+			memory_add_modal.render();
+		},
+		analytics: function() {
+			control_panel.open_d3_view();
+		},
+		memory: function(cid) {
+			var memory = my_memory.get(cid);
+			memory_display_view.render(memory);
+		}
+		
+	});
+	var app_router = new App_Router();
+	Backbone.history.start();
 
 
 	/* --------------------------------------------------------------------------- */
