@@ -253,7 +253,11 @@ function get_date_time() {
 		},
 		filter_by: function(e) {
 			var filter = $(e.currentTarget).val();
-			memories.filter_by_emotion(filter);
+			if (filter === 'core-memory') {
+				memories.filter_core_memory();
+			} else {
+				memories.filter_by_emotion(filter);	
+			}		
 		},
 		open_d3_view: function() {
 			$('#d3-view-toggle').addClass('selected');
@@ -332,7 +336,6 @@ function get_date_time() {
 			/* bind model 'Core Memory' bool to checkbox state */
 
 			/* reset checkbox */
-			console.log(memory.is_core_memory);
 			$('.core-memory-checkbox').prop('checked', memory.is_core_memory);
 
 			// emotions:
@@ -834,7 +837,6 @@ function get_date_time() {
 			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
 
 			if (this.model.attributes.is_core_memory) {
-				console.log('is core memory');
 				this.$el.addClass('core-memory');
 			}
 			return this;
@@ -930,6 +932,16 @@ function get_date_time() {
 			this.collection.reset(filtered);
 			this.sort_by_emotion(emotion);
 		},
+		filter_core_memory: function() {
+			this.collection.reset(superset.toJSON());
+			var filtered = this.collection.filter(function(memory) {
+				return (memory.get('is_core_memory'));
+			});
+			$('#memories_qty_label_prefix').text( 'Core' );
+			this.collection.reset(filtered);
+			this.render();
+
+		}
 		/* todo: filter by date - month/year/range/day of week */
 	});
 	var memories = new Memories_View(my_memory);
