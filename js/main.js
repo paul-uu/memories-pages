@@ -101,6 +101,7 @@ function get_date_time() {
 				'video':null,
 				'audio':null
 			},
+			'is_core_memory': null,
 			'emotions': {
 				'joy': {
 					'value': null,
@@ -284,6 +285,9 @@ function get_date_time() {
 			'keyup #input_memory'          : function() { 
 												this.validate();
 												this.new_memory.attributes.memory_text = $('#input_memory').val();
+											 },
+			'click .core-memory-checkbox'  : function(e) {
+												this.new_memory.attributes.is_core_memory = $(e.currentTarget).is(':checked');
 											 }
 		},
 		initialize: function() {
@@ -327,6 +331,10 @@ function get_date_time() {
 
 			/* bind model 'Core Memory' bool to checkbox state */
 
+			/* reset checkbox */
+			console.log(memory.is_core_memory);
+			$('.core-memory-checkbox').prop('checked', memory.is_core_memory);
+
 			// emotions:
 			for (emotion in memory.emotions) {
 				this.render_emotion_slider(emotion, memory.emotions[emotion]['value']);
@@ -358,6 +366,7 @@ function get_date_time() {
 			}
 		},
 		clear: function() {
+			$('.core-memory-checkbox').prop('checked', false);
 			$('#input_memory').val('');
 			$('.emotion_slider').slider('value', 0);
 		},
@@ -527,6 +536,7 @@ function get_date_time() {
 					'video':'',
 					'audio':''
 				},
+				'is_core_memory': false,
 				'emotions': {
 					'joy': {
 						'value': 0,
@@ -566,7 +576,7 @@ function get_date_time() {
 
 				this.new_memory.get_current_time();
 				this.new_memory.emotion_vals_to_percentages();
-				this.new_memory.percentages_to_gradient_string();
+				this.new_memory.percentages_to_gradient_string();				
 
 				my_memory.add(this.new_memory);
 				this.new_memory.save();
@@ -822,6 +832,11 @@ function get_date_time() {
 		render: function() {
 			this.$el.html(this.template(this.model));
 			this.$el.attr('style', 'background: ' + this.model.attributes.gradient.default.toString());
+
+			if (this.model.attributes.is_core_memory) {
+				console.log('is core memory');
+				this.$el.addClass('core-memory');
+			}
 			return this;
 		},
 		remove_memory: function() {

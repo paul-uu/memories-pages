@@ -700,15 +700,27 @@ input.core-memory-checkbox {
   display: inline-block;
   background-color: #ffffff;
   text-align: center;
-  padding-top: 2px;
+}
+
+.memory.core-memory {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .memory.core-memory:after {
-  font-family: FontAwesome;
-  content: "\f1db";
-  color: white;
+  content: "";
+  width: 13px;
+  height: 13px;
+  border: 2px solid white;
+  border-radius: 50%;
   opacity: 0.55;
   font-size: 18px;
+  transition: width 0.4s, height 0.4s;
+}
+.memory.core-memory:hover:after {
+  width: 25px;
+  height: 25px;
 }
 
 
@@ -717,6 +729,10 @@ input.core-memory-checkbox {
   -webkit-box-shadow:0 0 8px #f0f8ff; 
   -moz-box-shadow: 0 0 8px #f0f8ff; 
   box-shadow:0 0 8px #f0f8ff;
+}
+.memory-active.core-memory:after {
+  width: 25px;
+  height: 25px;
 }
 
 
