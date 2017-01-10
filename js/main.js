@@ -232,6 +232,7 @@ function get_date_time() {
 			'click #add_memory'              : 'add_memory',
 			'change #sort_select'            : 'collection_sort',
 			'change #filter_select'          : 'filter_by',
+			'click .fa-search'              : 'toggle_search_input',
 			'click #d3-view-toggle'          : 'open_d3_view',
 			'click #d3-view-toggle.selected' : 'close_d3_view'
 		},
@@ -258,6 +259,16 @@ function get_date_time() {
 			} else {
 				memories.filter_by_emotion(filter);	
 			}		
+		},
+		toggle_search_input: function(e) {
+			const $toggle = $(e.currentTarget);
+			const $input = $('.search-input');
+			$toggle.toggleClass('active');
+			if ($toggle.hasClass('active')) {
+				$input.removeClass('hidden');
+			} else {
+				$input.addClass('hidden');
+			}
 		},
 		open_d3_view: function() {
 			$('#d3-view-toggle').addClass('selected');

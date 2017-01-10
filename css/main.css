@@ -743,6 +743,32 @@ input.core-memory-checkbox {
   color: #777;
 }
 
+.search {
+  float: right;
+  position: relative;
+}
+.search .fa {
+  font-size: 20px;
+  margin: 12px 0 0 15px;
+  cursor: pointer;
+}
+.search .fa.active {
+  color: #13a3fd;
+}
+.search .search-input {
+  position: absolute;  
+  right: 0;
+  top: 50px;
+  transition: top 0.6s;
+  padding: 3px;
+  border-radius: 3px;
+  border: 1px solid #ddd;  
+  z-index: -1; 
+}
+.search .search-input.hidden {
+  top: 0;
+}
+
 .sort-filter-container { 
   float: right; 
 }
