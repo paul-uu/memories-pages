@@ -759,14 +759,14 @@ input.core-memory-checkbox {
   position: absolute;  
   right: 0;
   top: 50px;
-  transition: top 0.6s;
+  transition: right 0.6s;
   padding: 3px;
   border-radius: 3px;
   border: 1px solid #ddd;  
   z-index: -1; 
 }
 .search .search-input.hidden {
-  top: 0;
+  right: -225px;
 }
 
 .sort-filter-container { 

@@ -232,9 +232,14 @@ function get_date_time() {
 			'click #add_memory'              : 'add_memory',
 			'change #sort_select'            : 'collection_sort',
 			'change #filter_select'          : 'filter_by',
-			'click .fa-search'              : 'toggle_search_input',
+			'click .fa-search'               : 'toggle_search_input',
 			'click #d3-view-toggle'          : 'open_d3_view',
-			'click #d3-view-toggle.selected' : 'close_d3_view'
+			'click #d3-view-toggle.selected' : 'close_d3_view',
+			'keyup .search-input'            : 'search_memories',
+			'change .search-input'           : 'search_memories'
+		},
+		components: {
+			'search' : $('.search-input')
 		},
 		initialize: function() {
 			this.render();
@@ -262,14 +267,32 @@ function get_date_time() {
 		},
 		toggle_search_input: function(e) {
 			const $toggle = $(e.currentTarget);
-			const $input = $('.search-input');
 			$toggle.toggleClass('active');
 			if ($toggle.hasClass('active')) {
-				$input.removeClass('hidden');
+				this.components.search.removeClass('hidden');
 			} else {
-				$input.addClass('hidden');
+				this.components.search.addClass('hidden');
+				this.components.search.val('');
+				this.search_memories();
 			}
 		},
+		search_memories: function(e) {
+			const val = this.components.search.val();
+
+			// return array of matches
+			var results = my_memory.models.filter(function(memory) {
+				const regex = new RegExp(val, 'gi');
+				return memory.attributes.memory_text.match(regex);
+			});
+			console.log(results);
+			console.log(my_memory.models);
+
+			memories.collection.models = results;
+			memories.render();
+
+			my_memory = superset; /* reset collection from filtered to original */
+			
+		},		
 		open_d3_view: function() {
 			$('#d3-view-toggle').addClass('selected');
 			$('#d3-container').addClass('visible');
