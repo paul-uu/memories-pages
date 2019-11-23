@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Header from './components/Header';
+import Body from './components/Body';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import mockMemories from './mockData';
+
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      memories: mockMemories
+    }
+    this.updateMemories = this.updateMemories.bind(this);
+    this.filterMemories = this.filterMemories.bind(this);
+    this.sortMemories = this.sortMemories.bind(this);
+  }
+
+  updateMemories(updatedMemoriesArray) {
+    if (this.state.memories !== updatedMemoriesArray) {
+      this.setState({ memories: updatedMemoriesArray })
+    }
+  }
+
+  filterMemories(filter) { // todo: multiple filters
+    console.log(filter);
+  }
+
+  sortMemories(sort) {
+    console.log(sort);
+  }
+
+  render() {
+    const count = this.state.memories.length;
+    return (
+      <>
+        <Header
+          filterMemories={ this.filterMemories }
+          sortMemories={ this.sortMemories }
+          count={ count } />
+        <Body 
+          updateMemories={this.updateMemories}
+          memories={this.state.memories} />
+      </>
+    )
+  }
 }
 
 export default App;

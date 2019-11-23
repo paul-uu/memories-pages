@@ -304,7 +304,7 @@ input.core-memory-checkbox {
 }
 
 .core-memory-checkbox:checked {
-  background-color: ;
+  /* background-color: ; */
 }
 .core-memory-checkbox:checked:before {
   font-family: FontAwesome;
