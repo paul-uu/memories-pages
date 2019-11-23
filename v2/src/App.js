@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import Body from './components/Body';
+import styled from 'styled-components';
 
-import mockMemories from './mockData';
+import mockMemories from './constants/mockData';
 
 class App extends Component {
 
@@ -33,7 +34,7 @@ class App extends Component {
   render() {
     const count = this.state.memories.length;
     return (
-      <>
+      <StyledApp>
         <Header
           filterMemories={ this.filterMemories }
           sortMemories={ this.sortMemories }
@@ -41,9 +42,16 @@ class App extends Component {
         <Body 
           updateMemories={this.updateMemories}
           memories={this.state.memories} />
-      </>
+      </StyledApp>
     )
   }
 }
+
+const StyledApp = styled.div`
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow-x: hidden;
+`;
 
 export default App;

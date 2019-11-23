@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 
-class Memory extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  
-  render() {
-    return (
-    <div>{ this.props.memory.text }</div>
-    )
-  }
+const Memory = props => {
+
+  const test = () => { console.log('memory click'); }
+
+  const StyledMemory = styled.div`
+    width: 35px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    background: ${props => props.gradient}
+  `;
+
+  return (
+    <StyledMemory
+      gradient={ props.memory.gradient.default }
+      onClick={ test } />
+  );
 }
 
 export default Memory;

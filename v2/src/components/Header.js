@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { emotions } from "../constants";
+import { emotions } from "../constants/constants";
+import styled from 'styled-components';
 
 class Header extends Component {
   
@@ -91,7 +92,7 @@ class Header extends Component {
   
   render() {
     return (
-      <header>
+      <StyledHeader>
         <h3>Memory Collector</h3>
 
         <div>
@@ -109,9 +110,22 @@ class Header extends Component {
           <option key={option.label} value={option.value}>{ option.label }</option>) 
         }
         </select>
-      </header>
+      </StyledHeader>
     )
   }
 }
+
+const StyledHeader = styled.header`
+  position: fixed;
+  top: 0;
+  padding: 0 15px;
+  height: initial;
+  width: 100%;
+  background-color: white;
+  z-index: 6;
+  -webkit-box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
+  -moz-box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
+  box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
+`;
 
 export default Header;
