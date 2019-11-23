@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import Body from './components/Body';
+import AddMemoryModal from './components/AddMemoryModal';
 import styled from 'styled-components';
 
 import mockMemories from './constants/mockData';
@@ -10,11 +11,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      memories: mockMemories
+      memories: mockMemories,
+      isAddMemoryModalOpen: false
     }
     this.updateMemories = this.updateMemories.bind(this);
     this.filterMemories = this.filterMemories.bind(this);
     this.sortMemories = this.sortMemories.bind(this);
+    this.toggleAddModal = this.toggleAddModal.bind(this);
   }
 
   updateMemories(updatedMemoriesArray) {
@@ -31,13 +34,26 @@ class App extends Component {
     console.log(sort);
   }
 
+  toggleAddModal(isOpen) {
+    isOpen = typeof isOpen !== "boolean"
+      ? !this.state.isAddMemoryModalOpen
+      : isOpen;
+    this.setState({ isAddMemoryModalOpen: isOpen });
+  }
+
   render() {
     const count = this.state.memories.length;
     return (
       <StyledApp>
+
+        <AddMemoryModal
+          toggleAddModal={ this.toggleAddModal }
+          isOpen={ this.state.isAddMemoryModalOpen } />
+
         <Header
           filterMemories={ this.filterMemories }
           sortMemories={ this.sortMemories }
+          toggleAddModal={ this.toggleAddModal }
           count={ count } />
         <Body 
           updateMemories={this.updateMemories}

@@ -99,6 +99,8 @@ class Header extends Component {
           <strong>{ this.props.count || 0 }</strong> Memories
         </div>
 
+        <button onClick={ this.props.toggleAddModal }>Add New Memory</button>
+
         <select onChange={ this.handleSortChange }>
         { Object.values(this.sortOptions).map(option => 
           <option key={option.label} value={option.value}>{ option.label }</option>) 
