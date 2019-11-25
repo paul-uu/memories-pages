@@ -18,6 +18,7 @@ class App extends Component {
     this.filterMemories = this.filterMemories.bind(this);
     this.sortMemories = this.sortMemories.bind(this);
     this.toggleAddModal = this.toggleAddModal.bind(this);
+    this.searchMemories = this.searchMemories.bind(this);
   }
 
   updateMemories(updatedMemoriesArray) {
@@ -41,6 +42,9 @@ class App extends Component {
     this.setState({ isAddMemoryModalOpen: isOpen });
   }
 
+  searchMemories(memory) {
+  }
+
   render() {
     const count = this.state.memories.length;
     return (
@@ -54,6 +58,7 @@ class App extends Component {
           filterMemories={ this.filterMemories }
           sortMemories={ this.sortMemories }
           toggleAddModal={ this.toggleAddModal }
+          searchMemories={ this.searchMemories }
           count={ count } />
         <Body 
           updateMemories={this.updateMemories}

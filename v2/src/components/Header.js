@@ -99,7 +99,7 @@ class Header extends Component {
           <strong>{ this.props.count || 0 }</strong> Memories
         </div>
 
-        <button onClick={ this.props.toggleAddModal }>Add New Memory</button>
+        <i className="fa fa-plus" aria-hidden="true" onClick={ this.props.toggleAddModal }></i>
 
         <select onChange={ this.handleSortChange }>
         { Object.values(this.sortOptions).map(option => 
@@ -112,6 +112,9 @@ class Header extends Component {
           <option key={option.label} value={option.value}>{ option.label }</option>) 
         }
         </select>
+
+        <i className="fa fa-search" aria-hidden="true" onClick={ this.props.searchMemories }></i>
+
       </StyledHeader>
     )
   }
