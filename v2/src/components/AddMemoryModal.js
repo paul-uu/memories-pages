@@ -1,37 +1,42 @@
 import React,  { Component } from 'react';
 import ReactModal from 'react-modal';
 import { emotions, emotions2 } from '../constants/constants';
+import mockMemories from '../constants/mockData';
 import styled from 'styled-components';
-import Slider, { Range } from 'rc-slider';
+import Slider, { createSliderWithTooltip } from 'rc-slider';
+import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
 
 ReactModal.setAppElement('#root');
 
 class AddMemoryModal extends Component {
-  constructor(props) {
+  constructor(props) { // to check: props.memory ? edit/update props.memory, check for memory ts type : create new from scratch
     super(props);
+
     this.state = {
       isOpen: false,
-
       memory: '',
       isCoreMemory: false,
-
-      joy: 0,
-      anger: 0,
-      sadness: 0,
-      fear: 0,
-      disgust: 0,
-      neutral: 0
-
+      emotions: {
+        joy: 0,
+        anger: 0,
+        sadness: 0,
+        fear: 0,
+        disgust: 0,
+        neutral: 0
+      }
     }
+
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSliderChange = this.handleSliderChange.bind(this);
+
+    this.saveMemory = this.saveMemory.bind(this);
+    this.constructMemory = this.constructMemory.bind(this);
   }
 
-  handleSliderChange(a) {
-    console.log(a);
-
+  handleSliderChange(val, emotion) {
+    this.setState({ [emotion]: val });
   }
 
   handleInputChange(e) {
@@ -41,13 +46,53 @@ class AddMemoryModal extends Component {
   }
 
   resetForm() {
-    console.log('reset!');
+    this.setState({
+      memory: '',
+      isCoreMemory: false,
+      joy: 0,
+      anger: 0,
+      sadness: 0,
+      fear: 0,
+      disgust: 0,
+      neutral: 0
+    }, () => { console.log('reset!'); })
   }
 
   handleCancel() {
     this.resetForm();
     this.props.toggleAddModal(false);
   }
+
+
+
+  saveMemory() {
+    this.props.addMemory( this.constructMemory() )
+    this.resetForm();
+    this.props.toggleAddModal(false);
+  }
+
+  constructMemory() {
+    console.log(this.state.emotions);
+
+    return mockMemories[0];
+
+    /* // to update usage of Memory model
+    return {
+      date: new Date(), // to replace verbose date usage
+      text: this.state.memory,
+      media: {
+        audio: "",
+        image: "",
+        video: ""
+      },
+      isCoreMemory: this.state.isCoreMemory,
+      emotions: this.state.emotions, // to replace explicit percentage values, calc as needed?
+    }
+    */
+  }
+
+  // todo: global -> { emotions } => percentages per relevant emotion
+  // ex: { joy: 1, anger: 1 ... } => { joy: 50, anger: 50 }
 
   render() {
     return (
@@ -57,7 +102,6 @@ class AddMemoryModal extends Component {
         shouldCloseOnEsc={true}
         role="dialog"
         contentLabel="Add new memory modal"
-        style={ModalStyles}
       >
         <h3>Add New Memory</h3>
         <button onClick={ this.props.toggleAddModal }>Close</button>
@@ -81,12 +125,13 @@ class AddMemoryModal extends Component {
             <StyledSlider 
               name={emotion} 
               key={emotion} 
+              value={ this.state.emotions[emotion] }
               min={0} 
               max={10} 
               step={1} 
               vertical={true} 
-              defaultValue={this.state[emotion]}
-              onChange={ this.handleSliderChange }>
+              defaultValue={this.state.emotions[emotion]}
+              onChange={ (val) => { this.handleSliderChange(val, emotion) } }>
               <span>{emotion}</span>
             </StyledSlider>
         )}
@@ -102,7 +147,7 @@ class AddMemoryModal extends Component {
         <div>
           <button onClick={ this.handleCancel }>Cancel</button>
           <button onClick={ this.resetForm }>Reset</button>
-          <button>Save Memory</button>
+          <button onClick={ this.saveMemory }>Save Memory</button>
         </div>
 
       </ReactModal>
@@ -115,7 +160,7 @@ const StyledSliderContainer = styled.div`
   margin: 45px 0;
 `;
 
-const StyledSlider = styled(Slider)`
+const StyledSlider = styled(createSliderWithTooltip(Slider))`
   display: inline-block;
   margin: 0 7%;
 
@@ -128,20 +173,5 @@ const StyledSlider = styled(Slider)`
     top: -30px;
   }
 `;
-
-const ModalStyles = {
-
-}
-
-/* it seems that React-Modal is not compatible with Styled Components
-const StyledReactModal = styled(ReactModal)`
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  margin-right: -50%;
-  transform: 'translate(-50%, -50%)';
-`;
-*/
 
 export default AddMemoryModal;

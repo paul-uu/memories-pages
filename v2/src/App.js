@@ -19,11 +19,21 @@ class App extends Component {
     this.sortMemories = this.sortMemories.bind(this);
     this.toggleAddModal = this.toggleAddModal.bind(this);
     this.searchMemories = this.searchMemories.bind(this);
+    this.addMemory = this.addMemory.bind(this);
   }
 
   updateMemories(updatedMemoriesArray) {
     if (this.state.memories !== updatedMemoriesArray) {
       this.setState({ memories: updatedMemoriesArray })
+    }
+  }
+
+  addMemory(memory) {
+    if (memory) { // type validate
+      this.setState(state => {
+        const memories = [...state.memories, memory];
+        return { memories };
+      })
     }
   }
 
@@ -52,6 +62,7 @@ class App extends Component {
 
         <AddMemoryModal
           toggleAddModal={ this.toggleAddModal }
+          addMemory={ this.addMemory }
           isOpen={ this.state.isAddMemoryModalOpen } />
 
         <Header
