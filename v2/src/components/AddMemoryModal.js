@@ -2,20 +2,46 @@ import React,  { Component } from 'react';
 import ReactModal from 'react-modal';
 import { emotions, emotions2 } from '../constants/constants';
 import mockMemories from '../constants/mockData';
+import mockMemories2 from '../constants/mockData2';
 import styled from 'styled-components';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
 import 'rc-slider/assets/index.css';
+import { generateId } from '../utilities';
 
 ReactModal.setAppElement('#root');
 
 class AddMemoryModal extends Component {
-  constructor(props) { // to check: props.memory ? edit/update props.memory, check for memory ts type : create new from scratch
+  constructor(props) {
     super(props);
 
-    this.state = {
+    this.state ={
       isOpen: false,
-      memory: '',
+      memory: props.memory 
+        ? props.memory 
+        : this.initEmptyMemory()
+    }
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
+    this.handleSliderChange = this.handleSliderChange.bind(this);
+    this.saveMemory = this.saveMemory.bind(this);
+    this.constructMemory = this.constructMemory.bind(this);
+    this.initEmptyMemory = this.initEmptyMemory.bind(this);
+  }
+
+  /*
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props !== nextProps
+  }
+  */
+
+  initEmptyMemory() {
+    return {
+      id: generateId(),
+      dateTime: new Date(),
+      text: '',
+      media: { audio: '', image: '', video: '' },
       isCoreMemory: false,
       emotions: {
         joy: 0,
@@ -26,44 +52,36 @@ class AddMemoryModal extends Component {
         neutral: 0
       }
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleSliderChange = this.handleSliderChange.bind(this);
-
-    this.saveMemory = this.saveMemory.bind(this);
-    this.constructMemory = this.constructMemory.bind(this);
   }
 
   handleSliderChange(val, emotion) {
-    this.setState({ [emotion]: val });
+    const { memory } = { ...this.state };
+    const currentMemory = memory;
+    currentMemory.emotions[emotion] = val;
+    this.setState({ memory: currentMemory }, () => { console.log(this.state)} );
   }
 
   handleInputChange(e) {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({ [target.name]: value })
+    const { memory } = { ...this.state };
+    const currentMemory = memory;
+    const name = e.target.name;
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    currentMemory[name] = value;
+    this.setState({ memory: currentMemory });
   }
 
   resetForm() {
-    this.setState({
-      memory: '',
-      isCoreMemory: false,
-      joy: 0,
-      anger: 0,
-      sadness: 0,
-      fear: 0,
-      disgust: 0,
-      neutral: 0
-    }, () => { console.log('reset!'); })
+    this.setState({ 
+      memory: this.initEmptyMemory()
+    }, () => { 
+      console.log('reset!'); 
+    })
   }
 
   handleCancel() {
     this.resetForm();
     this.props.toggleAddModal(false);
   }
-
-
 
   saveMemory() {
     this.props.addMemory( this.constructMemory() )
@@ -72,23 +90,7 @@ class AddMemoryModal extends Component {
   }
 
   constructMemory() {
-    console.log(this.state.emotions);
-
-    return mockMemories[0];
-
-    /* // to update usage of Memory model
-    return {
-      date: new Date(), // to replace verbose date usage
-      text: this.state.memory,
-      media: {
-        audio: "",
-        image: "",
-        video: ""
-      },
-      isCoreMemory: this.state.isCoreMemory,
-      emotions: this.state.emotions, // to replace explicit percentage values, calc as needed?
-    }
-    */
+    return mockMemories2[0];
   }
 
   // todo: global -> { emotions } => percentages per relevant emotion
@@ -107,8 +109,8 @@ class AddMemoryModal extends Component {
         <button onClick={ this.props.toggleAddModal }>Close</button>
 
         <textarea
-          name='memory'
-          value={ this.state.memory } 
+          name='text'
+          value={ this.state.memory.text } 
           onChange={ this.handleInputChange }>
         </textarea>
         <br /><br /><br />
@@ -117,7 +119,7 @@ class AddMemoryModal extends Component {
         <input 
           name='isCoreMemory'
           type='checkbox' 
-          checked={ this.state.isCoreMemory }
+          checked={ this.state.memory.isCoreMemory }
           onChange={ this.handleInputChange } />
 
         <StyledSliderContainer>
@@ -125,13 +127,13 @@ class AddMemoryModal extends Component {
             <StyledSlider 
               name={emotion} 
               key={emotion} 
-              value={ this.state.emotions[emotion] }
+              defaultValue={ this.state.memory.emotions[emotion] }
+              value={ this.state.memory.emotions[emotion] }
+              onChange={ (val) => { this.handleSliderChange(val, emotion) } }
               min={0} 
               max={10} 
               step={1} 
-              vertical={true} 
-              defaultValue={this.state.emotions[emotion]}
-              onChange={ (val) => { this.handleSliderChange(val, emotion) } }>
+              vertical={true} >
               <span>{emotion}</span>
             </StyledSlider>
         )}
