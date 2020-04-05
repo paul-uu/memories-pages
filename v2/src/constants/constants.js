@@ -1,3 +1,5 @@
+/* Need to consolodate these! */
+
 export const emotions = {
   joy: "joy",
   anger: "anger",

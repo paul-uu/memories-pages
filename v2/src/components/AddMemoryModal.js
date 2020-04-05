@@ -58,7 +58,7 @@ class AddMemoryModal extends Component {
     const { memory } = { ...this.state };
     const currentMemory = memory;
     currentMemory.emotions[emotion] = val;
-    this.setState({ memory: currentMemory }, () => { console.log(this.state)} );
+    this.setState({ memory: currentMemory });
   }
 
   handleInputChange(e) {
