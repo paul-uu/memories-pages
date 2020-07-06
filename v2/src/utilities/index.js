@@ -1,4 +1,4 @@
-import { emotions3 } from '../constants';
+import { emotions3 } from '../constants/constants.js';
 
 export const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
 
@@ -37,7 +37,7 @@ export const getEmotionGradients = (emotions) => {
 
   function hasMultipleEmotions(emotions) {
     let emotionPercentages = getEmotionPercentages(emotions);
-    for (emotion in emotionPercentages) {
+    for (let emotion in emotionPercentages) {
       if (emotionPercentages[emotion] === 100 ) 
         return false
     }
