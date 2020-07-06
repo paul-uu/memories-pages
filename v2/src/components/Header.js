@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { emotions } from "../constants/constants";
+import { emotions, sortOptions, filterOptions } from "../constants/constants";
 import styled from 'styled-components';
 
 class Header extends Component {
@@ -7,87 +7,12 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-
-    this.sortOptions = {
-      new: {
-        label: "Newest",
-        value: "new"
-      },
-      old : {
-        label: "Oldest",
-        value: "old"
-      },
-      joy: {
-        label: "Joyful",
-        value: emotions.joy
-      },
-      anger: {
-        label: "Anger",
-        value: emotions.anger
-      },
-      sad: {
-        label: "Sadness",
-        value: emotions.sadness
-      },
-      fear: {
-        label: "Fearful",
-        value: emotions.fear
-      },
-      disgust: {
-        label: "Disgusting",
-        value: emotions.disgust
-      },
-      neutral: {
-        label: "Neutral",
-        value: emotions.neutral
-      }
-    };
-    this.filterOptions = {
-      all: {
-        label: "All",
-        value: "all"
-      },
-      joy: {
-        label: "Joy",
-        value: emotions.joy
-      },
-      anger: {
-        label: "Anger",
-        value: emotions.anger
-      },
-      sad: {
-        label: "Sad",
-        value: emotions.sadness
-      },
-      fear: {
-        label: "Fearful",
-        value: emotions.fear
-      },
-      disgust: {
-        label: "Disgusting",
-        value: emotions.disgust
-      },
-      neutral: {
-        label: "Neutral",
-        value: emotions.neutral
-      },
-      core: {
-        label: "Core Memories",
-        value: "core"
-      }
-    };
-
-    this.handleSortChange = this.handleSortChange.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
   }
 
-  handleSortChange(e) {
-    if (e.target.value) 
-      this.props.sortMemories(e.target.value);
-  }
   handleFilterChange(e) {
     if (e.target.value) 
-      this.props.sortMemories(e.target.value);
+      this.props.filterMemories(e.target.value);
   }
   
   render() {
@@ -101,16 +26,16 @@ class Header extends Component {
 
         <i className="fa fa-plus" aria-hidden="true" onClick={ this.props.toggleAddModal }></i>
 
-        <select onChange={ this.handleSortChange }>
-        { Object.values(this.sortOptions).map(option => 
-          <option key={option.label} value={option.value}>{ option.label }</option>) 
-        }
+        <select onChange={e => this.props.sortMemories(e.target.value)}>
+        { Object.values(sortOptions).map(option => 
+          <option key={option.label} value={option.value}>{option.label}</option>
+        )}
         </select>
 
-        <select onChange={ this.handleFilterChange }>
-        { Object.values(this.filterOptions).map(option => 
-          <option key={option.label} value={option.value}>{ option.label }</option>) 
-        }
+        <select onChange={e => this.props.filterMemories(e.target.value)}>
+        { Object.values(filterOptions).map(option => 
+          <option key={option.label} value={option.value}>{ option.label }</option>
+        )}
         </select>
 
         <i className="fa fa-search" aria-hidden="true" onClick={ this.props.searchMemories }></i>

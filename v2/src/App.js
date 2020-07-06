@@ -11,7 +11,9 @@ class App extends Component {
     super(props);
     this.state = {
       memories: mockMemories,
-      isAddMemoryModalOpen: false
+      isAddMemoryModalOpen: false,
+      sortBy: null,
+      filterBy: null
     }
     this.updateMemories = this.updateMemories.bind(this);
     this.filterMemories = this.filterMemories.bind(this);
@@ -41,7 +43,13 @@ class App extends Component {
   }
 
   sortMemories(sort) {
-    console.log(sort);
+    console.log('sort by ' + sort);
+    this.setState({ sortBy: sort });
+  }
+
+  filterMemories(filter) {
+    console.log('filter by: ' + filter);
+    this.setState({ filterBy: filter })
   }
 
   toggleAddModal(isOpen) {
@@ -58,7 +66,6 @@ class App extends Component {
     const count = this.state.memories.length;
     return (
       <StyledApp>
-
         <AddMemoryModal
           toggleAddModal={ this.toggleAddModal }
           addMemory={ this.addMemory }
@@ -67,12 +74,16 @@ class App extends Component {
         <Header
           filterMemories={ this.filterMemories }
           sortMemories={ this.sortMemories }
+          filterMemories={ this.filterMemories }
           toggleAddModal={ this.toggleAddModal }
           searchMemories={ this.searchMemories }
           count={ count } />
+
         <Body 
           updateMemories={this.updateMemories}
-          memories={this.state.memories} />
+          memories={this.state.memories}
+          sortBy={this.state.sortBy}
+          filterBy={this.state.filterBy} />
       </StyledApp>
     )
   }

@@ -37,3 +37,73 @@ export const emotions3 = {
     color: "ddd"
   }
 }
+
+export const sortOptions = {
+  new: {
+    label: "Newest",
+    value: "new"
+  },
+  old : {
+    label: "Oldest",
+    value: "old"
+  },
+  joy: {
+    label: "Joyful",
+    value: emotions.joy
+  },
+  anger: {
+    label: "Anger",
+    value: emotions.anger
+  },
+  sad: {
+    label: "Sadness",
+    value: emotions.sadness
+  },
+  fear: {
+    label: "Fearful",
+    value: emotions.fear
+  },
+  disgust: {
+    label: "Disgusting",
+    value: emotions.disgust
+  },
+  neutral: {
+    label: "Neutral",
+    value: emotions.neutral
+  }
+}
+
+export const filterOptions = {
+  all: {
+    label: "All",
+    value: "all"
+  },
+  joy: {
+    label: "Joy",
+    value: emotions.joy
+  },
+  anger: {
+    label: "Anger",
+    value: emotions.anger
+  },
+  sad: {
+    label: "Sad",
+    value: emotions.sadness
+  },
+  fear: {
+    label: "Fearful",
+    value: emotions.fear
+  },
+  disgust: {
+    label: "Disgusting",
+    value: emotions.disgust
+  },
+  neutral: {
+    label: "Neutral",
+    value: emotions.neutral
+  },
+  core: {
+    label: "Core Memories",
+    value: "core"
+  }
+}

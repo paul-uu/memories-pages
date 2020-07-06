@@ -8,13 +8,19 @@ class Body extends Component {
     super(props);
     this.state = {};
   }
+
+  parseMemories(memories, sortBy, filterBy) {
+    // handle sorting and filtering on memories array
+    return memories;
+  }
   
   render() {
+    const { memories, sortBy, filterBy } = this.props;
+    const parsedMemories = this.parseMemories(memories, sortBy, filterBy);
+
     return (
       <StyledBody>
-        { this.props.memories.length > 0 && this.props.memories.map((memory, i) => 
-          <Memory memory={memory} key={i} />
-        )}
+        { parsedMemories.map((memory, i) => <Memory memory={memory} key={i} />) }
       </StyledBody>
     )
   }

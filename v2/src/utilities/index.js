@@ -20,8 +20,8 @@ export const getEmotionPercentages = (emotions) => {
 
 export const getEmotionGradients = (emotions) => {
 
-  console.log(emotions);
-  console.log(getEmotionPercentages(emotions));
+  //console.log(emotions);
+  //console.log(getEmotionPercentages(emotions));
 
   let output = '';
 
