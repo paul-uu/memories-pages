@@ -1,9 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-
 import { getEmotionPercentages, getEmotionGradients } from '../utilities'
 
-const Memory = props => {
+interface Props {
+  memory: any;
+}
+
+interface StyledMemoryProps {
+  gradient: string;
+}
+
+const Memory: React.FC<Props> = (props) => {
 
   console.log(props);
 
@@ -13,19 +20,20 @@ const Memory = props => {
     ? props.memory.gradient.default
     : getEmotionGradients(props.memory.emotions);
 
+
+  
   const StyledMemory = styled.div`
     width: 35px;
     height: 35px;
     border: 1px solid #ccc;
     border-radius: 50%;
     cursor: pointer;
-    background: ${props => props.gradient }
+    background: ${(props: StyledMemoryProps) => props.gradient }
   `;
 
+  
   return (
-    <StyledMemory
-      gradient={ gradient }
-      onClick={ test } />
+    <StyledMemory gradient={ gradient } onClick={ test } />
   );
 }
 
