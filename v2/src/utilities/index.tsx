@@ -2,6 +2,8 @@ import { emotions3 } from '../constants/constants.js';
 
 export const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
 
+export const isObjEmpty = (obj: object):boolean => Object.keys(obj).length === 0;
+
 export const getEmotionPercentages = (emotions: any) => {
   let total = 0;
   for (let emotion in emotions) {

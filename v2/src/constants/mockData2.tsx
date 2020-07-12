@@ -22,6 +22,9 @@ export default [
       fear: 0,
       disgust: 3,
       neutral: 2
+    },
+    gradient: {
+      default: ''
     }
   },
   {
@@ -37,6 +40,9 @@ export default [
       fear: 2,
       disgust: 1,
       neutral: 0
+    },
+    gradient: {
+      default: ''
     }
   }
 ];

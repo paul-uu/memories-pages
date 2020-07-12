@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { IMemory } from '../constants/interfaces';
 import { getEmotionPercentages, getEmotionGradients } from '../utilities'
 
 interface Props {
-  memory: any;
+  memory: IMemory;
 }
 
 interface StyledMemoryProps {
@@ -12,16 +13,13 @@ interface StyledMemoryProps {
 
 const Memory: React.FC<Props> = (props) => {
 
+  const test = () => { 
+    console.log('memory click'); 
+  }
+
   console.log(props);
+  let gradient = props.memory.gradient.default;
 
-  const test = () => { console.log('memory click'); }
-
-  let gradient = props.memory.gradient 
-    ? props.memory.gradient.default
-    : getEmotionGradients(props.memory.emotions);
-
-
-  
   const StyledMemory = styled.div`
     width: 35px;
     height: 35px;
@@ -31,7 +29,6 @@ const Memory: React.FC<Props> = (props) => {
     background: ${(props: StyledMemoryProps) => props.gradient }
   `;
 
-  
   return (
     <StyledMemory gradient={ gradient } onClick={ test } />
   );
