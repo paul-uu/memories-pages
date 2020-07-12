@@ -11,7 +11,9 @@ export const emotions = {
 
 export const emotions2 = [ 'joy', 'anger', 'sadness', 'fear', 'disgust', 'neutral' ];
 
-export const emotions3 = {
+export const emotions3 : { 
+  [index: string]: { label: string, color: string } 
+} = {
   joy: {
     label: "joy",
     color: "#f5f317"

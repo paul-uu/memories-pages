@@ -1,6 +1,7 @@
-import React,  { useState } from 'react';
+import React,  { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
-import { emotions, emotions2 } from '../constants/constants';
+import { Memory, Emotion } from '../constants/interfaces';
+import { emotions, emotions2, emotions3 } from '../constants/constants';
 import mockMemories from '../constants/mockData';
 import mockMemories2 from '../constants/mockData2';
 import styled from 'styled-components';
@@ -13,7 +14,7 @@ interface Props {
   toggleAddModal: (isOpen: any) => void;
   addMemory: (memory: any) => void;
   isOpen: boolean;
-  memory?: any; // todo
+  memory?: Memory;
 }
 
 ReactModal.setAppElement('#root');
@@ -21,7 +22,35 @@ ReactModal.setAppElement('#root');
 const AddMemoryModal: React.FC<Props> = (props) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [memory, setMemory] = useState<any>(props.memory || initEmptyMemory());
+  const [memory, setMemory] = useState<Memory>(initEmptyMemory());
+
+  // need to conditionally set value from props
+  const [dateTime, setDateTime] = useState()
+  const [text, setText] = useState<string>('');
+  const [media, setMedia] = useState({ audio: '', image: '', video: '' });
+  const [isCoreMemory, isetICoreMemory] = useState<boolean>(false);
+  const [anger, setAnger] = useState({percentage: 0, value: 0});
+  const [disgust, setDisgust] = useState({percentage: 0, value: 0});
+  const [fear, setFear] = useState({percentage: 0, value: 0});
+  const [joy, setJoy] = useState({percentage: 0, value: 0});
+  const [neutral, setNeutral] = useState({percentage: 0, value: 0});
+  const [sadness, setSadness] = useState({percentage: 0, value: 0});
+  const [gradients, setGradients] = useState({default: '', moz: '', webkit: ''});
+
+  /*
+  useEffect(() => {
+    if (props.memory) {
+      setMemoryFromProps(props.memory)
+    }
+  });
+
+  const setMemoryFromProps = (memory: Memory): void => {
+    const {dateTime, text, media, isCoreMemory, emotions, gradients} = memory;
+    setDateTime(dateTime)
+    setText(text);
+    setMedia({ audio: memory.media.audio });
+  }
+  */
 
   /*
   shouldComponentUpdate(nextProps, nextState) {
@@ -29,35 +58,48 @@ const AddMemoryModal: React.FC<Props> = (props) => {
   }
   */
 
-  function initEmptyMemory() {
-    return {
+  function initEmptyMemory():Memory {
+    const emptyMemory: Memory = {
       id: generateId(),
-      dateTime: new Date(),
+      dateTime: undefined,
       text: '',
       media: { audio: '', image: '', video: '' },
       isCoreMemory: false,
       emotions: {
-        joy: 0,
-        anger: 0,
-        sadness: 0,
-        fear: 0,
-        disgust: 0,
-        neutral: 0
+        joy: { percentage: 0, value: 0 },
+        anger: { percentage: 0, value: 0 },
+        sadness: { percentage: 0, value: 0 },
+        fear: { percentage: 0, value: 0 },
+        disgust: { percentage: 0, value: 0 },
+        neutral: { percentage: 0, value: 0 }
+      },
+      gradients: {
+        default: ''
       }
     }
+    return emptyMemory;
   }
 
   const handleSliderChange = (val: any, emotion: any) => {
-    const currentMemory = memory;
-    currentMemory.emotions[emotion] = val;
+    let currentMemory = Object.assign({}, memory);
+    currentMemory.emotions[emotion].value = val;
     setMemory(currentMemory);
   }
 
   const handleInputChange = (e: any) => {
-    const currentMemory = memory;
+    const currentMemory = Object.assign({}, memory);
     const name = e.target.name;
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    currentMemory[name] = value;
+
+    // todo: fix ts index signature issue
+    //currentMemory[name] = value;
+
+    // temporary 
+    if (e.target.name === 'text') {
+      currentMemory.text = value;
+    } else if (e.target.name === 'isCoreMemory') {
+      currentMemory.isCoreMemory = value;
+    }
     setMemory(currentMemory);
   }
 
@@ -75,9 +117,31 @@ const AddMemoryModal: React.FC<Props> = (props) => {
     resetForm();
     props.toggleAddModal(false);
   }
+  const getDateTime = () => {
+    return {
+      date: 1,
+      day: 'Monday',
+      month: 'July',
+      year: 2020,
+      time: "1",
+      raw: 12345
+    }
+  }
 
-  const constructMemory = () => {
-    return mockMemories2[0];
+  const constructMemory = ():Memory => {
+    return {
+      id: 'test',
+      dateTime: new Date(),
+      text,
+      media,
+      isCoreMemory,
+      emotions: {
+        anger, disgust, fear, joy, neutral, sadness
+      },
+      gradients
+    }
+
+    //return mockMemories2[0];
   }
 
   // todo: global -> { emotions } => percentages per relevant emotion
@@ -108,19 +172,23 @@ const AddMemoryModal: React.FC<Props> = (props) => {
         onChange={ handleInputChange } />
 
       <StyledSliderContainer>
-      { emotions2 && emotions2.map(emotion => 
-          <StyledSlider 
-            key={emotion} 
-            defaultValue={ memory.emotions[emotion] }
-            value={ memory.emotions[emotion] }
-            onChange={ (val: any) => { handleSliderChange(val, emotion) } }
-            min={0} 
-            max={10} 
-            step={1} 
-            vertical={true} >
-            <span>{emotion}</span>
-          </StyledSlider>
-      )}
+        {emotions3 && Object.keys(emotions3).map((emotion, i) => {
+          let { label } = emotions3[emotion];
+          console.log(memory.emotions);
+          return (
+            <StyledSlider 
+              key={label} 
+              defaultValue={memory.emotions[label].value}
+              value={memory.emotions[label].value}
+              onChange={ (val: any) => { handleSliderChange(val, emotion) } }
+              min={0} 
+              max={10} 
+              step={1} 
+              vertical={true} >
+              <span>{emotion}</span>
+            </StyledSlider>
+          )
+        })}
       </StyledSliderContainer>
 
       <div>
