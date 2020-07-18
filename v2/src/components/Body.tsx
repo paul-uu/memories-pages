@@ -7,6 +7,7 @@ interface Props {
   memories: any;
   sortBy: string;
   filterBy: string;
+  viewMemory: Function;
 }
 
 const Body: React.FC<Props> = (props) => {
@@ -21,7 +22,12 @@ const Body: React.FC<Props> = (props) => {
 
   return (
     <StyledBody>
-      { parsedMemories.map((memory: any, i: number) => <Memory memory={memory} key={i} />) }
+      { parsedMemories.map((memory: any, i: number) => (
+        <Memory 
+          viewMemory={props.viewMemory} 
+          memory={memory} 
+          key={i} />
+      )) }
     </StyledBody>
   )
 }

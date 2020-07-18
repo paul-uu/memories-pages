@@ -5,6 +5,7 @@ import { getEmotionPercentages, getEmotionGradients } from '../utilities'
 
 interface Props {
   memory: IMemory;
+  viewMemory: Function;
 }
 
 interface StyledMemoryProps {
@@ -14,10 +15,9 @@ interface StyledMemoryProps {
 const Memory: React.FC<Props> = (props) => {
 
   const test = () => { 
-    console.log('memory click'); 
+    props.viewMemory(props.memory);
   }
 
-  console.log(props);
   let gradient = props.memory.gradient.default;
 
   const StyledMemory = styled.div`

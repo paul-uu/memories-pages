@@ -24,7 +24,19 @@ const App: React.FC = () => {
     localStorage.setItem(LOCALSTORAGEKEY, JSON.stringify(memories));
   }, [memories]);
 
+  const [selectedMemory, setSelectedMemory] = useState(null);
+  useEffect(() => {
+    if (selectedMemory !== null) {
+      setIsAddMemoryModalOpen(true);
+    }
+  }, [selectedMemory]);
+
   const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false);
+  useEffect(() => {
+    if (!isAddMemoryModalOpen) {
+      setSelectedMemory(null);
+    }
+  }, [isAddMemoryModalOpen])
   
   const [sortBy, setSortBy] = useState<string>('');
   useEffect(() => {
@@ -68,28 +80,29 @@ const App: React.FC = () => {
   }
 
 
-    return (
-      <StyledApp>
-        <AddMemoryModal
-          toggleAddModal={ toggleAddModal }
-          addMemory={ addMemory }
-          isOpen={ isAddMemoryModalOpen } />
+  return (
+    <StyledApp>
+      <AddMemoryModal
+        toggleAddModal={ toggleAddModal }
+        addMemory={ addMemory }
+        isOpen={ isAddMemoryModalOpen }
+        memory={selectedMemory} />
 
-        <Header
-          sortMemories={ sortMemories }
-          filterMemories={ filterMemories }
-          toggleAddModal={ toggleAddModal }
-          searchMemories={ searchMemories }
-          count={ memories.length } />
+      <Header
+        sortMemories={ sortMemories }
+        filterMemories={ filterMemories }
+        toggleAddModal={ toggleAddModal }
+        searchMemories={ searchMemories }
+        count={ memories.length } />
 
-        <Body 
-          updateMemories={updateMemories}
-          memories={memories}
-          sortBy={sortBy}
-          filterBy={filterBy} />
-      </StyledApp>
-    )
-  
+      <Body 
+        updateMemories={updateMemories}
+        memories={memories}
+        sortBy={sortBy}
+        filterBy={filterBy}
+        viewMemory={setSelectedMemory} />
+    </StyledApp>
+  )
 }
 
 const StyledApp = styled.div`

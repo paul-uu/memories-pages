@@ -12,15 +12,18 @@ interface Props {
   toggleAddModal: (isOpen: any) => void;
   addMemory: (memory: any) => void;
   isOpen: boolean;
-  memory?: IMemory;
+  memory?: IMemory | null;
 }
 
 ReactModal.setAppElement('#root');
 
 const AddMemoryModal: React.FC<Props> = (props) => {
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [memory, setMemory] = useState<IMemory>(initEmptyMemory());
+  const [memory, setMemory] = useState<any>(props.memory || initEmptyMemory());
+  useEffect(() => {
+    if (props.memory)
+      setMemory(props.memory);
+  }, [props.memory]);
 
   // need to conditionally set value from props
   const [dateTime, setDateTime] = useState()
@@ -198,18 +201,6 @@ const AddMemoryModal: React.FC<Props> = (props) => {
         return true;
     }
     return false;
-  }
-
-
-  const getDateTime = () => {
-    return {
-      date: 1,
-      day: 'Monday',
-      month: 'July',
-      year: 2020,
-      time: "1",
-      raw: 12345
-    }
   }
 
 
