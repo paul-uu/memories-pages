@@ -1,3 +1,5 @@
+export const LOCALSTORAGEKEY = 'memoryCollectorData';
+
 /* Need to consolodate these! */
 
 export const emotions = {

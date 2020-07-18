@@ -110,7 +110,7 @@ const AddMemoryModal: React.FC<Props> = (props) => {
       return valueTotal;
     }
   }
-  const setMemoryGradient = (emotions: {}): string => {
+  const setMemoryGradient = (emotions: {}): string => { // todo: accommodate single emotion value
     let str = 'linear-gradient(to bottom, ';
     let percentageTotal = 0;
     for (let emotion in emotions) {
