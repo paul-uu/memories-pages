@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Body from './components/Body';
-import AddMemoryModal from './components/AddMemoryModal';
+import MemoryModal from './components/MemoryModal';
 import styled from 'styled-components';
-import mockMemories from './constants/mockData';
 import { LOCALSTORAGEKEY } from './constants/constants';
+import { IMemory } from './constants/interfaces';
 
 const App: React.FC = () => {
 
   const loadMemories = () => {
     let memories = localStorage.getItem(LOCALSTORAGEKEY);
-    if (memories) {
-      console.log('memories from localstorage');
+    if (memories)
       return JSON.parse(memories);
-    } 
-    else {
-      return mockMemories;
-    }
+    else
+      return [];
   }
 
   const [memories, setMemories] = useState(loadMemories());
@@ -27,25 +24,26 @@ const App: React.FC = () => {
   const [selectedMemory, setSelectedMemory] = useState(null);
   useEffect(() => {
     if (selectedMemory !== null) {
-      setIsAddMemoryModalOpen(true);
+      setIsMemoryModalOpen(true);
     }
   }, [selectedMemory]);
 
-  const [isAddMemoryModalOpen, setIsAddMemoryModalOpen] = useState(false);
+  const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
   useEffect(() => {
-    if (!isAddMemoryModalOpen) {
+    if (!isMemoryModalOpen) {
       setSelectedMemory(null);
     }
-  }, [isAddMemoryModalOpen])
+  }, [isMemoryModalOpen])
   
   const [sortBy, setSortBy] = useState<string>('');
   useEffect(() => {
     console.log(sortBy);
-  }, [sortBy])
+  }, [sortBy]);
 
   const [filterBy, setFilterBy] = useState<string>('');
-
-
+  useEffect(() => {
+    console.log(filterBy);
+  }, [filterBy]);
 
 
   const updateMemories = (updatedMemoriesArray: []) => {
@@ -53,9 +51,22 @@ const App: React.FC = () => {
       setMemories(updatedMemoriesArray)
   }
 
-  const addMemory = (memory: any) => { // todo: add memory type
-    if (memory)
+  const saveMemory = (memory: IMemory, shouldAdd: boolean) => {
+    // todo? remove shouldAdd param, manually check to update, otherwise append to array?
+
+    if (memory && shouldAdd) {
       setMemories((memories: any) => [...memories, memory]);
+    }
+    else if (memory && !shouldAdd) {
+      setMemories(memories.map((m: IMemory) => {
+        let mem = m.id === memory.id ? Object.assign({}, memory) : m;
+        return mem;
+      }));
+    }
+  }
+
+  const deleteMemory = (memoryId: string) => {
+    setMemories(memories.filter((memory: IMemory) => memory.id !== memoryId))
   }
 
   const sortMemories = (sort: string) => {
@@ -70,9 +81,9 @@ const App: React.FC = () => {
 
   const toggleAddModal = (isOpen: boolean) => {
     isOpen = typeof isOpen !== "boolean"
-      ? !isAddMemoryModalOpen
+      ? !isMemoryModalOpen
       : isOpen;
-    setIsAddMemoryModalOpen(isOpen);
+    setIsMemoryModalOpen(isOpen);
   }
 
   const searchMemories = () => { // todo
@@ -82,11 +93,12 @@ const App: React.FC = () => {
 
   return (
     <StyledApp>
-      <AddMemoryModal
+      <MemoryModal
         toggleAddModal={ toggleAddModal }
-        addMemory={ addMemory }
-        isOpen={ isAddMemoryModalOpen }
-        memory={selectedMemory} />
+        saveMemory={ saveMemory }
+        isOpen={ isMemoryModalOpen }
+        memory={selectedMemory}
+        deleteMemory={deleteMemory} />
 
       <Header
         sortMemories={ sortMemories }

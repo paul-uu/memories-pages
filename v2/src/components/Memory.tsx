@@ -13,13 +13,8 @@ interface StyledMemoryProps {
 }
 
 const Memory: React.FC<Props> = (props) => {
-
-  const test = () => { 
-    props.viewMemory(props.memory);
-  }
-
-  let gradient = props.memory.gradient.default;
-
+  const { viewMemory, memory } = props;
+  const gradient = props.memory.gradient.default;
   const StyledMemory = styled.div`
     width: 35px;
     height: 35px;
@@ -30,7 +25,9 @@ const Memory: React.FC<Props> = (props) => {
   `;
 
   return (
-    <StyledMemory gradient={ gradient } onClick={ test } />
+    <StyledMemory 
+      gradient={gradient} 
+      onClick={() => viewMemory(memory)} />
   );
 }
 

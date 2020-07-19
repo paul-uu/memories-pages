@@ -10,14 +10,15 @@ import { generateId, isObjEmpty } from '../utilities';
 
 interface Props {
   toggleAddModal: (isOpen: any) => void;
-  addMemory: (memory: any) => void;
+  saveMemory: (memory: any, shouldAdd: boolean) => void;
   isOpen: boolean;
   memory?: IMemory | null;
+  deleteMemory: Function;
 }
 
 ReactModal.setAppElement('#root');
 
-const AddMemoryModal: React.FC<Props> = (props) => {
+const MemoryModal: React.FC<Props> = (props) => {
 
   const [memory, setMemory] = useState<any>(props.memory || initEmptyMemory());
   useEffect(() => {
@@ -161,25 +162,24 @@ const AddMemoryModal: React.FC<Props> = (props) => {
   }
 
   const saveMemory = (memory: IMemory) => {
-    props.addMemory(memory);
+    let shouldAdd = props.memory === null;
+    props.saveMemory(memory, shouldAdd);
   }
 
   const handleSave = () => {
     const memoryToSave = Object.assign({}, memory);
 
     if (isMemoryValid(memoryToSave)) {
-
-      // set dateTime to time of save
       memoryToSave.dateTime = new Date();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
 
-      saveMemory(memoryToSave)
+      saveMemory(memoryToSave);
       resetForm();
       props.toggleAddModal(false);
-      // add 'Save and Add Another' option?
     }
   }
+
   const isMemoryValid = (memory: IMemory): boolean => {
     let errorMessages = [];
     if (memory.text.trim().length <= 0) {
@@ -201,6 +201,11 @@ const AddMemoryModal: React.FC<Props> = (props) => {
         return true;
     }
     return false;
+  }
+
+  const handleDelete = () => {
+    props.memory && props.deleteMemory(props.memory.id);
+    props.toggleAddModal(false);
   }
 
 
@@ -262,8 +267,18 @@ const AddMemoryModal: React.FC<Props> = (props) => {
 
       <div>
         <button onClick={ handleCancel }>Cancel</button>
-        <button onClick={ resetForm }>Reset</button>
-        <button onClick={ handleSave }>Save Memory</button>
+
+        { props.memory === null && 
+          <button onClick={ resetForm }>Reset</button>
+        }
+
+        <button onClick={ handleSave }>
+          {props.memory === null ? 'Add' : 'Save'} Memory
+        </button>
+
+        { props.memory !== null && 
+          <button onClick={ handleDelete }>Delete</button> 
+        }
       </div>
 
     </ReactModal>
@@ -289,4 +304,4 @@ const StyledSlider = styled(createSliderWithTooltip(Slider))`
   }
 `;
 
-export default AddMemoryModal;
+export default MemoryModal;

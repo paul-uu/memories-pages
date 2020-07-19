@@ -17,14 +17,14 @@ const Body: React.FC<Props> = (props) => {
     return memories;
   }  
 
-  const { memories, sortBy, filterBy } = props;
+  const { memories, sortBy, filterBy, viewMemory } = props;
   const parsedMemories = parseMemories(memories, sortBy, filterBy);
 
   return (
     <StyledBody>
       { parsedMemories.map((memory: any, i: number) => (
         <Memory 
-          viewMemory={props.viewMemory} 
+          viewMemory={viewMemory} 
           memory={memory} 
           key={i} />
       )) }
