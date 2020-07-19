@@ -2,11 +2,9 @@ import React,  { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import { IMemory, Emotion } from '../constants/interfaces';
 import { emotions3 } from '../constants/constants';
-import styled from 'styled-components';
-import Slider, { createSliderWithTooltip } from 'rc-slider';
 import Tooltip from 'rc-tooltip';
-import 'rc-slider/assets/index.css';
 import { generateId, isObjEmpty } from '../utilities';
+import Sliders from './Sliders';
 
 interface Props {
   toggleAddModal: (isOpen: any) => void;
@@ -26,42 +24,7 @@ const MemoryModal: React.FC<Props> = (props) => {
       setMemory(props.memory);
   }, [props.memory]);
 
-  // need to conditionally set value from props
-  const [dateTime, setDateTime] = useState()
-  const [text, setText] = useState<string>('');
-  const [media, setMedia] = useState({ audio: '', image: '', video: '' });
-  const [isCoreMemory, isetICoreMemory] = useState<boolean>(false);
-  const [anger, setAnger] = useState({percentage: 0, value: 0});
-  const [disgust, setDisgust] = useState({percentage: 0, value: 0});
-  const [fear, setFear] = useState({percentage: 0, value: 0});
-  const [joy, setJoy] = useState({percentage: 0, value: 0});
-  const [neutral, setNeutral] = useState({percentage: 0, value: 0});
-  const [sadness, setSadness] = useState({percentage: 0, value: 0});
-  const [gradient, setGradient] = useState({default: '', moz: '', webkit: ''});
-
   const [errors, setErorrs] = useState<string[]>([]); // eventually, define Error type { message: string, type: string? }
-
-  /*
-  useEffect(() => {
-    if (props.memory) {
-      setMemoryFromProps(props.memory)
-    }
-  });
-
-  const setMemoryFromProps = (memory: Memory): void => {
-    const {dateTime, text, media, isCoreMemory, emotions, gradient} = memory;
-    setDateTime(dateTime)
-    setText(text);
-    setMedia({ audio: memory.media.audio });
-  }
-  */
-
-  /*
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props !== nextProps
-  }
-  */
-
 
   function initEmptyMemory(): IMemory {
     const emptyMemory: IMemory = {
@@ -114,6 +77,7 @@ const MemoryModal: React.FC<Props> = (props) => {
       return valueTotal;
     }
   }
+
   const setMemoryGradient = (emotions: {}): string => {
     let str = 'linear-gradient(to bottom, ';
     let percentageTotal = 0;
@@ -136,7 +100,6 @@ const MemoryModal: React.FC<Props> = (props) => {
     return str + ');';
   }
   
-
   const handleInputChange = (e: any) => {
     const currentMemory = Object.assign({}, memory);
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -173,7 +136,6 @@ const MemoryModal: React.FC<Props> = (props) => {
       memoryToSave.dateTime = new Date();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
-
       saveMemory(memoryToSave);
       resetForm();
       props.toggleAddModal(false);
@@ -236,24 +198,9 @@ const MemoryModal: React.FC<Props> = (props) => {
         checked={ memory.isCoreMemory }
         onChange={ handleInputChange } />
 
-      <StyledSliderContainer>
-        {emotions3 && Object.keys(emotions3).map((emotion, i) => {
-          let { label } = emotions3[emotion];
-          return (
-            <StyledSlider 
-              key={label} 
-              defaultValue={memory.emotions[label].value}
-              value={memory.emotions[label].value}
-              onChange={ (val: any) => { handleSliderChange(val, emotion) } }
-              min={0} 
-              max={10} 
-              step={1} 
-              vertical={true} >
-              <span>{emotion}</span>
-            </StyledSlider>
-          )
-        })}
-      </StyledSliderContainer>
+      <Sliders 
+        onSliderChange={handleSliderChange}
+        memory={memory} />
 
       <div>
         <i className="fa fa-music" aria-hidden="true"></i>
@@ -280,28 +227,8 @@ const MemoryModal: React.FC<Props> = (props) => {
           <button onClick={ handleDelete }>Delete</button> 
         }
       </div>
-
     </ReactModal>
   )
 }
-
-const StyledSliderContainer = styled.div`
-  height: 25%;
-  margin: 45px 0;
-`;
-
-const StyledSlider = styled(createSliderWithTooltip(Slider))`
-  display: inline-block;
-  margin: 0 7%;
-
-  :first-child { margin-left: 0; }
-  :last-child  { margin-right: 0; }
-
-  position: relative;
-  > span {
-    position: absolute;
-    top: -30px;
-  }
-`;
 
 export default MemoryModal;
