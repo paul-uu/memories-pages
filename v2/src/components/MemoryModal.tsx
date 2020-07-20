@@ -8,7 +8,7 @@ import Sliders from './Sliders';
 
 interface Props {
   toggleAddModal: (isOpen: any) => void;
-  saveMemory: (memory: any, shouldAdd: boolean) => void;
+  saveMemory: (memory: any) => void;
   isOpen: boolean;
   memory?: IMemory | null;
   deleteMemory: Function;
@@ -125,8 +125,7 @@ const MemoryModal: React.FC<Props> = (props) => {
   }
 
   const saveMemory = (memory: IMemory) => {
-    let shouldAdd = props.memory === null;
-    props.saveMemory(memory, shouldAdd);
+    props.saveMemory(memory);
   }
 
   const handleSave = () => {
@@ -136,7 +135,7 @@ const MemoryModal: React.FC<Props> = (props) => {
       memoryToSave.dateTime = new Date();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
-      saveMemory(memoryToSave);
+      props.saveMemory(memoryToSave);
       resetForm();
       props.toggleAddModal(false);
     }

@@ -51,18 +51,16 @@ const App: React.FC = () => {
       setMemories(updatedMemoriesArray)
   }
 
-  const saveMemory = (memory: IMemory, shouldAdd: boolean) => {
-    // todo? remove shouldAdd param, manually check to update, otherwise append to array?
-
-    if (memory && shouldAdd) {
-      setMemories((memories: any) => [...memories, memory]);
+  const saveMemory = (memory: IMemory) => {
+    let memoriesCopy = [...memories];
+    for (let i = 0; i < memoriesCopy.length; i++) {
+      if (memoriesCopy[i].id === memory.id) {
+        memoriesCopy[i] = memory;
+        return setMemories(memoriesCopy);
+      }
     }
-    else if (memory && !shouldAdd) {
-      setMemories(memories.map((m: IMemory) => {
-        let mem = m.id === memory.id ? Object.assign({}, memory) : m;
-        return mem;
-      }));
-    }
+    memoriesCopy.push(memory);
+    return setMemories(memoriesCopy);
   }
 
   const deleteMemory = (memoryId: string) => {
