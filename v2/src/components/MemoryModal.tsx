@@ -130,8 +130,11 @@ const MemoryModal: React.FC<Props> = (props) => {
 
   const handleSave = () => {
     const memoryToSave = Object.assign({}, memory);
-
-    if (isMemoryValid(memoryToSave)) {
+    let newErrors = getMemoryErrors(memoryToSave);
+    if (newErrors.length > 0) {
+      setErorrs(newErrors);
+    }
+    else {
       memoryToSave.dateTime = new Date();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
@@ -141,19 +144,15 @@ const MemoryModal: React.FC<Props> = (props) => {
     }
   }
 
-  const isMemoryValid = (memory: IMemory): boolean => {
+  const getMemoryErrors = (memory: IMemory): string[] => {
     let errorMessages = [];
     if (memory.text.trim().length <= 0) {
-      errorMessages.push('Please add a description of your memeory')
+      errorMessages.push('Please add a description of your memeory');
     }
     if (!hasEmotions(memory.emotions)) {
-      errorMessages.push('But how did you feel??')
+      errorMessages.push('But how did you feel??');
     }
-    if (errorMessages.length > 0) {
-      setErorrs(errorMessages);
-      return false;
-    }
-    return true;
+    return errorMessages;
   }
   const hasEmotions = (emotions: {}): boolean => {
     for (let emotion in emotions) {
