@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IMemory } from '../constants/interfaces';
-import { getEmotionPercentages, getEmotionGradients } from '../utilities';
 
 interface Props {
   memory: IMemory;

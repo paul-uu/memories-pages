@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
-import { IMemory, Emotion } from '../constants/interfaces';
+import { IMemory } from '../constants/interfaces';
 import { emotions3 } from '../constants/constants';
-import Tooltip from 'rc-tooltip';
+// import Tooltip from 'rc-tooltip';
 import { generateId, isObjEmpty } from '../utilities';
 import Sliders from './Sliders';
 
@@ -119,10 +119,6 @@ const MemoryModal: React.FC<Props> = (props) => {
   const handleCancel = () => {
     resetForm();
     props.toggleAddModal(false);
-  };
-
-  const saveMemory = (memory: IMemory) => {
-    props.saveMemory(memory);
   };
 
   const handleSave = () => {

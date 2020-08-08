@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -39,7 +39,7 @@ const Sliders: React.FC<Props> = (props) => {
   return (
     <StyledSliderContainer>
       {emotions3 &&
-        Object.keys(emotions3).map((emotion, i) => {
+        Object.keys(emotions3).map((emotion) => {
           const { label } = emotions3[emotion];
           return (
             <StyledSlider

@@ -1,5 +1,5 @@
 import React from 'react';
-import { emotions, sortOptions, filterOptions } from '../constants/constants';
+import { sortOptions, filterOptions } from '../constants/constants';
 import styled from 'styled-components';
 
 interface Props {
@@ -11,10 +11,6 @@ interface Props {
 }
 
 const Header: React.FC<Props> = (props) => {
-  const handleFilterChange = (e: any) => {
-    if (e.target.value) props.filterMemories(e.target.value);
-  };
-
   return (
     <StyledHeader>
       <Title>Memory Collector</Title>
