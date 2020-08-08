@@ -11,26 +11,22 @@ interface Props {
 }
 
 const Body: React.FC<Props> = (props) => {
-
   const parseMemories = (memories: any, sortBy: string, filterBy: string) => {
     // handle sorting and filtering on memories array
     return memories;
-  }  
+  };
 
   const { memories, sortBy, filterBy, viewMemory } = props;
   const parsedMemories = parseMemories(memories, sortBy, filterBy);
 
   return (
     <StyledBody>
-      { parsedMemories.map((memory: any, i: number) => (
-        <Memory 
-          viewMemory={viewMemory} 
-          memory={memory} 
-          key={i} />
-      )) }
+      {parsedMemories.map((memory: any, i: number) => (
+        <Memory viewMemory={viewMemory} memory={memory} key={i} />
+      ))}
     </StyledBody>
-  )
-}
+  );
+};
 
 const StyledBody = styled.div`
   display: flex;

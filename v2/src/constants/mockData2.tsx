@@ -1,19 +1,19 @@
 /* Updated Data Model
- * 
+ *
  * dateTime: Date Object // deconstruct at usage
  * text: string
  * media: { audio: string, image: string, video: string }
  * isCoreMemory: bool
  * emotions: { joy: number, ... } // use these valuses to construct gradient
- * 
+ *
  */
 
 export default [
   {
     id: 123,
     dateTime: new Date(),
-    text: "memory 1",
-    media: { audio: "", image: "", video: "" },
+    text: 'memory 1',
+    media: { audio: '', image: '', video: '' },
     isCoreMemory: false,
     emotions: {
       joy: 5,
@@ -21,17 +21,17 @@ export default [
       sadness: 0,
       fear: 0,
       disgust: 3,
-      neutral: 2
+      neutral: 2,
     },
     gradient: {
-      default: ''
-    }
+      default: '',
+    },
   },
   {
     id: 1234,
     dateTime: new Date(),
-    text: "memory 2",
-    media: { audio: "", image: "", video: "" },
+    text: 'memory 2',
+    media: { audio: '', image: '', video: '' },
     isCoreMemory: true,
     emotions: {
       joy: 0,
@@ -39,10 +39,10 @@ export default [
       sadness: 2,
       fear: 2,
       disgust: 1,
-      neutral: 0
+      neutral: 0,
     },
     gradient: {
-      default: ''
-    }
-  }
+      default: '',
+    },
+  },
 ];

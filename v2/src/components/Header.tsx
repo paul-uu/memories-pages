@@ -1,5 +1,5 @@
 import React from 'react';
-import { emotions, sortOptions, filterOptions } from "../constants/constants";
+import { emotions, sortOptions, filterOptions } from '../constants/constants';
 import styled from 'styled-components';
 
 interface Props {
@@ -11,12 +11,10 @@ interface Props {
 }
 
 const Header: React.FC<Props> = (props) => {
-
   const handleFilterChange = (e: any) => {
-    if (e.target.value) 
-      props.filterMemories(e.target.value);
-  }
-  
+    if (e.target.value) props.filterMemories(e.target.value);
+  };
+
   return (
     <StyledHeader>
       <Title>Memory Collector</Title>
@@ -27,51 +25,67 @@ const Header: React.FC<Props> = (props) => {
           <span>Add Memory</span>
         </ActionLink>
 
-        <ActionLink onClick={() => { alert('in progress') }}>
+        <ActionLink
+          onClick={() => {
+            alert('in progress');
+          }}
+        >
           <i className="fa fa-bar-chart" aria-hidden="true"></i>
           <span>Data Visualizations</span>
         </ActionLink>
 
-        <Search onClick={() => { alert('in progress') }}>
-          <i className="fa fa-search" aria-hidden="true" onClick={props.searchMemories}></i>
+        <Search
+          onClick={() => {
+            alert('in progress');
+          }}
+        >
+          <i
+            className="fa fa-search"
+            aria-hidden="true"
+            onClick={props.searchMemories}
+          ></i>
         </Search>
 
         <Dropdown>
           <DropdownLabel>Sort By</DropdownLabel>
-          <select onChange={e => props.filterMemories(e.target.value)}>
-          { Object.values(filterOptions).map(option => 
-            <option key={option.label} value={option.value}>{ option.label }</option>
-          )}
+          <select onChange={(e) => props.filterMemories(e.target.value)}>
+            {Object.values(filterOptions).map((option) => (
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </Dropdown>
 
         <Dropdown>
           <DropdownLabel>Filter By</DropdownLabel>
-          <select onChange={e => props.sortMemories(e.target.value)}>
-          { Object.values(sortOptions).map(option => 
-            <option key={option.label} value={option.value}>{option.label}</option>
-          )}
+          <select onChange={(e) => props.sortMemories(e.target.value)}>
+            {Object.values(sortOptions).map((option) => (
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </Dropdown>
-        <div style={{'clear':'both'}}></div>
+        <div style={{ clear: 'both' }}></div>
       </Actions>
     </StyledHeader>
-  )
-}
+  );
+};
 
 const StyledHeader = styled.header`
   position: fixed;
   top: 0;
-  padding: 8px 16px;;
+  padding: 8px 16px;
   height: initial;
   width: 100%;
   background-color: white;
   z-index: 6;
-  -webkit-box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
-  -moz-box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
-  box-shadow: 0px 1px 4px 0px rgba(170,170,170,1);
+  -webkit-box-shadow: 0px 1px 4px 0px rgba(170, 170, 170, 1x);
+  -moz-box-shadow: 0px 1px 4px 0px rgba(170, 170, 170, 1);
+  box-shadow: 0px 1px 4px 0px rgba(170, 170, 170, 1);
 `;
-const Title = styled.h3 `
+const Title = styled.h3`
   float: left;
   font-weight: 400;
   font-size: 16px;
@@ -79,10 +93,10 @@ const Title = styled.h3 `
   margin: 0;
 `;
 const Count = styled.div`
-float: right;
-font-weight: 400;
-font-size: 16px;
-color: #999;
+  float: right;
+  font-weight: 400;
+  font-size: 16px;
+  color: #999;
 `;
 const Actions = styled.div`
   clear: both;

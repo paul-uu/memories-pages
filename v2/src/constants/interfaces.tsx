@@ -1,4 +1,3 @@
-
 export interface IMemory {
   id: string;
   dateTime: Date | undefined;
@@ -7,10 +6,10 @@ export interface IMemory {
     audio?: string | undefined;
     image?: string | undefined;
     video?: string | undefined;
-  },
+  };
   isCoreMemory: boolean;
   emotions: {
-    [key: string]: { percentage: number, value: number };
+    [key: string]: { percentage: number; value: number };
     /* todo: add these w/o ts errors
     anger  : { percentage: number, value: number };
     disgust: { percentage: number, value: number };
@@ -19,12 +18,12 @@ export interface IMemory {
     neutral: { percentage: number, value: number };
     sadness: { percentage: number, value: number };
     */
-  },
+  };
   gradient: {
     default: string;
     moz?: string;
     webkit?: string;
-  }
+  };
 }
 
 export interface Emotion {

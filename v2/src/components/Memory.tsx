@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IMemory } from '../constants/interfaces';
-import { getEmotionPercentages, getEmotionGradients } from '../utilities'
+import { getEmotionPercentages, getEmotionGradients } from '../utilities';
 
 interface Props {
   memory: IMemory;
@@ -21,14 +21,12 @@ const Memory: React.FC<Props> = (props) => {
     border: 1px solid #ccc;
     border-radius: 50%;
     cursor: pointer;
-    background: ${(props: StyledMemoryProps) => props.gradient }
+    background: ${(props: StyledMemoryProps) => props.gradient};
   `;
 
   return (
-    <StyledMemory 
-      gradient={gradient} 
-      onClick={() => viewMemory(memory)} />
+    <StyledMemory gradient={gradient} onClick={() => viewMemory(memory)} />
   );
-}
+};
 
 export default Memory;
