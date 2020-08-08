@@ -40,7 +40,7 @@ const Sliders: React.FC<Props> = (props) => {
     <StyledSliderContainer>
       {emotions3 &&
         Object.keys(emotions3).map((emotion, i) => {
-          let { label } = emotions3[emotion];
+          const { label } = emotions3[emotion];
           return (
             <StyledSlider
               key={label}

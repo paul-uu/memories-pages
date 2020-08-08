@@ -7,11 +7,11 @@ export const isObjEmpty = (obj: object): boolean =>
 
 export const getEmotionPercentages = (emotions: any) => {
   let total = 0;
-  for (let emotion in emotions) {
+  for (const emotion in emotions) {
     total += emotions[emotion];
   }
-  let percentages = {};
-  for (let emotion in emotions) {
+  const percentages = {};
+  for (const emotion in emotions) {
     // @ts-ignore
     percentages[emotion] = Math.floor((emotions[emotion] / total) * 100);
   }
@@ -32,8 +32,8 @@ export const getEmotionGradients = (emotions: any) => {
   return (output += ');'); // end css string
 
   function hasMultipleEmotions(emotions: any) {
-    let emotionPercentages = getEmotionPercentages(emotions);
-    for (let emotion in emotionPercentages) {
+    const emotionPercentages = getEmotionPercentages(emotions);
+    for (const emotion in emotionPercentages) {
       // @ts-ignore
       if (emotionPercentages[emotion] === 100) return false;
     }

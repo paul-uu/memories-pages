@@ -47,17 +47,17 @@ const MemoryModal: React.FC<Props> = (props) => {
   }
 
   const handleSliderChange = (val: any, emotion: any) => {
-    let currentMemory = Object.assign({}, memory);
+    const currentMemory = Object.assign({}, memory);
     currentMemory.emotions[emotion].value = val;
     setMemory(currentMemory);
   };
 
   const setEmotionPercentages = (emotions: {}) => {
-    let emotionsCopy = Object.assign({}, emotions);
-    let valuesTotal = getValuesTotal(emotionsCopy);
-    for (let emotion in emotionsCopy) {
+    const emotionsCopy = Object.assign({}, emotions);
+    const valuesTotal = getValuesTotal(emotionsCopy);
+    for (const emotion in emotionsCopy) {
       // @ts-ignore
-      let value = emotionsCopy[emotion].value;
+      const value = emotionsCopy[emotion].value;
       // @ts-ignore
       emotionsCopy[emotion].percentage = (value / valuesTotal) * 100;
     }
@@ -67,7 +67,7 @@ const MemoryModal: React.FC<Props> = (props) => {
       let valueTotal = 0;
       if (!isObjEmpty(emotionsObj)) {
         console.log(emotionsObj);
-        for (let emotion in emotionsObj) {
+        for (const emotion in emotionsObj) {
           // @ts-ignore
           valueTotal += emotionsObj[emotion].value;
         }
@@ -79,11 +79,11 @@ const MemoryModal: React.FC<Props> = (props) => {
   const setMemoryGradient = (emotions: {}): string => {
     let str = 'linear-gradient(to bottom, ';
     let percentageTotal = 0;
-    for (let emotion in emotions) {
+    for (const emotion in emotions) {
       //@ts-ignore
-      let percentage = emotions[emotion].percentage;
+      const percentage = emotions[emotion].percentage;
       if (percentage) {
-        let hex = emotions3[emotion].color;
+        const hex = emotions3[emotion].color;
         if (percentage === 100) {
           return hex;
         } else {
@@ -127,7 +127,7 @@ const MemoryModal: React.FC<Props> = (props) => {
 
   const handleSave = () => {
     const memoryToSave = Object.assign({}, memory);
-    let newErrors = getMemoryErrors(memoryToSave);
+    const newErrors = getMemoryErrors(memoryToSave);
     if (newErrors.length > 0) {
       setErorrs(newErrors);
     } else {
@@ -141,7 +141,7 @@ const MemoryModal: React.FC<Props> = (props) => {
   };
 
   const getMemoryErrors = (memory: IMemory): string[] => {
-    let errorMessages = [];
+    const errorMessages = [];
     if (memory.text.trim().length <= 0) {
       errorMessages.push('Please add a description of your memeory');
     }
@@ -151,7 +151,7 @@ const MemoryModal: React.FC<Props> = (props) => {
     return errorMessages;
   };
   const hasEmotions = (emotions: {}): boolean => {
-    for (let emotion in emotions) {
+    for (const emotion in emotions) {
       // @ts-ignore
       if (emotions[emotion].value > 0) return true;
     }
