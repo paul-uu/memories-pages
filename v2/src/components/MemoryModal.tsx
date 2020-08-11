@@ -16,7 +16,7 @@ interface Props {
 
 ReactModal.setAppElement('#root');
 
-const MemoryModal: React.FC<Props> = (props) => {
+function MemoryModal(props: Props): React.ReactElement {
   const [memory, setMemory] = useState<any>(props.memory || initEmptyMemory());
   useEffect(() => {
     if (props.memory) setMemory(props.memory);
@@ -217,6 +217,6 @@ const MemoryModal: React.FC<Props> = (props) => {
       </div>
     </ReactModal>
   );
-};
+}
 
 export default MemoryModal;

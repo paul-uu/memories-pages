@@ -10,7 +10,7 @@ interface Props {
   viewMemory: Function;
 }
 
-const Body: React.FC<Props> = (props) => {
+function Body(props: Props): React.ReactElement {
   const parseMemories = (memories: any, sortBy: string, filterBy: string) => {
     // handle sorting and filtering on memories array
     return memories;
@@ -26,7 +26,7 @@ const Body: React.FC<Props> = (props) => {
       ))}
     </StyledBody>
   );
-};
+}
 
 const StyledBody = styled.div`
   display: flex;

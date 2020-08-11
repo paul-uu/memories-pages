@@ -33,7 +33,7 @@ const StyledSlider = styled(createSliderWithTooltip(Slider))`
   }
 `;
 
-const Sliders: React.FC<Props> = (props) => {
+function Sliders(props: Props): React.ReactElement {
   const { memory, onSliderChange } = props;
 
   return (
@@ -58,6 +58,6 @@ const Sliders: React.FC<Props> = (props) => {
         })}
     </StyledSliderContainer>
   );
-};
+}
 
 export default Sliders;

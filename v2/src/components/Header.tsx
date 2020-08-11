@@ -10,7 +10,7 @@ interface Props {
   count: number;
 }
 
-const Header: React.FC<Props> = (props) => {
+function Header(props: Props): React.ReactElement {
   return (
     <StyledHeader>
       <Title>Memory Collector</Title>
@@ -67,7 +67,7 @@ const Header: React.FC<Props> = (props) => {
       </Actions>
     </StyledHeader>
   );
-};
+}
 
 const StyledHeader = styled.header`
   position: fixed;
