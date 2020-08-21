@@ -1,6 +1,6 @@
 export interface IMemory {
   id: string;
-  dateTime: Date | undefined;
+  dateTime: number | undefined;
   text: string; // rename to description
   media: {
     audio?: string | undefined;

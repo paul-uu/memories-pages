@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import { IMemory } from '../constants/interfaces';
-import { emotions3 } from '../constants/constants';
+import { emotions3, MONTHS, DAYS } from '../constants/constants';
 // import Tooltip from 'rc-tooltip';
 import { generateId, isObjEmpty } from '../utilities';
 import Sliders from './Sliders';
@@ -127,7 +127,7 @@ function MemoryModal(props: Props): React.ReactElement {
     if (newErrors.length > 0) {
       setErorrs(newErrors);
     } else {
-      memoryToSave.dateTime = new Date();
+      memoryToSave.dateTime = new Date().getTime();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
       props.saveMemory(memoryToSave);
@@ -159,6 +159,16 @@ function MemoryModal(props: Props): React.ReactElement {
     props.toggleAddModal(false);
   };
 
+  const formatDateTime = (dateTime: number | undefined) => {
+    if (dateTime) {
+      let d = new Date(dateTime);
+      let day = DAYS[d.getDay()];
+      let month = MONTHS[d.getMonth()];
+      let formattedDate = `${day} ${month} ${d.getDate()}, ${d.getFullYear()}`;
+      return formattedDate;
+    }
+  };
+
   // todo: global -> { emotions } => percentages per relevant emotion
   // ex: { joy: 1, anger: 1 ... } => { joy: 50, anger: 50 }
   return (
@@ -169,7 +179,11 @@ function MemoryModal(props: Props): React.ReactElement {
       role="dialog"
       contentLabel="Add new memory modal"
     >
-      <h3>Add New Memory</h3>
+      <h3>
+        {props.memory
+          ? formatDateTime(props.memory.dateTime)
+          : 'Add New Memory'}
+      </h3>
       <button onClick={props.toggleAddModal}>Close</button>
 
       <textarea

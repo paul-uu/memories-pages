@@ -33,14 +33,7 @@ const App: React.FC = () => {
   }, [isMemoryModalOpen]);
 
   const [sortBy, setSortBy] = useState<string>('');
-  useEffect(() => {
-    console.log(sortBy);
-  }, [sortBy]);
-
   const [filterBy, setFilterBy] = useState<string>('');
-  useEffect(() => {
-    console.log(filterBy);
-  }, [filterBy]);
 
   const updateMemories = (updatedMemoriesArray: []) => {
     if (memories !== updatedMemoriesArray) setMemories(updatedMemoriesArray);
@@ -60,11 +53,6 @@ const App: React.FC = () => {
 
   const deleteMemory = (memoryId: string) => {
     setMemories(memories.filter((memory: IMemory) => memory.id !== memoryId));
-  };
-
-  const sortMemories = (sort: string) => {
-    console.log('sort by ' + sort);
-    setSortBy(sort);
   };
 
   const filterMemories = (filter: string) => {
@@ -93,7 +81,7 @@ const App: React.FC = () => {
       />
 
       <Header
-        sortMemories={sortMemories}
+        sortMemories={setSortBy}
         filterMemories={filterMemories}
         toggleAddModal={toggleAddModal}
         searchMemories={searchMemories}

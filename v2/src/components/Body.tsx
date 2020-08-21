@@ -1,6 +1,7 @@
 import React from 'react';
 import Memory from './Memory';
 import styled from 'styled-components';
+import { sortOptions, filterOptions } from '../constants/constants';
 
 interface Props {
   updateMemories: (updatedMemories: []) => void;
@@ -12,8 +13,24 @@ interface Props {
 
 function Body(props: Props): React.ReactElement {
   const parseMemories = (memories: any, sortBy: string, filterBy: string) => {
-    // handle sorting and filtering on memories array
-    return memories;
+    let memoriesCopy = [...memories];
+
+    if (filterBy) {
+      console.log(filterBy);
+      // filterMemories
+    }
+
+    if (sortBy) {
+      if (sortBy === sortOptions.new.value)
+        memoriesCopy.sort((A, B) => B.dateTime - A.dateTime);
+      else if (sortBy === sortOptions.old.value)
+        memoriesCopy.sort((A, B) => A.dateTime - B.dateTime);
+      else
+        memoriesCopy.sort(
+          (A, B) => B.emotions[sortBy].value - A.emotions[sortBy].value
+        );
+    }
+    return memoriesCopy;
   };
 
   const { memories, sortBy, filterBy, viewMemory } = props;
