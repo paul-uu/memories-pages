@@ -55,7 +55,7 @@ function Header(props: Props): React.ReactElement {
 
         <Dropdown>
           <DropdownLabel>Filter By</DropdownLabel>
-          <select onChange={(e) => props.sortMemories(e.target.value)}>
+          <select onChange={(e) => props.filterMemories(e.target.value)}>
             {Object.values(filterOptions).map((option) => (
               <option key={option.label} value={option.value}>
                 {option.label}

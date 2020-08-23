@@ -3,7 +3,11 @@ import Header from './components/Header';
 import Body from './components/Body';
 import MemoryModal from './components/MemoryModal';
 import styled from 'styled-components';
-import { LOCALSTORAGEKEY } from './constants/constants';
+import {
+  LOCALSTORAGEKEY,
+  sortOptions,
+  filterOptions,
+} from './constants/constants';
 import { IMemory } from './constants/interfaces';
 
 const App: React.FC = () => {
@@ -32,8 +36,8 @@ const App: React.FC = () => {
     }
   }, [isMemoryModalOpen]);
 
-  const [sortBy, setSortBy] = useState<string>('');
-  const [filterBy, setFilterBy] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>(sortOptions.new.value);
+  const [filterBy, setFilterBy] = useState<string>(filterOptions.all.value);
 
   const updateMemories = (updatedMemoriesArray: []) => {
     if (memories !== updatedMemoriesArray) setMemories(updatedMemoriesArray);
@@ -82,7 +86,7 @@ const App: React.FC = () => {
 
       <Header
         sortMemories={setSortBy}
-        filterMemories={filterMemories}
+        filterMemories={setFilterBy}
         toggleAddModal={toggleAddModal}
         searchMemories={searchMemories}
         count={memories.length}

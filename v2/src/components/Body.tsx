@@ -2,6 +2,7 @@ import React from 'react';
 import Memory from './Memory';
 import styled from 'styled-components';
 import { sortOptions, filterOptions } from '../constants/constants';
+import { IMemory } from '../constants/interfaces';
 
 interface Props {
   updateMemories: (updatedMemories: []) => void;
@@ -12,12 +13,19 @@ interface Props {
 }
 
 function Body(props: Props): React.ReactElement {
-  const parseMemories = (memories: any, sortBy: string, filterBy: string) => {
+  const filterSortMemories = (
+    memories: IMemory[],
+    sortBy: string,
+    filterBy: string
+  ) => {
     let memoriesCopy = [...memories];
 
     if (filterBy) {
-      console.log(filterBy);
-      // filterMemories
+      memoriesCopy = memoriesCopy.filter((m) => {
+        if (filterBy === filterOptions.all.value) return true;
+        else if (filterBy === filterOptions.core.value) return m.isCoreMemory;
+        else return m.emotions[filterBy].value > 0;
+      });
     }
 
     if (sortBy) {
@@ -34,7 +42,7 @@ function Body(props: Props): React.ReactElement {
   };
 
   const { memories, sortBy, filterBy, viewMemory } = props;
-  const parsedMemories = parseMemories(memories, sortBy, filterBy);
+  const parsedMemories = filterSortMemories(memories, sortBy, filterBy);
 
   return (
     <StyledBody>

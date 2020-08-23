@@ -27,7 +27,7 @@ function MemoryModal(props: Props): React.ReactElement {
   function initEmptyMemory(): IMemory {
     const emptyMemory: IMemory = {
       id: generateId(),
-      dateTime: undefined,
+      dateTime: new Date().getTime(),
       text: '',
       media: { audio: '', image: '', video: '' },
       isCoreMemory: false,
@@ -159,7 +159,7 @@ function MemoryModal(props: Props): React.ReactElement {
     props.toggleAddModal(false);
   };
 
-  const formatDateTime = (dateTime: number | undefined) => {
+  const formatDateTime = (dateTime: number) => {
     if (dateTime) {
       let d = new Date(dateTime);
       let day = DAYS[d.getDay()];
