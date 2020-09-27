@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { sortOptions, filterOptions } from '../constants/constants';
 import styled from 'styled-components';
 
@@ -6,66 +6,84 @@ interface Props {
   filterMemories: (filter: string) => void;
   sortMemories: (sort: string) => void;
   toggleAddModal: (isOpen: any) => void; // look into this arg type
-  searchMemories: () => void;
+  searchString: string;
+  setSearch: Function;
   count: number;
 }
 
 function Header(props: Props): React.ReactElement {
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  useEffect(() => {
+    if (!isSearchVisible) props.setSearch('');
+  }, [isSearchVisible]);
+  const toggleSearchVisibility = () => {
+    setIsSearchVisible((isSearchVisible) => !isSearchVisible);
+  };
+
   return (
-    <StyledHeader>
-      <Title>Memory Collector</Title>
-      <Count>{props.count || 0} Memories</Count>
-      <Actions>
-        <ActionLink onClick={props.toggleAddModal}>
-          <i className="fa fa-plus" aria-hidden="true"></i>
-          <span>Add Memory</span>
-        </ActionLink>
+    <>
+      <StyledHeader>
+        <Title>Memory Collector</Title>
 
-        <ActionLink
-          onClick={() => {
-            alert('in progress');
+        <Count>{props.count || 0} Memories</Count>
+
+        <Actions>
+          <ActionLink onClick={props.toggleAddModal}>
+            <i className="fa fa-plus" aria-hidden="true"></i>
+            <span>Add Memory</span>
+          </ActionLink>
+
+          <ActionLink
+            onClick={() => {
+              console.log('todo');
+            }}
+          >
+            <i className="fa fa-bar-chart" aria-hidden="true"></i>
+            <span>Data Visualizations</span>
+          </ActionLink>
+
+          <Search onClick={toggleSearchVisibility}>
+            <i
+              className={`fa ${isSearchVisible ? 'fa-times' : 'fa-search'}`}
+              aria-hidden="true"
+            ></i>
+          </Search>
+
+          <Dropdown>
+            <DropdownLabel>Sort By</DropdownLabel>
+            <select onChange={(e) => props.sortMemories(e.target.value)}>
+              {Object.values(sortOptions).map((option) => (
+                <option key={option.label} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </Dropdown>
+
+          <Dropdown>
+            <DropdownLabel>Filter By</DropdownLabel>
+            <select onChange={(e) => props.filterMemories(e.target.value)}>
+              {Object.values(filterOptions).map((option) => (
+                <option key={option.label} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </Dropdown>
+          <div style={{ clear: 'both' }}></div>
+        </Actions>
+      </StyledHeader>
+      <SearchInput className={isSearchVisible ? 'visible' : ''}>
+        <input
+          type="text"
+          value={props.searchString}
+          onChange={(e) => {
+            props.setSearch(e.target.value);
           }}
-        >
-          <i className="fa fa-bar-chart" aria-hidden="true"></i>
-          <span>Data Visualizations</span>
-        </ActionLink>
-
-        <Search
-          onClick={() => {
-            alert('in progress');
-          }}
-        >
-          <i
-            className="fa fa-search"
-            aria-hidden="true"
-            onClick={props.searchMemories}
-          ></i>
-        </Search>
-
-        <Dropdown>
-          <DropdownLabel>Sort By</DropdownLabel>
-          <select onChange={(e) => props.sortMemories(e.target.value)}>
-            {Object.values(sortOptions).map((option) => (
-              <option key={option.label} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </Dropdown>
-
-        <Dropdown>
-          <DropdownLabel>Filter By</DropdownLabel>
-          <select onChange={(e) => props.filterMemories(e.target.value)}>
-            {Object.values(filterOptions).map((option) => (
-              <option key={option.label} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </Dropdown>
-        <div style={{ clear: 'both' }}></div>
-      </Actions>
-    </StyledHeader>
+        />
+        <button onClick={() => props.setSearch('')}>Clear</button>
+      </SearchInput>
+    </>
   );
 }
 
@@ -97,6 +115,7 @@ const Count = styled.div`
 const Actions = styled.div`
   clear: both;
   padding-top: 24px;
+  position: relative;
 `;
 const ActionLink = styled.div`
   .fa {
@@ -128,6 +147,16 @@ const Search = styled.div`
   float: right;
   margin-top: 12px;
   cursor: pointer;
+`;
+const SearchInput = styled.div`
+  position: absolute;
+  top: 69px;
+  right: 46px;
+  z-index: 1;
+  transition: top 0.3s;
+  &.visible {
+    top: 96px;
+  }
 `;
 
 export default Header;

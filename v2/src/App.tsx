@@ -38,6 +38,7 @@ const App: React.FC = () => {
 
   const [sortBy, setSortBy] = useState<string>(sortOptions.new.value);
   const [filterBy, setFilterBy] = useState<string>(filterOptions.all.value);
+  const [searchString, setSearchString] = useState<string>('');
 
   const updateMemories = (updatedMemoriesArray: []) => {
     if (memories !== updatedMemoriesArray) setMemories(updatedMemoriesArray);
@@ -69,11 +70,6 @@ const App: React.FC = () => {
     setIsMemoryModalOpen(isOpen);
   };
 
-  const searchMemories = () => {
-    // todo
-    return;
-  };
-
   return (
     <StyledApp>
       <MemoryModal
@@ -88,7 +84,8 @@ const App: React.FC = () => {
         sortMemories={setSortBy}
         filterMemories={setFilterBy}
         toggleAddModal={toggleAddModal}
-        searchMemories={searchMemories}
+        searchString={searchString}
+        setSearch={setSearchString}
         count={memories.length}
       />
 
@@ -97,6 +94,7 @@ const App: React.FC = () => {
         memories={memories}
         sortBy={sortBy}
         filterBy={filterBy}
+        searchString={searchString}
         viewMemory={setSelectedMemory}
       />
     </StyledApp>

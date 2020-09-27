@@ -9,6 +9,7 @@ interface Props {
   memories: any;
   sortBy: string;
   filterBy: string;
+  searchString: string;
   viewMemory: Function;
 }
 
@@ -16,9 +17,14 @@ function Body(props: Props): React.ReactElement {
   const filterSortMemories = (
     memories: IMemory[],
     sortBy: string,
-    filterBy: string
+    filterBy: string,
+    searchString: string
   ) => {
     let memoriesCopy = [...memories];
+
+    if (searchString) {
+      memoriesCopy = memoriesCopy.filter((m) => m.text.includes(searchString));
+    }
 
     if (filterBy) {
       memoriesCopy = memoriesCopy.filter((m) => {
@@ -41,8 +47,13 @@ function Body(props: Props): React.ReactElement {
     return memoriesCopy;
   };
 
-  const { memories, sortBy, filterBy, viewMemory } = props;
-  const parsedMemories = filterSortMemories(memories, sortBy, filterBy);
+  const { memories, sortBy, filterBy, viewMemory, searchString } = props;
+  const parsedMemories = filterSortMemories(
+    memories,
+    sortBy,
+    filterBy,
+    searchString
+  );
 
   return (
     <StyledBody>
