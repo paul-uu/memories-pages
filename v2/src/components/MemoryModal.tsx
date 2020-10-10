@@ -8,10 +8,9 @@ import Sliders from './Sliders';
 
 interface Props {
   toggleAddModal: (isOpen: any) => void;
-  saveMemory: (memory: any) => void;
   isOpen: boolean;
   memory?: IMemory | null;
-  deleteMemory: Function;
+  dispatch: any;
 }
 
 ReactModal.setAppElement('#root');
@@ -130,7 +129,10 @@ function MemoryModal(props: Props): React.ReactElement {
       memoryToSave.dateTime = new Date().getTime();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
-      props.saveMemory(memoryToSave);
+      props.dispatch({
+        type: 'SET',
+        data: { memory: memoryToSave },
+      });
       resetForm();
       props.toggleAddModal(false);
     }
@@ -155,7 +157,11 @@ function MemoryModal(props: Props): React.ReactElement {
   };
 
   const handleDelete = () => {
-    props.memory && props.deleteMemory(props.memory.id);
+    props.memory &&
+      props.dispatch({
+        type: 'DELETE',
+        data: { memory: props.memory },
+      });
     props.toggleAddModal(false);
   };
 

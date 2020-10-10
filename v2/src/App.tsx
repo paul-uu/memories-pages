@@ -8,7 +8,7 @@ import {
   sortOptions,
   filterOptions,
 } from './constants/constants';
-import { IMemory } from './constants/interfaces';
+import useMemories from './hooks/useMemories';
 
 const App: React.FC = () => {
   const loadMemories = () => {
@@ -17,7 +17,7 @@ const App: React.FC = () => {
     else return [];
   };
 
-  const [memories, setMemories] = useState(loadMemories());
+  const [memories, dispatch] = useMemories(loadMemories());
   useEffect(() => {
     localStorage.setItem(LOCALSTORAGEKEY, JSON.stringify(memories));
   }, [memories]);
@@ -40,31 +40,6 @@ const App: React.FC = () => {
   const [filterBy, setFilterBy] = useState<string>(filterOptions.all.value);
   const [searchString, setSearchString] = useState<string>('');
 
-  const updateMemories = (updatedMemoriesArray: []) => {
-    if (memories !== updatedMemoriesArray) setMemories(updatedMemoriesArray);
-  };
-
-  const saveMemory = (memory: IMemory) => {
-    const memoriesCopy = [...memories];
-    for (let i = 0; i < memoriesCopy.length; i++) {
-      if (memoriesCopy[i].id === memory.id) {
-        memoriesCopy[i] = memory;
-        return setMemories(memoriesCopy);
-      }
-    }
-    memoriesCopy.push(memory);
-    return setMemories(memoriesCopy);
-  };
-
-  const deleteMemory = (memoryId: string) => {
-    setMemories(memories.filter((memory: IMemory) => memory.id !== memoryId));
-  };
-
-  const filterMemories = (filter: string) => {
-    console.log('filter by: ' + filter);
-    setFilterBy(filter);
-  };
-
   const toggleAddModal = (isOpen: boolean) => {
     isOpen = typeof isOpen !== 'boolean' ? !isMemoryModalOpen : isOpen;
     setIsMemoryModalOpen(isOpen);
@@ -74,10 +49,9 @@ const App: React.FC = () => {
     <StyledApp>
       <MemoryModal
         toggleAddModal={toggleAddModal}
-        saveMemory={saveMemory}
         isOpen={isMemoryModalOpen}
         memory={selectedMemory}
-        deleteMemory={deleteMemory}
+        dispatch={dispatch}
       />
 
       <Header
@@ -90,7 +64,6 @@ const App: React.FC = () => {
       />
 
       <Body
-        updateMemories={updateMemories}
         memories={memories}
         sortBy={sortBy}
         filterBy={filterBy}

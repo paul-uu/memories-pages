@@ -5,7 +5,6 @@ import { sortOptions, filterOptions } from '../constants/constants';
 import { IMemory } from '../constants/interfaces';
 
 interface Props {
-  updateMemories: (updatedMemories: []) => void;
   memories: any;
   sortBy: string;
   filterBy: string;

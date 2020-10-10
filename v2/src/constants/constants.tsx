@@ -142,3 +142,8 @@ export const DAYS = [
   'Friday',
   'Saturday',
 ];
+
+export const actions = {
+  SET: 'SET',
+  DELETE: 'DELETE',
+};

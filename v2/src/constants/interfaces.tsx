@@ -30,3 +30,11 @@ export interface Emotion {
   label: string;
   color: string;
 }
+
+export interface IAction {
+  type: string;
+  data: {
+    type: string;
+    memory: IMemory;
+  };
+}
