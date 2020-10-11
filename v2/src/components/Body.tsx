@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Memory from './Memory';
 import styled from 'styled-components';
 import { sortOptions, filterOptions } from '../constants/constants';
 import { IMemory } from '../constants/interfaces';
+import ViewMemoryModal from './ViewMemoryModal';
 
 interface Props {
   memories: any;
   sortBy: string;
   filterBy: string;
   searchString: string;
-  viewMemory: Function;
+  dispatch: any;
 }
 
 function Body(props: Props): React.ReactElement {
@@ -46,19 +47,27 @@ function Body(props: Props): React.ReactElement {
     return memoriesCopy;
   };
 
-  const { memories, sortBy, filterBy, viewMemory, searchString } = props;
+  const { memories, sortBy, filterBy, searchString } = props;
   const parsedMemories = filterSortMemories(
     memories,
     sortBy,
     filterBy,
     searchString
   );
+  const [selectedMemory, setSelectedMemory] = useState(null);
 
   return (
     <StyledBody>
       {parsedMemories.map((memory: any, i: number) => (
-        <Memory viewMemory={viewMemory} memory={memory} key={i} />
+        <Memory viewMemory={setSelectedMemory} memory={memory} key={i} />
       ))}
+
+      <ViewMemoryModal
+        memory={selectedMemory}
+        isOpen={selectedMemory !== null}
+        toggle={() => setSelectedMemory(null)}
+        dispatch={props.dispatch}
+      />
     </StyledBody>
   );
 }

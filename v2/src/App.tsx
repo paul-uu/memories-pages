@@ -22,20 +22,7 @@ const App: React.FC = () => {
     localStorage.setItem(LOCALSTORAGEKEY, JSON.stringify(memories));
   }, [memories]);
 
-  const [selectedMemory, setSelectedMemory] = useState(null);
-  useEffect(() => {
-    if (selectedMemory !== null) {
-      setIsMemoryModalOpen(true);
-    }
-  }, [selectedMemory]);
-
   const [isMemoryModalOpen, setIsMemoryModalOpen] = useState(false);
-  useEffect(() => {
-    if (!isMemoryModalOpen) {
-      setSelectedMemory(null);
-    }
-  }, [isMemoryModalOpen]);
-
   const [sortBy, setSortBy] = useState<string>(sortOptions.new.value);
   const [filterBy, setFilterBy] = useState<string>(filterOptions.all.value);
   const [searchString, setSearchString] = useState<string>('');
@@ -50,7 +37,6 @@ const App: React.FC = () => {
       <MemoryModal
         toggleAddModal={toggleAddModal}
         isOpen={isMemoryModalOpen}
-        memory={selectedMemory}
         dispatch={dispatch}
       />
 
@@ -68,7 +54,7 @@ const App: React.FC = () => {
         sortBy={sortBy}
         filterBy={filterBy}
         searchString={searchString}
-        viewMemory={setSelectedMemory}
+        dispatch={dispatch}
       />
     </StyledApp>
   );

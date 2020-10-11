@@ -9,18 +9,13 @@ import Sliders from './Sliders';
 interface Props {
   toggleAddModal: (isOpen: any) => void;
   isOpen: boolean;
-  memory?: IMemory | null;
   dispatch: any;
 }
 
 ReactModal.setAppElement('#root');
 
 function MemoryModal(props: Props): React.ReactElement {
-  const [memory, setMemory] = useState<any>(props.memory || initEmptyMemory());
-  useEffect(() => {
-    if (props.memory) setMemory(props.memory);
-  }, [props.memory]);
-
+  const [memory, setMemory] = useState<any>(initEmptyMemory());
   const [errors, setErorrs] = useState<string[]>([]); // eventually, define Error type { message: string, type: string? }
 
   function initEmptyMemory(): IMemory {
@@ -156,25 +151,6 @@ function MemoryModal(props: Props): React.ReactElement {
     return false;
   };
 
-  const handleDelete = () => {
-    props.memory &&
-      props.dispatch({
-        type: 'DELETE',
-        data: { memory: props.memory },
-      });
-    props.toggleAddModal(false);
-  };
-
-  const formatDateTime = (dateTime: number) => {
-    if (dateTime) {
-      let d = new Date(dateTime);
-      let day = DAYS[d.getDay()];
-      let month = MONTHS[d.getMonth()];
-      let formattedDate = `${day} ${month} ${d.getDate()}, ${d.getFullYear()}`;
-      return formattedDate;
-    }
-  };
-
   // todo: global -> { emotions } => percentages per relevant emotion
   // ex: { joy: 1, anger: 1 ... } => { joy: 50, anger: 50 }
   return (
@@ -185,11 +161,7 @@ function MemoryModal(props: Props): React.ReactElement {
       role="dialog"
       contentLabel="Add new memory modal"
     >
-      <h3>
-        {props.memory
-          ? formatDateTime(props.memory.dateTime)
-          : 'Add New Memory'}
-      </h3>
+      <h3>Add New Memory</h3>
       <button onClick={props.toggleAddModal}>Close</button>
 
       <textarea
@@ -224,16 +196,8 @@ function MemoryModal(props: Props): React.ReactElement {
 
       <div>
         <button onClick={handleCancel}>Cancel</button>
-
-        {props.memory === null && <button onClick={resetForm}>Reset</button>}
-
-        <button onClick={handleSave}>
-          {props.memory === null ? 'Add' : 'Save'} Memory
-        </button>
-
-        {props.memory !== null && (
-          <button onClick={handleDelete}>Delete</button>
-        )}
+        <button onClick={resetForm}>Reset</button>
+        <button onClick={handleSave}>Save Memory</button>
       </div>
     </ReactModal>
   );
