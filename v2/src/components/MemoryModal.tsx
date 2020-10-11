@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactModal from 'react-modal';
 import { IMemory } from '../constants/interfaces';
 import { emotions3, MONTHS, DAYS } from '../constants/constants';
 // import Tooltip from 'rc-tooltip';
 import { generateId, isObjEmpty } from '../utilities';
 import Sliders from './Sliders';
+import { MemoriesContext } from '../contexts';
 
 interface Props {
   toggleAddModal: (isOpen: any) => void;
   isOpen: boolean;
-  dispatch: any;
 }
 
 ReactModal.setAppElement('#root');
@@ -17,6 +17,7 @@ ReactModal.setAppElement('#root');
 function MemoryModal(props: Props): React.ReactElement {
   const [memory, setMemory] = useState<any>(initEmptyMemory());
   const [errors, setErorrs] = useState<string[]>([]); // eventually, define Error type { message: string, type: string? }
+  const memContext: any = useContext(MemoriesContext);
 
   function initEmptyMemory(): IMemory {
     const emptyMemory: IMemory = {
@@ -124,7 +125,7 @@ function MemoryModal(props: Props): React.ReactElement {
       memoryToSave.dateTime = new Date().getTime();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
-      props.dispatch({
+      memContext.dispatch({
         type: 'SET',
         data: { memory: memoryToSave },
       });

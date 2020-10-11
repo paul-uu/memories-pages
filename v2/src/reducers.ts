@@ -1,8 +1,8 @@
-import { useReducer } from 'react';
-import { actions } from '../constants/constants';
-import { IMemory, IAction } from '../constants/interfaces';
+import { createContext } from 'react';
+import { actions } from './constants/constants';
+import { IMemory, IAction } from './constants/interfaces';
 
-const reducer = (state: IMemory[], action: IAction): IMemory[] => {
+const memoriesReducer = (state: IMemory[], action: IAction): IMemory[] => {
   const index = getMemoryIndex(state, action.data.memory);
   const { memory } = action.data;
 
@@ -31,9 +31,4 @@ const getMemoryIndex = (arr: IMemory[], memory: IMemory) => {
   return -1;
 };
 
-const useMemories = (initialState: any) => {
-  const [memories, dispatch] = useReducer(reducer, initialState);
-  return [memories, dispatch];
-};
-
-export default useMemories;
+export default memoriesReducer;

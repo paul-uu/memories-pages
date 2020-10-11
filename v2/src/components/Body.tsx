@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Memory from './Memory';
 import styled from 'styled-components';
 import { sortOptions, filterOptions } from '../constants/constants';
@@ -10,7 +10,6 @@ interface Props {
   sortBy: string;
   filterBy: string;
   searchString: string;
-  dispatch: any;
 }
 
 function Body(props: Props): React.ReactElement {
@@ -66,7 +65,6 @@ function Body(props: Props): React.ReactElement {
         memory={selectedMemory}
         isOpen={selectedMemory !== null}
         toggle={() => setSelectedMemory(null)}
-        dispatch={props.dispatch}
       />
     </StyledBody>
   );

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import { IMemory } from '../constants/interfaces';
 import { actions } from '../constants/constants';
+import { MemoriesContext } from '../contexts';
 
 ReactModal.setAppElement('#root');
 
@@ -10,10 +11,10 @@ interface Props {
   memory: IMemory | null;
   isOpen: boolean;
   toggle: Function;
-  dispatch: any;
 }
 
 const ViewMemoryModal = (props: Props) => {
+  const memContext: any = useContext(MemoriesContext);
   if (props.memory) {
     const { text, emotions, dateTime } = props.memory;
     return (
@@ -29,7 +30,7 @@ const ViewMemoryModal = (props: Props) => {
         <button onClick={() => props.toggle()}>Close</button>
         <button
           onClick={() => {
-            props.dispatch({
+            memContext.dispatch({
               type: actions.DELETE,
               data: { memory: props.memory },
             });

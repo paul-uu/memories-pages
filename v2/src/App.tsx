@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import Header from './components/Header';
 import Body from './components/Body';
 import MemoryModal from './components/MemoryModal';
@@ -8,7 +8,8 @@ import {
   sortOptions,
   filterOptions,
 } from './constants/constants';
-import useMemories from './hooks/useMemories';
+import memoriesReducer from './reducers';
+import { MemoriesContext } from './contexts';
 
 const App: React.FC = () => {
   const loadMemories = () => {
@@ -17,7 +18,7 @@ const App: React.FC = () => {
     else return [];
   };
 
-  const [memories, dispatch] = useMemories(loadMemories());
+  const [memories, dispatch] = useReducer(memoriesReducer, loadMemories());
   useEffect(() => {
     localStorage.setItem(LOCALSTORAGEKEY, JSON.stringify(memories));
   }, [memories]);
@@ -33,30 +34,32 @@ const App: React.FC = () => {
   };
 
   return (
-    <StyledApp>
-      <MemoryModal
-        toggleAddModal={toggleAddModal}
-        isOpen={isMemoryModalOpen}
-        dispatch={dispatch}
-      />
+    <MemoriesContext.Provider
+      value={{ memories: memories, dispatch: dispatch }}
+    >
+      <StyledApp>
+        <MemoryModal
+          toggleAddModal={toggleAddModal}
+          isOpen={isMemoryModalOpen}
+        />
 
-      <Header
-        sortMemories={setSortBy}
-        filterMemories={setFilterBy}
-        toggleAddModal={toggleAddModal}
-        searchString={searchString}
-        setSearch={setSearchString}
-        count={memories.length}
-      />
+        <Header
+          sortMemories={setSortBy}
+          filterMemories={setFilterBy}
+          toggleAddModal={toggleAddModal}
+          searchString={searchString}
+          setSearch={setSearchString}
+          count={memories.length}
+        />
 
-      <Body
-        memories={memories}
-        sortBy={sortBy}
-        filterBy={filterBy}
-        searchString={searchString}
-        dispatch={dispatch}
-      />
-    </StyledApp>
+        <Body
+          memories={memories}
+          sortBy={sortBy}
+          filterBy={filterBy}
+          searchString={searchString}
+        />
+      </StyledApp>
+    </MemoriesContext.Provider>
   );
 };
 
