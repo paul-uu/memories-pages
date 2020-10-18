@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import ReactModal from 'react-modal';
+import styled from 'styled-components';
 import { IMemory } from '../constants/interfaces';
 import { emotions3, MONTHS, DAYS } from '../constants/constants';
 // import Tooltip from 'rc-tooltip';
@@ -12,11 +13,45 @@ interface Props {
   isOpen: boolean;
 }
 
+const StyledReactModal = styled(ReactModal)`
+  max-width: 800px;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  h3 {
+    margin-top: 0;
+  }
+  .fa {
+    cursor: pointer;
+    color: #555;
+    &:hover {
+      color: #333;
+    }
+  }
+`;
+const Textarea = styled.textarea`
+  width: 80%;
+  margin-left: 10%;
+`;
+const CoreMemory = styled.div`
+  text-align: center;
+  margin-bottom: 64px;
+`;
+const Buttons = styled.div`
+  text-align: right;
+  button {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+`;
+
 ReactModal.setAppElement('#root');
 
 function MemoryModal(props: Props): React.ReactElement {
   const [memory, setMemory] = useState<any>(initEmptyMemory());
-  const [errors, setErorrs] = useState<string[]>([]); // eventually, define Error type { message: string, type: string? }
+  const [errors, setErrors] = useState<string[]>([]); // eventually, define Error type { message: string, type: string? }
   const memContext: any = useContext(MemoriesContext);
 
   function initEmptyMemory(): IMemory {
@@ -120,7 +155,7 @@ function MemoryModal(props: Props): React.ReactElement {
     const memoryToSave = Object.assign({}, memory);
     const newErrors = getMemoryErrors(memoryToSave);
     if (newErrors.length > 0) {
-      setErorrs(newErrors);
+      setErrors(newErrors);
     } else {
       memoryToSave.dateTime = new Date().getTime();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
@@ -132,6 +167,10 @@ function MemoryModal(props: Props): React.ReactElement {
       resetForm();
       props.toggleAddModal(false);
     }
+  };
+
+  const isSaveDisabled = () => {
+    return getMemoryErrors(Object.assign({}, memory)).length > 0;
   };
 
   const getMemoryErrors = (memory: IMemory): string[] => {
@@ -162,25 +201,27 @@ function MemoryModal(props: Props): React.ReactElement {
       role="dialog"
       contentLabel="Add new memory modal"
     >
-      <h3>Add New Memory</h3>
-      <button onClick={props.toggleAddModal}>Close</button>
+      <Header>
+        <h3>Add New Memory</h3>
+        <i className="fa fa-times" onClick={props.toggleAddModal}></i>
+      </Header>
 
-      <textarea
+      <Textarea
         name="text"
+        rows={5}
         value={memory.text}
         onChange={handleInputChange}
-      ></textarea>
-      <br />
-      <br />
-      <br />
+      ></Textarea>
 
-      <label>Core Memory</label>
-      <input
-        name="isCoreMemory"
-        type="checkbox"
-        checked={memory.isCoreMemory}
-        onChange={handleInputChange}
-      />
+      <CoreMemory>
+        <label>Core Memory</label>
+        <input
+          name="isCoreMemory"
+          type="checkbox"
+          checked={memory.isCoreMemory}
+          onChange={handleInputChange}
+        />
+      </CoreMemory>
 
       <Sliders onSliderChange={handleSliderChange} memory={memory} />
 
@@ -195,11 +236,13 @@ function MemoryModal(props: Props): React.ReactElement {
         errors.map((error, i) => <div key={i}>{error}</div>)}
       <br />
 
-      <div>
+      <Buttons>
         <button onClick={handleCancel}>Cancel</button>
         <button onClick={resetForm}>Reset</button>
-        <button onClick={handleSave}>Save Memory</button>
-      </div>
+        <button onClick={handleSave} disabled={isSaveDisabled()}>
+          Save Memory
+        </button>
+      </Buttons>
     </ReactModal>
   );
 }

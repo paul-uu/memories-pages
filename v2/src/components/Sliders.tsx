@@ -13,23 +13,16 @@ interface Props {
 const StyledSliderContainer = styled.div`
   height: 25%;
   margin: 45px 0;
+  display: flex;
+  justify-content: space-around;
 `;
 
 const StyledSlider = styled(createSliderWithTooltip(Slider))`
-  display: inline-block;
-  margin: 0 7%;
-
-  :first-child {
-    margin-left: 0;
-  }
-  :last-child {
-    margin-right: 0;
-  }
-
   position: relative;
   > span {
     position: absolute;
     top: -30px;
+    left: 0;
   }
 `;
 
@@ -51,6 +44,13 @@ function Sliders(props: Props): React.ReactElement {
               max={10}
               step={1}
               vertical={true}
+              handleStyle={{
+                backgroundColor: emotions3[emotion].color,
+                border: `2px solid ${emotions3[emotion].color}`,
+              }}
+              trackStyle={{
+                backgroundColor: emotions3[emotion].color,
+              }}
             >
               <span>{emotion}</span>
             </StyledSlider>
