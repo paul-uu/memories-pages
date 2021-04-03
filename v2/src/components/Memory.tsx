@@ -26,7 +26,7 @@ function Memory(props: Props): React.ReactElement {
         data-for={memory.id}
       />
       <ReactTooltip place="top" id={memory.id} type="dark" effect="solid">
-        <strong>{dateTime}</strong>
+        <span>{memory.title && `${memory.title} - `}{dateTime}</span>
       </ReactTooltip>
     </>
   );

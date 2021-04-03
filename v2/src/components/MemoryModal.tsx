@@ -26,12 +26,26 @@ const Header = styled.header`
     }
   }
 `;
+const Label = styled.label`
+  display: block;
+  margin-left: 10%;
+  font-size: 13px;
+  color: #555;
+`;
+const TitleInput = styled.input`
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 16px;
+  display: block;
+`;
 const Textarea = styled.textarea`
   width: 80%;
   margin-left: 10%;
+  margin-bottom: 16px;
 `;
 const CoreMemory = styled.div`
-  text-align: center;
+  margin-left: 10%;
+  font-size: 13px;
   margin-bottom: 64px;
 `;
 const Buttons = styled.div`
@@ -53,7 +67,8 @@ function MemoryModal(props: Props): React.ReactElement {
     const emptyMemory: IMemory = {
       id: generateId(),
       dateTime: new Date().getTime(),
-      text: '',
+      title: '',
+      description: '',
       media: { audio: '', image: '', video: '' },
       isCoreMemory: false,
       emotions: {
@@ -123,17 +138,8 @@ function MemoryModal(props: Props): React.ReactElement {
 
   const handleInputChange = (e: any) => {
     const currentMemory = Object.assign({}, memory);
-    const value =
-      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-    if (e.target.name === 'text') {
-      if (value.trim().length > 0) {
-        console.log('remove no-text error');
-      }
-      currentMemory.text = value;
-    } else if (e.target.name === 'isCoreMemory') {
-      currentMemory.isCoreMemory = value;
-    }
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    currentMemory[e.target.name] = value;
     setMemory(currentMemory);
   };
 
@@ -171,7 +177,10 @@ function MemoryModal(props: Props): React.ReactElement {
 
   const getMemoryErrors = (memory: IMemory): string[] => {
     const errorMessages = [];
-    if (memory.text.trim().length <= 0) {
+    if (memory.title.trim().length <= 0) {
+      errorMessages.push('Please add a title for your memory');
+    }
+    if (memory.description.trim().length <= 0) {
       errorMessages.push('Please add a description of your memeory');
     }
     if (!hasEmotions(memory.emotions)) {
@@ -202,12 +211,20 @@ function MemoryModal(props: Props): React.ReactElement {
         <i className="fa fa-times" onClick={props.toggleAddModal}></i>
       </Header>
 
-      <Textarea
-        name="text"
-        rows={5}
-        value={memory.text}
+      <Label>Title</Label>
+      <TitleInput 
+        name='title'
+        value={memory.title}
         onChange={handleInputChange}
-      ></Textarea>
+      />
+
+      <Label>Description</Label>
+      <Textarea
+        name="description"
+        rows={5}
+        value={memory.description}
+        onChange={handleInputChange}
+      />
 
       <CoreMemory>
         <label>Core Memory</label>

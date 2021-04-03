@@ -25,11 +25,15 @@ const RadialChartContainer = styled.div`
   }
 `;
 
+const MemoryTitle = styled.div`
+  margin-bottom: 8px;
+`;
+
 const MemoryDateTime = styled.div`
   margin-bottom: 8px;
 `;
 
-const MemoryText = styled.div`
+const MemoryDescription = styled.div`
   margin-bottom: 16px
 `;
 
@@ -58,7 +62,7 @@ const radialChartLabelsStyle = {
 const ViewMemoryModal = (props: Props) => {
   const memContext: any = useContext(MemoriesContext);
   if (props.memory) {
-    const { text, emotions, dateTime } = props.memory;
+    const { title, description, emotions, dateTime } = props.memory;
 
     const formattedDateTime = moment(dateTime).format("dddd, MMMM Do YYYY, h:mm:ss A")
 
@@ -70,6 +74,7 @@ const ViewMemoryModal = (props: Props) => {
         role="dialog"
         contentLabel="View Memory"
       >
+        <MemoryTitle>{title}</MemoryTitle>
         <MemoryDateTime>{formattedDateTime}</MemoryDateTime>
         <RadialChartContainer>
           <RadialChart
@@ -81,7 +86,7 @@ const ViewMemoryModal = (props: Props) => {
             labelsStyle={radialChartLabelsStyle}
           />
         </RadialChartContainer>
-        <MemoryText>{text}</MemoryText>
+        <MemoryDescription>{description}</MemoryDescription>
         <Button onClick={() => props.toggle()}>Close</Button>
         <Button
           onClick={() => {

@@ -22,7 +22,7 @@ function Body(props: Props): React.ReactElement {
     let memoriesCopy = [...memories];
 
     if (searchString) {
-      memoriesCopy = memoriesCopy.filter((m) => m.text.includes(searchString));
+      memoriesCopy = memoriesCopy.filter((m) => m.title.includes(searchString) || m.description.includes(searchString));
     }
 
     if (filterBy) {
