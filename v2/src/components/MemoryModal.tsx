@@ -2,8 +2,7 @@ import React, { useState, useContext } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import { IMemory } from '../constants/interfaces';
-import { emotions3, MONTHS, DAYS } from '../constants/constants';
-// import Tooltip from 'rc-tooltip';
+import { emotions3 } from '../constants/constants';
 import { generateId, isObjEmpty } from '../utilities';
 import Sliders from './Sliders';
 import { MemoriesContext } from '../contexts';
@@ -12,10 +11,6 @@ interface Props {
   toggleAddModal: (isOpen: any) => void;
   isOpen: boolean;
 }
-
-const StyledReactModal = styled(ReactModal)`
-  max-width: 800px;
-`;
 
 const Header = styled.header`
   display: flex;
@@ -155,8 +150,9 @@ function MemoryModal(props: Props): React.ReactElement {
     const memoryToSave = Object.assign({}, memory);
     const newErrors = getMemoryErrors(memoryToSave);
     if (newErrors.length > 0) {
-      setErrors(newErrors);
-    } else {
+      return setErrors(newErrors);
+    } 
+    else {
       memoryToSave.dateTime = new Date().getTime();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
       memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
