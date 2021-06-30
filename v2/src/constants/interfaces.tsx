@@ -20,11 +20,6 @@ export interface IMemory {
     sadness: { percentage: number, value: number };
     */
   };
-  gradient: {
-    default: string;
-    moz?: string;
-    webkit?: string;
-  };
 }
 
 export interface Emotion {

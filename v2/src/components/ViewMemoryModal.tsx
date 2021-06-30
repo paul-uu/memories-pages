@@ -50,6 +50,7 @@ const emotionObjToRadialChartObj = (emotions: any) => {
         angle: emotions[emotion]['percentage'],
         label: emotion,
         color: emotions3[emotion]['color'],
+        innerRadius: 0.9
       });
     }
   }
@@ -57,6 +58,9 @@ const emotionObjToRadialChartObj = (emotions: any) => {
 };
 
 const radialChartLabelsStyle = {
+  fontSize: 18,
+  fill: "#333",
+  backgroundColor: "red"
 }
 
 const ViewMemoryModal = (props: Props) => {
@@ -84,6 +88,7 @@ const ViewMemoryModal = (props: Props) => {
             colorType="literal"
             showLabels={true}
             labelsStyle={radialChartLabelsStyle}
+
           />
         </RadialChartContainer>
         <MemoryDescription>{description}</MemoryDescription>

@@ -25,23 +25,23 @@ export const emotions3: {
 } = {
   joy: {
     label: 'joy',
-    color: '#f5f317',
+    color: '#ffca3a'
   },
   anger: {
     label: 'anger',
-    color: '#db373e',
+    color: '#ff595e',
   },
   sadness: {
     label: 'sadness',
-    color: '#5380be',
+    color: '#1982c4',
   },
   fear: {
     label: 'fear',
-    color: '#c3648e',
+    color: '#6a4c93',
   },
   disgust: {
     label: 'disgust',
-    color: '#73c557',
+    color: '#8ac926',
   },
   neutral: {
     label: 'neutral',

@@ -3,6 +3,7 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import moment from 'moment';
 import { IMemory } from '../constants/interfaces';
+import { emotions3 } from '../constants/constants';
 
 interface Props {
   memory: IMemory;
@@ -15,7 +16,7 @@ interface StyledMemoryProps {
 
 function Memory(props: Props): React.ReactElement {
   const { viewMemory, memory } = props;
-  const gradient = memory.gradient.default;
+  const gradient = getGradient(memory.emotions);
   const dateTime = formatDate(memory.dateTime);
   return (
     <>
@@ -31,6 +32,26 @@ function Memory(props: Props): React.ReactElement {
     </>
   );
 }
+
+const getGradient = (emotions: {}): string => {
+  let str = 'linear-gradient(to bottom, ';
+  let percentageTotal = 0;
+  for (const emotion in emotions) {
+    //@ts-ignore
+    const percentage = emotions[emotion].percentage;
+    if (percentage) {
+      const hex = emotions3[emotion].color;
+      if (percentage > 99) {
+        return hex;
+      } else {
+        percentageTotal += percentage;
+        str +=
+          percentageTotal < 100 ? `${hex} ${percentageTotal}%, ` : `${hex}`;
+      }
+    }
+  }
+  return str + ');';
+};
 
 const formatDate = (ms: number) => {
   return moment(ms).format("M/D/YY, h:mm:ss a");

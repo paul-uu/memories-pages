@@ -78,10 +78,7 @@ function MemoryModal(props: Props): React.ReactElement {
         fear: { percentage: 0, value: 0 },
         disgust: { percentage: 0, value: 0 },
         neutral: { percentage: 0, value: 0 },
-      },
-      gradient: {
-        default: '',
-      },
+      }
     };
     return emptyMemory;
   }
@@ -116,26 +113,6 @@ function MemoryModal(props: Props): React.ReactElement {
     }
   };
 
-  const setMemoryGradient = (emotions: {}): string => {
-    let str = 'linear-gradient(to bottom, ';
-    let percentageTotal = 0;
-    for (const emotion in emotions) {
-      //@ts-ignore
-      const percentage = emotions[emotion].percentage;
-      if (percentage) {
-        const hex = emotions3[emotion].color;
-        if (percentage > 99) {
-          return hex;
-        } else {
-          percentageTotal += percentage;
-          str +=
-            percentageTotal < 100 ? `${hex} ${percentageTotal}%, ` : `${hex}`;
-        }
-      }
-    }
-    return str + ');';
-  };
-
   const handleInputChange = (e: any) => {
     const currentMemory = Object.assign({}, memory);
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -161,7 +138,6 @@ function MemoryModal(props: Props): React.ReactElement {
     else {
       memoryToSave.dateTime = new Date().getTime();
       memoryToSave.emotions = setEmotionPercentages(memoryToSave.emotions);
-      memoryToSave.gradient.default = setMemoryGradient(memoryToSave.emotions);
       memContext.dispatch({
         type: 'SET',
         data: { memory: memoryToSave },
