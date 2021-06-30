@@ -124,7 +124,7 @@ function MemoryModal(props: Props): React.ReactElement {
       const percentage = emotions[emotion].percentage;
       if (percentage) {
         const hex = emotions3[emotion].color;
-        if (percentage === 100) {
+        if (percentage > 99) {
           return hex;
         } else {
           percentageTotal += percentage;
