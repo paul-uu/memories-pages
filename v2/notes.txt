@@ -1,0 +1,18 @@
+
+TODOS:
+
+Implement location field for memories 
+
+Compile all memory data
+- date/time 
+- emotions
+- location tbd
+
+Create data visualization using global emotions data 
+- graphs -> emotions over time 
+- map -> emotions and location 
+
+Animation on memory creation
+- 'ball' drops from top of window and rolls into next empty spot 
+
+Create a backend, storage, user authentication, etc.

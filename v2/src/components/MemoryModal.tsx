@@ -172,8 +172,6 @@ function MemoryModal(props: Props): React.ReactElement {
     return false;
   };
 
-  // todo: global -> { emotions } => percentages per relevant emotion
-  // ex: { joy: 1, anger: 1 ... } => { joy: 50, anger: 50 }
   return (
     <ReactModal
       isOpen={props.isOpen}

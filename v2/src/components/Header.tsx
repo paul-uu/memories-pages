@@ -6,6 +6,7 @@ interface Props {
   filterMemories: (filter: string) => void;
   sortMemories: (sort: string) => void;
   toggleAddModal: (isOpen: any) => void; // look into this arg type
+  toggleDataViz: () => void;
   searchString: string;
   setSearch: Function;
   count: number;
@@ -33,11 +34,8 @@ function Header(props: Props): React.ReactElement {
             <span>Add Memory</span>
           </ActionLink>
 
-          <ActionLink
-            onClick={() => {
-              console.log('todo');
-            }}
-          >
+          <ActionLink onClick={props.toggleDataViz}>
+            
             <i className="fa fa-bar-chart" aria-hidden="true"></i>
             <span>Data Visualizations</span>
           </ActionLink>
@@ -132,6 +130,10 @@ const ActionLink = styled.div`
   }
   &:not(:last-child) {
     margin-right: 16px;
+  }
+  &:hover {
+    text-decoration: underline;
+    color: #000;
   }
 `;
 const Dropdown = styled.div`

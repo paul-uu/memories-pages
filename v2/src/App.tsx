@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import Header from './components/Header';
 import Body from './components/Body';
 import MemoryModal from './components/MemoryModal';
+import VisualizationContainer from './components/VisualizationContainer';
 import styled from 'styled-components';
 import {
   LOCALSTORAGEKEY,
@@ -27,11 +28,16 @@ const App: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>(sortOptions.new.value);
   const [filterBy, setFilterBy] = useState<string>(filterOptions.all.value);
   const [searchString, setSearchString] = useState<string>('');
+  const [isDataVizOpen, setIsDataVizOpen] = useState<boolean>(false);
 
   const toggleAddModal = (isOpen: boolean) => {
     isOpen = typeof isOpen !== 'boolean' ? !isMemoryModalOpen : isOpen;
     setIsMemoryModalOpen(isOpen);
   };
+
+  const toggleDataViz = () => {
+    setIsDataVizOpen(isDataVizOpen => !isDataVizOpen);
+  }
 
   return (
     <MemoriesContext.Provider
@@ -47,9 +53,16 @@ const App: React.FC = () => {
           sortMemories={setSortBy}
           filterMemories={setFilterBy}
           toggleAddModal={toggleAddModal}
+          toggleDataViz={toggleDataViz}
           searchString={searchString}
           setSearch={setSearchString}
           count={memories.length}
+        />
+
+        <VisualizationContainer 
+          memories={memories}
+          isOpen={isDataVizOpen}
+          setIsOpen={setIsDataVizOpen}
         />
 
         <Body
