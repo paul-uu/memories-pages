@@ -56,6 +56,10 @@ const Buttons = styled.div`
   }
 `;
 
+const StyledReactModal = styled(ReactModal)`
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+`
+
 ReactModal.setAppElement('#root');
 
 function MemoryModal(props: Props): React.ReactElement {
@@ -179,6 +183,11 @@ function MemoryModal(props: Props): React.ReactElement {
       shouldCloseOnEsc={true}
       role="dialog"
       contentLabel="Add new memory modal"
+      style={{
+        content: {
+          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px'
+        }
+      }}
     >
       <Header>
         <h3>Add New Memory</h3>
