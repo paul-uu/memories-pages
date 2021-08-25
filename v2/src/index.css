@@ -25,3 +25,13 @@ code {
 .ReactModal__Overlay {
   z-index: 10;
 }
+
+@media screen and (max-width: 600px) {
+  .ReactModal__Content {
+    width: 95% !important;
+    height: 95% !important;
+    left: 2.5% !important;
+    top: 2.5% !important;
+    padding: 10px !important;
+  }
+}

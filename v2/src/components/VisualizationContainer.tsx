@@ -67,27 +67,22 @@ const DataVisualization = (props: DataVisualizationProps) => {
   }
 }
 
-// todo: when shown, fade in &&|| slide in
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
   padding: 25px;
-
   color: #555;
   z-index: 7;
-
   background-color: rgba(255,255,255,1);
   left: 0;
-  transition: all .75s ease-out;
-
+  transition: all .5s ease-out;
   
-
   &.closed {
     background-color: rgba(255,255,255,0);
     pointer-events: none;
     color: #fff;
-    left: -175px;
+    left: -100%;
   }
 
 `;
@@ -115,6 +110,9 @@ const Close = styled.div`
 
 
 const DataVisualizationContainer = styled.div`
+
+  width: 100%;
+  height: 90%;
 
   .data-visualization-label {
     font-size: 10px;

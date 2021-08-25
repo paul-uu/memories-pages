@@ -155,7 +155,7 @@ const SearchInput = styled.div`
   top: 69px;
   right: 46px;
   z-index: 1;
-  transition: top 0.3s;
+  transition: top 0.2s;
   &.visible {
     top: 96px;
   }

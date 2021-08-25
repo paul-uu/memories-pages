@@ -11,6 +11,7 @@
     "@types/react-modal": "^3.10.6",
     "@types/react-vis": "^1.11.3",
     "date-fns": "^2.23.0",
+    "matter-js": "^0.17.1",
     "moment": "^2.29.1",
     "rc-slider": "^8.7.1",
     "rc-tooltip": "^4.0.0-alpha.3",
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/matter-js": "^0.17.5",
     "@types/styled-components": "^5.1.1",
     "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^3.8.0",

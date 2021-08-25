@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { sortOptions, filterOptions } from '../constants/constants';
 import { IMemory } from '../constants/interfaces';
 import ViewMemoryModal from './ViewMemoryModal';
+import MemoryContainer from './MemoryContainer';
 
 interface Props {
   memories: any;
@@ -60,6 +61,8 @@ function Body(props: Props): React.ReactElement {
       {parsedMemories.map((memory: any, i: number) => (
         <Memory viewMemory={setSelectedMemory} memory={memory} key={i} />
       ))}
+
+      {/* <MemoryContainer memories={memories} /> */}
 
       <ViewMemoryModal
         memory={selectedMemory}
